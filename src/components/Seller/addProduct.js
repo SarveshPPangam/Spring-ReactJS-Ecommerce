@@ -146,7 +146,7 @@ export const AddProduct = ({ edit = false }) => {
             // console.log(response);
             response.text().then(r => {
                 console.log(r)
-                history.push(id ? `/seller/product/${id}` : `/seller/products`);
+                history.push(id ? `/seller/product/${id}` : `/seller/products`)
             })
         }, function (error) {
             console.log(error.message)
