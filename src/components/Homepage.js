@@ -34,6 +34,9 @@ export const Homepage = () => {
             <Link to={"/cart"} className={classes.link}>
                 <Button >Cart</Button>
             </Link>
+            <Link to={"/profile"} className={classes.link}>
+                <Button >Profile</Button>
+            </Link>
             <ProductList />
             </>
             }

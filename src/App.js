@@ -22,32 +22,13 @@ import { SellerProducts } from "./components/Seller/sellerProducts";
 import { AddProduct } from "./components/Seller/addProduct";
 import { Product } from "./components/product";
 import { Cart } from "./components/Customer/cart";
+import { ContactList } from "./components/Customer/contactList";
+import { Profile } from "./components/Customer/profile";
 
 
 
 function App() {
     const { state } = useContext(AppContext);
-
-    // var creds = {"email":"jc@ccp.com","password":"s"};
-    // console.log(creds);
-    // useEffect(() => {
-    //     console.log('inside useEffect')
-    //     fetch('http://localhost:8080/c/profile', {
-    //         method: 'GET',
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             //  "Authorization": "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqY0BjY3AuY29tIiwicm9sZXMiOiJDVVNUT01FUiIsImV4cCI6MTYyODUyOTU0NiwiaWF0IjoxNjI4NDkzNTQ2fQ.8WnmHySoHKLeLCmk_PpuJ_ilCPbEANPTtkVkrKwVWlA"
-    //         }
-    //     }).then(function (response) {
-    //         response.text().then(r => {
-    //             //                console.log(r)
-    //             // const d = JSON.parse(r)
-    //             console.log(r);
-    //         })
-    //     }, function (error) {
-    //         console.log(error.message)
-    //     })
-    // }, [])
 
     return (
         <BrowserRouter >
@@ -63,8 +44,10 @@ function App() {
                             <Route path="/forgotPassword"><ForgotPassword/></Route> */}
                         <main >
                             <div />
-                            <Route path="/seller/"><SellerHomepage /></Route>
+                            <Route path="/profile"><Profile /></Route>
+                            <Route path="/profile/contacts"><ContactList /></Route>
                             <Route path="/cart"><Cart /></Route>
+                            <Route path="/seller/"><SellerHomepage /></Route>
                             <Route path="/seller/products"><SellerProducts /></Route>
                             <Route path="/seller/product/:id"><Product /></Route>
                             <Route path="/seller/addProduct"><AddProduct /></Route>

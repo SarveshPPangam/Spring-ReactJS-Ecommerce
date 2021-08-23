@@ -136,6 +136,7 @@ export const Cart = () => {
                 <Button variant="contained">Place order</Button>
             </Grid>
 
+            <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
 
         </div>
     )
