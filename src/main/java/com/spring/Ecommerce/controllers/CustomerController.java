@@ -48,16 +48,18 @@ public class CustomerController {
     @GetMapping("/orders")
     public Set<Order> getOrders(Principal principal) {
         User user = userRepository.findByEmail(principal.getName()).get();
+        System.out.println(user.getCustomerOrders().iterator().next().getOrderItems());
         return user.getCustomerOrders();
     }
 
-    @GetMapping("/placeOrder")
-    public ResponseEntity placeOrder(Principal principal, int contactId) {
+    @PostMapping("/placeOrder")
+    public ResponseEntity placeOrder(@RequestBody Contact contact, Principal principal) {
         try {
             User user = userRepository.findByEmail(principal.getName()).get();
-            userService.placeOrder(user, contactId);
+            userService.placeOrder(user, contact.getId());
             return ResponseEntity.ok(HttpStatus.OK);
         } catch (Exception e) {
+            System.out.println(e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -143,4 +145,9 @@ public class CustomerController {
         return userService.getContacts(user);
     }
 
+    @GetMapping("/profile/order/:orderId")
+    public Order getCustomerOrderById(@PathVariable  int orderId, Principal principal){
+        User user = userRepository.findByEmail(principal.getName()).get();
+        return userService.getCustomerOrderById(user, orderId);
+    }
 }

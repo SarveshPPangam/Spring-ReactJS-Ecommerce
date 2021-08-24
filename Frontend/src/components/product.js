@@ -96,7 +96,7 @@ export const Product = () => {
         }, function (err) {
             console.log(err.message)
         })
-    }, [])
+    }, [state?.token])
 
     const addToCart = () => {
         fetch(`http://localhost:8080/c/addToCart/${product.id}`, {

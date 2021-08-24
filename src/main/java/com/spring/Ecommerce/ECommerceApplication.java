@@ -2,10 +2,7 @@ package com.spring.Ecommerce;
 
 import com.spring.Ecommerce.models.Product;
 import com.spring.Ecommerce.models.User;
-import com.spring.Ecommerce.repository.CartItemRepository;
-import com.spring.Ecommerce.repository.ProductCategoryRepository;
-import com.spring.Ecommerce.repository.RoleRepository;
-import com.spring.Ecommerce.repository.UserRepository;
+import com.spring.Ecommerce.repository.*;
 import com.spring.Ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -54,10 +51,15 @@ public class ECommerceApplication {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    OrderRepository orderRepository;
     @Bean
     public CommandLineRunner commandLineRunner() {
 
         return args -> {
+            System.out.println(orderRepository.findById(13).get().getOrderItems());
+            System.out.println(orderRepository.getOrdersByCustomerId(userRepository.findById(2).get()).iterator().next().getOrderItems());
 //            User user = new User();
 //            user.setEmail("c@c.com").setEnabled(true).setRole(roleRepository.findById(2).get())
 //                    .setPassword(new BCryptPasswordEncoder().encode("s")).setFirstName("Seller").setLastName("1");

@@ -16,6 +16,9 @@ export const Profile = () => {
             <Link to={"/profile/contacts"} className={classes.link}>
                 <Button >Contacts</Button>
             </Link>
+            <Link to={"/profile/orders"} className={classes.link}>
+                <Button >Your orders</Button>
+            </Link>
         </div>
     )
 }

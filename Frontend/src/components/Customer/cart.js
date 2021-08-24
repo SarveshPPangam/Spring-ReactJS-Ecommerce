@@ -3,6 +3,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../contexts';
 import { CartItem } from './cartItem';
 import RupeeSymbol from '../../rupee.svg'
+import ContactDialog from './contactDialog';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,14 +21,17 @@ const useStyles = makeStyles((theme) => ({
 }))
 export const Cart = () => {
     const classes = useStyles();
+    const history = useHistory()
     const { state } = useContext(AppContext);
-    const userRole = state?.user?.role;
     const [cart, setCart] = useState();
+    const [contacts, setContacts] = useState();
     const [temp, setTemp] = useState(false);
+    const [open, setOpen] = React.useState(false);
+    const [selectedValue, setSelectedValue] = useState();
     let totalPrice = 0;
     let totalItems = 0;
 
-    useEffect(() => {
+    const fetchCart = () => {
         fetch(`http://localhost:8080/c/cart`, {
             method: 'GET',
             headers: {
@@ -43,6 +48,33 @@ export const Cart = () => {
         }, function (err) {
             console.log(err)
         })
+    }
+
+    const fetchContacts = () => {
+        fetch('http://localhost:8080/c/profile/getContacts', {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + state.token
+            }
+
+        }).then(function (response) {
+            response.text().then(r => {
+                //                console.log(r)
+                const d = JSON.parse(r)
+                console.log(d)
+                setContacts(d);
+                setSelectedValue(d?.[0])
+            })
+        }, function (error) {
+            console.log(error.message)
+        })
+    }
+
+
+    useEffect(() => {
+        fetchCart();
+        fetchContacts();
     }, [state.token, temp])
 
     const handleRemoveItem = (cartItemId) => {
@@ -60,6 +92,25 @@ export const Cart = () => {
             })
         }, function (error) {
             console.log(error);
+        })
+
+    }
+
+    const handlePlaceOrder = () => {
+        const contact = selectedValue;
+        fetch('http://localhost:8080/c/placeOrder', {
+            method: 'POST',
+            body: JSON.stringify(contact),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + state.token,
+            },
+        }).then(function (response) {
+            response.text().then(r => {
+                history.push('/')
+            })
+        }, function (err) {
+            console.log(err)
         })
 
     }
@@ -99,6 +150,15 @@ export const Cart = () => {
     }
 
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = (value) => {
+        setOpen(false);
+        setSelectedValue(value);
+    };
+
     return (
         <div className={classes.root}>
             {cart?.items.length == 0 && "Your cart is empty"}
@@ -134,16 +194,16 @@ export const Cart = () => {
                         </Typography>
                     </Grid>
 
-                    <Grid container>
-                        <Button variant="contained">Place order</Button>
-                    </Grid>
+
                 </>
             }
 
 
 
-            {/* <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} /> */}
-
+            <ContactDialog selectedValue={selectedValue} open={open} onClose={handleClose} contacts={contacts} />
+            <Grid container>
+                {selectedValue && <Button variant="contained" onClick={handlePlaceOrder}>Place order</Button>}
+            </Grid>
         </div>
     )
 }

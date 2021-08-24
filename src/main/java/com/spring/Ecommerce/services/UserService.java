@@ -2,6 +2,7 @@ package com.spring.Ecommerce.services;
 
 
 import com.spring.Ecommerce.models.Contact;
+import com.spring.Ecommerce.models.Order;
 import com.spring.Ecommerce.models.User;
 import com.spring.Ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class UserService {
     ProductService productService;
 
     public void placeOrder(User user, int contactId){
-        productService.setProductQuantity(user.getCart());
+        productService.setProductQuantity(user.getCart());//reduce Product quantity after placing order
         user.placeOrder(contactId);
         userRepository.save(user);
     }
@@ -45,5 +46,9 @@ public class UserService {
 
     public Set<Contact> getContacts(User user){
         return user.getContacts();
+    }
+
+    public Order getCustomerOrderById(User user, int id){
+        return user.getCustomerOrders().stream().filter(order -> order.getId() == id).findFirst().get();
     }
 }

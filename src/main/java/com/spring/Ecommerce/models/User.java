@@ -53,7 +53,10 @@ public class User {
     private Set<Contact> contacts;
 
 
-
+    public Set<Order> getCustomerOrders(){
+        System.out.println(customerOrders.iterator().next().getOrderItems());
+        return this.customerOrders;
+    }
 
     public User setProducts(Set<Product> products) {
         this.products = products;

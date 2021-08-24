@@ -24,6 +24,8 @@ import { Product } from "./components/product";
 import { Cart } from "./components/Customer/cart";
 import { ContactList } from "./components/Customer/contactList";
 import { Profile } from "./components/Customer/profile";
+import { OrderList } from "./components/Customer/orderList";
+import { OrderDetails } from "./components/Customer/orderDetails";
 
 
 
@@ -46,6 +48,8 @@ function App() {
                             <div />
                             <Route path="/profile"><Profile /></Route>
                             <Route path="/profile/contacts"><ContactList /></Route>
+                            <Route path="/profile/orders"><OrderList /></Route>
+                            <Route path="/profile/order/:id"><OrderDetails /></Route>
                             <Route path="/cart"><Cart /></Route>
                             <Route path="/seller/"><SellerHomepage /></Route>
                             <Route path="/seller/products"><SellerProducts /></Route>

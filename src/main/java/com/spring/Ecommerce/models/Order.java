@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table (name = "orders")
@@ -51,7 +52,7 @@ public class Order {
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER)
-    private Collection<OrderItem> orderItems;
+    private Set<OrderItem> orderItems;
 
 
     public Order setCustomerId(User customerId) {
@@ -80,7 +81,7 @@ public class Order {
         return this;
     }
 
-    public Order setOrderItems(Collection<OrderItem> orderItems) {
+    public Order setOrderItems(Set<OrderItem> orderItems) {
         this.orderItems = orderItems;
         return this;
     }
