@@ -56,21 +56,7 @@ function App() {
                             <Route path="/seller/product/:id"><Product /></Route>
                             <Route path="/seller/addProduct"><AddProduct /></Route>
                             <Route path="/seller/editProduct/:id"><AddProduct edit={true}/></Route>
-                            {/* <Route path="/downloadTemplate"><DownloadTemplate/></Route>
-                                    <Route path="/uploadData"><UploadData/></Route>
-                                    <Route path="/graphs"><Report/></Route>
-                                    <Route path="/companyRegistration"><CompanyRegistration/></Route>
-                                    <Route path="/techInfo"><TechnicalInformation/></Route>
-                                    <Route path="/refrigerationBasics"><RefrigerationBasics/></Route>
-                                    <Route path="/comfortConditioningBasics"><ComfortConditioningBasics/></Route>
-                                    <Route path="/pumpBasics"><PumpBasics/></Route>
-                                    <Route path="/ahuBasics"><AHUBasics/></Route>
-                                    <Route path="/summary"><Summary/></Route>
-                                    <Route path="/locations"><Locations/></Route>
-                                    <Route path="/sites"><Sites/></Route>
-                                    <Route path="/units"><Units/></Route>
-                                    <Route path="/approvals"><Approvals timestamp={new Date().toString()} /></Route>
-                                    <Route path="/reports/energyConsumption"><EnergyConsumption/></Route> */}
+
                             <Redirect from="*" to="/" />
                         </main>
                     </React.Fragment>
