@@ -109,34 +109,40 @@ export const Cart = () => {
 
                     <Grid container key={index}>
                         <CartItem cartItem={item} handleRemoveItem={handleRemoveItem} handleAddQuantity={handleAddQuantity}
-                         handleRemoveQuantity={handleRemoveQuantity}/>
+                            handleRemoveQuantity={handleRemoveQuantity} />
                     </Grid>
                 )
             })}
-            <Typography variant="h5" noWrap>
+            {cart?.items.length > 0 &&
+                <>
+                    <Typography variant="h5" noWrap>
 
-                Total price:
-            </Typography>
-            <Typography variant="h5" noWrap>
-                <Icon>
-                    <img src={RupeeSymbol} height={14} width={14} />
-                </Icon>
-                {totalPrice}
-            </Typography>
-            <Grid container >
-                <Typography variant="h5" noWrap>
-                    Total items:
-                </Typography>
-                <Typography variant="h5" noWrap>
-                    {totalItems}
-                </Typography>
-            </Grid>
+                        Total price:
+                    </Typography>
+                    <Typography variant="h5" noWrap>
+                        <Icon>
+                            <img src={RupeeSymbol} height={14} width={14} />
+                        </Icon>
+                        {totalPrice}
+                    </Typography>
+                    <Grid container >
+                        <Typography variant="h5" noWrap>
+                            Total items:
+                        </Typography>
+                        <Typography variant="h5" noWrap>
+                            {totalItems}
+                        </Typography>
+                    </Grid>
 
-            <Grid container>
-                <Button variant="contained">Place order</Button>
-            </Grid>
+                    <Grid container>
+                        <Button variant="contained">Place order</Button>
+                    </Grid>
+                </>
+            }
 
-            <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
+
+
+            {/* <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} /> */}
 
         </div>
     )
