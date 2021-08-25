@@ -56,7 +56,8 @@ function App() {
                             <Route path="/seller/product/:id"><Product /></Route>
                             <Route path="/seller/addProduct"><AddProduct /></Route>
                             <Route path="/seller/editProduct/:id"><AddProduct edit={true}/></Route>
-
+                            <Route path="/seller/orders"><OrderList /></Route>
+                            <Route path="/seller/order/:id"><OrderDetails /></Route>
                             <Redirect from="*" to="/" />
                         </main>
                     </React.Fragment>

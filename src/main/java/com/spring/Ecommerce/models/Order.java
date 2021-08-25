@@ -46,6 +46,8 @@ public class Order {
     private Contact contact;
 
     private Timestamp placedAt;
+    private Timestamp deliveredAt;
+    private Timestamp cancelledAt;
 
 
     @OneToMany(mappedBy = "orderId",
@@ -93,10 +95,12 @@ public class Order {
 
     public void cancelOrder(){
         this.status = OrderStatus.CANCELLED;
+        this.cancelledAt = new Timestamp(System.currentTimeMillis());
     }
 
     public void setDelivered(){
         this.status = OrderStatus.DELIVERED;
+        this.deliveredAt = new Timestamp(System.currentTimeMillis());
     }
 }
 

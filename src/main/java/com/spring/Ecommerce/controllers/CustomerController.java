@@ -48,7 +48,6 @@ public class CustomerController {
     @GetMapping("/orders")
     public Set<Order> getOrders(Principal principal) {
         User user = userRepository.findByEmail(principal.getName()).get();
-        System.out.println(user.getCustomerOrders().iterator().next().getOrderItems());
         return user.getCustomerOrders();
     }
 
@@ -64,19 +63,6 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/orders/{orderId}")
-    public Order getOrder(Principal principal, @PathVariable int orderId) {
-        User user = userRepository.findByEmail(principal.getName()).get();
-        return user.findOrderOfCustomer(orderId);
-    }
-
-    @GetMapping("/orders/{orderId}/cancel")
-    public ResponseEntity cancelOrder(Principal principal, @PathVariable int orderId) {
-        User user = userRepository.findByEmail(principal.getName()).get();
-        user.cancelOrder(orderId);
-        userRepository.save(user);
-        return new ResponseEntity(HttpStatus.OK);
-    }
 
     @GetMapping("/addToCart/{productId}")
     public ResponseEntity addToCart(Principal principal, @PathVariable int productId) {
@@ -91,7 +77,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/removeCartItem/{cartItemId}")
-    public ResponseEntity removeCartItem(@PathVariable int cartItemId, Principal principal){
+    public ResponseEntity removeCartItem(@PathVariable int cartItemId, Principal principal) {
         try {
             User user = userRepository.findByEmail(principal.getName()).get();
             userService.removeCartItem(user, cartItemId);
@@ -101,8 +87,20 @@ public class CustomerController {
         }
     }
 
+    @GetMapping("/setQuantity/{cartItemId}/{quantity}")
+    public ResponseEntity addQuantity(@PathVariable int cartItemId, @PathVariable int quantity, Principal principal) {
+        try {
+            User user = userRepository.findByEmail(principal.getName()).get();
+            userService.setQuantity(user, cartItemId, quantity);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
     @GetMapping("/addQuantity/{cartItemId}")
-    public ResponseEntity addQuantity(@PathVariable int cartItemId, Principal principal){
+    public ResponseEntity addQuantity(@PathVariable int cartItemId, Principal principal) {
         try {
             User user = userRepository.findByEmail(principal.getName()).get();
             userService.addQuantity(user, cartItemId);
@@ -113,7 +111,7 @@ public class CustomerController {
     }
 
     @GetMapping("/removeQuantity/{cartItemId}")
-    public ResponseEntity removeQuantity(@PathVariable int cartItemId, Principal principal){
+    public ResponseEntity removeQuantity(@PathVariable int cartItemId, Principal principal) {
         try {
             User user = userRepository.findByEmail(principal.getName()).get();
             userService.removeQuantity(user, cartItemId);
@@ -129,8 +127,8 @@ public class CustomerController {
     }
 
     @PostMapping("/profile/addContact")
-    public ResponseEntity addContact(@RequestBody Contact contact, Principal principal){
-        try{
+    public ResponseEntity addContact(@RequestBody Contact contact, Principal principal) {
+        try {
             User user = userRepository.findByEmail(principal.getName()).get();
             userService.addContact(user, contact);
             return ResponseEntity.ok(HttpStatus.OK);
@@ -140,14 +138,26 @@ public class CustomerController {
     }
 
     @GetMapping("/profile/getContacts")
-    public Set<Contact> getContacts(Principal principal){
+    public Set<Contact> getContacts(Principal principal) {
         User user = userRepository.findByEmail(principal.getName()).get();
         return userService.getContacts(user);
     }
+    @PostMapping("/profile/cancelOrder")
+    public ResponseEntity cancelOrder(@RequestBody Order order, Principal principal) {
+        try {
+            User user = userRepository.findByEmail(principal.getName()).get();
+            userService.cancelOrder(user, order);
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
-    @GetMapping("/profile/order/:orderId")
-    public Order getCustomerOrderById(@PathVariable  int orderId, Principal principal){
+    @GetMapping("/profile/order/{orderId}")
+    public Order getCustomerOrderById(@PathVariable int orderId, Principal principal) {
         User user = userRepository.findByEmail(principal.getName()).get();
         return userService.getCustomerOrderById(user, orderId);
     }
+
+
 }

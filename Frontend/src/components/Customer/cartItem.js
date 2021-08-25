@@ -1,10 +1,11 @@
-import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
-import React from 'react'
+import { Button, Grid, Input, makeStyles, Typography } from '@material-ui/core'
+import React, { useState } from 'react'
 import { Icon } from "@material-ui/core";
 import RupeeSymbol from '../../rupee.svg'
 import { useContext } from 'react';
 import { AppContext } from '../contexts';
 import { Link } from 'react-router-dom';
+import { Controller, useForm } from 'react-hook-form';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -18,13 +19,53 @@ const useStyles = makeStyles((theme) => ({
     link: {
         color: 'inherit',
         textDecoration: 'inherit',
+    },
+    root: {
+        flexGrow: 1
+    },
+    paper: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+
+    },
+    setQ: {
+        position: 'fixed',
+        top: '11%',
+        left: '10%'
+    },
+
+    control: {
+        padding: theme.spacing(2)
     }
 }))
-export const CartItem = ({ cartItem, handleRemoveItem, handleAddQuantity, handleRemoveQuantity }) => {
+export const CartItem = ({ cartItem, handleRemoveItem, handleAddQuantity, handleRemoveQuantity, temp, setTemp }) => {
     const classes = useStyles();
     const { state } = useContext(AppContext);
+    const { handleSubmit, control, watch } = useForm()
+    const [isCustomQuantity, setIsCustomQuantity] = useState(false)
 
 
+    const onSubmitQuantity = (data) => {
+        if (data?.quantity<=0)
+            return;
+        fetch(`http://localhost:8080/c/setQuantity/${cartItem.id}/${data.quantity}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + state.token
+            }
+        }).then(function (response) {
+            response.text().then(r => {
+
+                console.log(r)
+                setTemp(prev => !prev);
+                setIsCustomQuantity(false)
+            })
+        }, function (err) {
+            console.log(err)
+        })
+    }
 
     return (
         <div>
@@ -42,14 +83,39 @@ export const CartItem = ({ cartItem, handleRemoveItem, handleAddQuantity, handle
                         </Icon>
                         {cartItem.product.price}
                     </Typography>
+                    <Grid container className={classes.root} spacing={2}>
+                        <Grid className={classes.paper}>
+                            <Grid item>
+                                <Button onClick={() => handleAddQuantity(cartItem.id)}><h1> + </h1> </Button>
 
+                            </Grid>
+                            <Grid item>
+                                {isCustomQuantity ?
+                                    <form onSubmit={handleSubmit(onSubmitQuantity)}>
 
-                    <Button onClick={() => handleAddQuantity(cartItem.id)}><h1> + </h1> </Button>
-                        {cartItem.quantity}
-                    <Button onClick={() => handleRemoveQuantity(cartItem.id)}><h1> - </h1></Button>
-
-
+                                        <Controller
+                                            render={({ field }) => <Input type="number" {...field} required />}
+                                            name={`quantity`}
+                                            control={control}
+                                            defaultValue={cartItem?.quantity} // make sure to set up defaultValue
+                                        />
+                                        {watch('quantity') !== cartItem.quantity && <Grid item><Button type="submit">Set quantity</Button></Grid>}
+                                        {console.log(watch('quantity') !== cartItem.quantity)}
+                                    </form>
+                                    : 
+                                    <>
+                                    {cartItem?.quantity}
+                                    <Button onClick={() => setIsCustomQuantity(true)}>Set custom quantity</Button>
+                                    </>
+                                }
+                            </Grid>
+                            <Grid item>
+                                <Button onClick={() => handleRemoveQuantity(cartItem.id)}><h1> - </h1></Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 </Grid>
+
                 <Grid item className={classes.media}>
                     <Link to={`/product/${cartItem.product.id}`} className={classes.link} >
 

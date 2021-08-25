@@ -133,6 +133,11 @@ public class User {
         this.cart.removeItem(cartItemId);
     }
 
+    public void setQuantity(int cartItemId, int quantity){
+        this.cart.getItems().stream().filter(cartItem -> cartItem.getId() == cartItemId)
+                .findFirst().get().setQuantity(quantity);
+    }
+
     public void addQuantity(int cartItemID, long quantity){
         this.cart.addQuantity(cartItemID, quantity);
     }

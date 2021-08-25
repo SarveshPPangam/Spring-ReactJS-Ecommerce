@@ -9,6 +9,7 @@ import com.spring.Ecommerce.repository.ProductCategoryRepository;
 import com.spring.Ecommerce.repository.UserRepository;
 import com.spring.Ecommerce.services.MyUserDetailsService;
 import com.spring.Ecommerce.services.ProductService;
+import com.spring.Ecommerce.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,12 +32,14 @@ public class SellerController {
     @Autowired
     UserRepository userRepository;
 
-
     @Autowired
     MyUserDetailsService userDetailsService;
 
     @Autowired
     ProductCategoryRepository productCategoryRepository;
+
+    @Autowired
+    UserService userService;
 
 
     @GetMapping("/products")
@@ -109,6 +112,29 @@ public class SellerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
+    }
+
+    @GetMapping("/orders")
+    public Set<Order> getOrders(Principal principal) {
+        User user = userRepository.findByEmail(principal.getName()).get();
+        return user.getSellerOrders();
+    }
+
+    @GetMapping("/order/{orderId}")
+    public Order getSellerOrderById(@PathVariable int orderId, Principal principal) {
+        User user = userRepository.findByEmail(principal.getName()).get();
+        return userService.getSellerOrderById(user, orderId);
+    }
+
+    @PostMapping("/setAsDelivered")
+    public ResponseEntity setAsDelivered(@RequestBody Order order, Principal principal) {
+        try {
+            User user = userRepository.findByEmail(principal.getName()).get();
+            userService.setAsDelivered(user, order);
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
 

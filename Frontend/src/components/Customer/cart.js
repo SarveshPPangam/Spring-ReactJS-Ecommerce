@@ -28,6 +28,7 @@ export const Cart = () => {
     const [temp, setTemp] = useState(false);
     const [open, setOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = useState();
+    
     let totalPrice = 0;
     let totalItems = 0;
 
@@ -169,7 +170,7 @@ export const Cart = () => {
 
                     <Grid container key={index}>
                         <CartItem cartItem={item} handleRemoveItem={handleRemoveItem} handleAddQuantity={handleAddQuantity}
-                            handleRemoveQuantity={handleRemoveQuantity} />
+                            handleRemoveQuantity={handleRemoveQuantity} temp={temp} setTemp={setTemp} />
                     </Grid>
                 )
             })}
