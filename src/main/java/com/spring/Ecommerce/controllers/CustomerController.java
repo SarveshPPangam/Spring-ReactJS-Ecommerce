@@ -87,8 +87,8 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/setQuantity/{cartItemId}/{quantity}")
-    public ResponseEntity addQuantity(@PathVariable int cartItemId, @PathVariable int quantity, Principal principal) {
+    @GetMapping("/setQuantity/{cartItemId}/{quantity}") //custom quantity
+    public ResponseEntity setQuantity(@PathVariable int cartItemId, @PathVariable int quantity, Principal principal) {
         try {
             User user = userRepository.findByEmail(principal.getName()).get();
             userService.setQuantity(user, cartItemId, quantity);

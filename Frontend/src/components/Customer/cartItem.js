@@ -1,5 +1,5 @@
 import { Button, Grid, Input, makeStyles, Typography } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Icon } from "@material-ui/core";
 import RupeeSymbol from '../../rupee.svg'
 import { useContext } from 'react';
@@ -42,8 +42,13 @@ const useStyles = makeStyles((theme) => ({
 export const CartItem = ({ cartItem, handleRemoveItem, handleAddQuantity, handleRemoveQuantity, temp, setTemp }) => {
     const classes = useStyles();
     const { state } = useContext(AppContext);
-    const { handleSubmit, control, watch } = useForm()
+    const { handleSubmit, control, watch, setValue } = useForm()
     const [isCustomQuantity, setIsCustomQuantity] = useState(false)
+
+    useEffect(() => {
+        setIsCustomQuantity(false)
+        setValue('quantity', cartItem?.quantity)
+    }, [state.token, cartItem?.quantity])
 
 
     const onSubmitQuantity = (data) => {
@@ -99,8 +104,7 @@ export const CartItem = ({ cartItem, handleRemoveItem, handleAddQuantity, handle
                                             control={control}
                                             defaultValue={cartItem?.quantity} // make sure to set up defaultValue
                                         />
-                                        {watch('quantity') !== cartItem.quantity && <Grid item><Button type="submit">Set quantity</Button></Grid>}
-                                        {console.log(watch('quantity') !== cartItem.quantity)}
+                                        {watch('quantity') !== cartItem?.quantity && <Grid item><Button type="submit">Set quantity</Button></Grid>}
                                     </form>
                                     : 
                                     <>

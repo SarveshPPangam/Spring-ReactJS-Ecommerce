@@ -28,7 +28,7 @@ export const Cart = () => {
     const [temp, setTemp] = useState(false);
     const [open, setOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = useState();
-    
+
     let totalPrice = 0;
     let totalItems = 0;
 
@@ -195,16 +195,12 @@ export const Cart = () => {
                         </Typography>
                     </Grid>
 
-
+                    <ContactDialog selectedValue={selectedValue} open={open} onClose={handleClose} contacts={contacts} />
+                    <Grid container>
+                        {selectedValue && <Button variant="contained" onClick={handlePlaceOrder}>Place order</Button>}
+                    </Grid>
                 </>
             }
-
-
-
-            <ContactDialog selectedValue={selectedValue} open={open} onClose={handleClose} contacts={contacts} />
-            <Grid container>
-                {selectedValue && <Button variant="contained" onClick={handlePlaceOrder}>Place order</Button>}
-            </Grid>
         </div>
     )
 }

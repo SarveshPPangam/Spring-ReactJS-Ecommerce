@@ -58,8 +58,8 @@ public class ECommerceApplication {
     public CommandLineRunner commandLineRunner() {
 
         return args -> {
-            System.out.println(orderRepository.findById(13).get().getOrderItems());
-            System.out.println(orderRepository.getOrdersByCustomerId(userRepository.findById(2).get()).iterator().next().getOrderItems());
+//            System.out.println(orderRepository.findById(13).get().getOrderItems());
+//            System.out.println(orderRepository.getOrdersByCustomerId(userRepository.findById(2).get()).iterator().next().getOrderItems());
 //            User user = new User();
 //            user.setEmail("c@c.com").setEnabled(true).setRole(roleRepository.findById(2).get())
 //                    .setPassword(new BCryptPasswordEncoder().encode("s")).setFirstName("Seller").setLastName("1");
