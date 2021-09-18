@@ -44,10 +44,10 @@ export const OrderItemTile = ({ orderItem }) => {
             {orderItem?.quantity}
           </Typography>
           <Typography variant="h5" noWrap>
-            Ordered at: 
+            Ordered at:
             {orderItem?.createdAt}
           </Typography>
-    
+
 
 
 

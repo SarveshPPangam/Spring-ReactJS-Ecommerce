@@ -1,26 +1,45 @@
-import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
+
+
+import { Button, Grid, Icon, makeStyles, Typography } from '@material-ui/core'
 import React, { useContext, useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
-import { AppContext } from '../contexts'
+import { AppContext } from '../contexts';
+import RupeeSymbol from '../../rupee.svg'
+import ContactDialog from './contactDialog';
+import { Link, useHistory, useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
+    title: {
+        width: 600,
+    },
+    media: {
+        height: 200,
+        width: 200
+        // objectFit: 'contain',
+    },
+    link: {
+        color: 'inherit',
+        textDecoration: 'inherit',
+    },
     root: {
+        flexGrow: 1,
         marginLeft: 300
     },
-    drawer: {
-        [theme.breakpoints.up('sm')]: {
-            width: 240,
-            flexShrink: 0,
-        },
+    paper: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+
     },
-    content: {
-        flexGrow: 1,
-        padding: theme.spacing(4),
-        marginLeft: 100
+    setQ: {
+        position: 'fixed',
+        top: '11%',
+        left: '10%'
     },
 
-}));
-
+    control: {
+        padding: theme.spacing(2)
+    }
+}))
 export const OrderDetails = () => {
     const classes = useStyles()
     const { id } = useParams()
@@ -105,23 +124,87 @@ export const OrderDetails = () => {
         })
     }
 
+
+
     return (
         <div className={classes.root}>
-            {order?.orderItems?.map(orderItem => {
+            {order?.orderItems?.map((orderItem, index) => {
+                console.log(orderItem)
                 return (
-                    <Grid container>
-                        <Typography variant="h4">
-                            {orderItem?.product?.name}
-                        </Typography>
+
+                    <Grid container key={index}>
+                        <div>
+                            <Grid container >
+                                <Grid item>
+                                    <Link to={`/product/${orderItem?.product.id}`} className={classes.link} >
+                                        <Typography variant="h5" noWrap className={classes.title}>
+                                            {orderItem?.product.name}
+                                        </Typography>
+                                    </Link>
+
+                                    <Typography variant="h5" noWrap>
+                                        Product price:{" "}
+                                        <Icon>
+                                            <img src={RupeeSymbol} height={14} width={14} />
+                                        </Icon>
+                                        {orderItem?.product.price}
+                                    </Typography>
+                                    <Grid container spacing={2}>
+                                        <Grid item className={classes.paper}>
+
+                                            <Typography variant="h5" noWrap className={classes.title}>
+                                                Item quantity: {orderItem?.quantity}
+                                            </Typography>
+
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container spacing={2}>
+                                        <Grid item className={classes.paper}>
+
+                                            <Typography variant="h5" noWrap className={classes.title}>
+                                                Total price: {orderItem?.totalPrice}
+                                            </Typography>
+
+                                        </Grid>
+                                    </Grid>
+
+
+                                </Grid>
+
+                                <Grid item className={classes.media}>
+                                    <Link to={`/product/${orderItem.product.id}`} className={classes.link} >
+
+                                        <img src={orderItem?.product.imageURL} width="100%" height="100%" style={{ objectFit: "contain" }} />
+                                    </Link>
+                                </Grid>
+
+
+                            </Grid>
+
+                        </div>
                     </Grid>
                 )
             })}
-            <Typography variant="h5" noWrap>
-                Order status:
-                {order?.status}
-            </Typography>
-            {order?.status === 'PENDING' && userRole === 'CUSTOMER' && <Button onClick={() => handleCancelOrder(order?.id)}> Cancel order</Button>}
-            {order?.status === 'PENDING' && userRole === 'SELLER' && <Button onClick={() => handleSetAsDelivered(order?.id)}> Set as delivered</Button>}
-        </div>
+            <Grid container >
+                <Typography variant="h5" noWrap className={classes.title}>
+                    Deliver to:  {order?.contact?.address}
+
+                </Typography>
+                <Typography variant="h5" noWrap className={classes.title}>
+                    {userRole === 'SELLER' ? "Ordered by:" : "Receiver name:"} {order?.contact?.receiverName}
+
+                </Typography>
+                <Typography variant="h5" noWrap className={classes.title}>
+                    Order status:  {order?.status}
+                </Typography>
+
+
+            </Grid>
+            <Grid container>
+                {order?.status == 'PENDING' && userRole === 'CUSTOMER' && <Button variant="contained" onClick={() => handleCancelOrder(order?.id)}> Cancel order</Button>}
+                {order?.status === 'PENDING' && userRole === 'SELLER' && <Button variant="contained" onClick={() => handleSetAsDelivered(order?.id)}> Set as delivered</Button>}
+            </Grid>
+        </div >
     )
 }
+
