@@ -1,8 +1,9 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 import { AppContext } from '../contexts'
-import { Order } from './order';
-import { OrderItemTile, OrderTile } from './orderItemTile';
+
+import OrderListTable from '../orderListTable';
 
 
 const drawerWidth = 240;
@@ -22,6 +23,10 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(4),
         marginLeft: 250
     },
+    link: {
+        color: 'inherit',
+        textDecoration: 'inherit',
+    }
 
 }));
 
@@ -30,6 +35,7 @@ export const OrderList = () => {
     const { state } = useContext(AppContext);
     const userRole = state?.user?.role;
     const [orders, setOrders] = useState()
+    const viewOrderURL = (userRole === 'CUSTOMER' ? `/profile/order/` : `/seller/order/`)
 
     const fetchCustomerOrders = () => {
         fetch(`http://localhost:8080/c/orders`, {
@@ -79,14 +85,52 @@ export const OrderList = () => {
                     Your orders
                 </Typography>
                 {orders?.length === 0 && "You have not ordered anything yet."}
-                {orders?.map(order => {
-                    // console.log(order.orderItems)
-                    return (
-                        <Order order={order} />
-                    )
-                })}
+                <OrderListTable orders={orders} viewOrderURL={viewOrderURL} link={classes.link} />
+                {/* <table>
+                    <tr>
+                        <th> Sr. No</th>
+                        <th> Items</th>
+                        <th> Total quantity</th>
+                        <th> Total price</th>
+                        <th> Status</th>
+                        <th> Placed at</th>
+                    </tr>
+                    <tbody>
+
+
+                        {orders?.map(order => {
+                            // console.log(order.orderItems)
+                            return (
+
+
+                                <tr >
+                                    <Link to={viewOrderURL + order?.id} className={classes.link}>
+                                        <td>1</td>
+                                        <td>
+                                            <div style={{ overflow: "hidden", textOverflow: "ellipsis", width: '20rem' }}>
+
+                                                <Typography noWrap >
+                                                    {order?.orderItems?.length > 1 ?
+                                                        order?.orderItems?.[0]?.product?.name + "..."
+                                                        : order?.orderItems?.[0]?.product?.name}
+                                                </Typography>
+                                            </div>
+                                        </td>
+                                        <td>{order?.totalItems}</td>
+                                        <td>{order?.totalPrice}</td>
+                                        <td>{order?.status}</td>
+                                        <td>{order?.placedAt}</td>
+                                    </Link>
+                                </tr>
+
+
+
+                            )
+                        })}
+                    </tbody>
+                </table> */}
             </main>
 
-        </div>
+        </div >
     )
 }

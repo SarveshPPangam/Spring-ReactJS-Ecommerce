@@ -5,7 +5,7 @@ import { AppContext } from '../contexts'
 
 const useStyles = makeStyles((theme) => ({
     root: {
-       marginLeft:300
+        marginLeft: 300
     },
     drawer: {
         [theme.breakpoints.up('sm')]: {
@@ -120,8 +120,8 @@ export const OrderDetails = () => {
                 Order status:
                 {order?.status}
             </Typography>
-            {order?.status !== 'CANCELLED' && userRole === 'CUSTOMER' && <Button onClick={() => handleCancelOrder(order?.id)}> Cancel order</Button>}
-            {order?.status !== 'CANCELLED' && userRole === 'SELLER' && <Button onClick={() => handleSetAsDelivered(order?.id)}> Set as delivered</Button>}
+            {order?.status === 'PENDING' && userRole === 'CUSTOMER' && <Button onClick={() => handleCancelOrder(order?.id)}> Cancel order</Button>}
+            {order?.status === 'PENDING' && userRole === 'SELLER' && <Button onClick={() => handleSetAsDelivered(order?.id)}> Set as delivered</Button>}
         </div>
     )
 }
