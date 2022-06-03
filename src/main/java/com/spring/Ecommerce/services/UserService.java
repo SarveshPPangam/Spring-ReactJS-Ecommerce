@@ -8,6 +8,7 @@ import com.spring.Ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -18,6 +19,16 @@ public class UserService {
 
     @Autowired
     ProductService productService;
+
+
+    public User findByEmail(String email){
+        Optional<User> optionalUser =  userRepository.findByEmail(email);
+        return optionalUser.orElse(null);
+    }
+
+    public void save(User user){
+        userRepository.save(user);
+    }
 
     public void placeOrder(User user, int contactId) {
         productService.setProductQuantity(user.getCart());//reduce Product quantity after placing order

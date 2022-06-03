@@ -8,6 +8,7 @@ import com.spring.Ecommerce.models.User;
 import com.spring.Ecommerce.repository.ProductRepository;
 import com.spring.Ecommerce.repository.UserRepository;
 import com.spring.Ecommerce.services.MyUserDetailsService;
+import com.spring.Ecommerce.services.ProductService;
 import com.spring.Ecommerce.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,34 +32,30 @@ public class CustomerController {
     private MyUserDetailsService userDetailsService;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    ProductRepository productRepository;
-
-    @Autowired
     UserService userService;
+
+    @Autowired
+    ProductService productService;
 
     @GetMapping("/cart")
     public Cart getCart(Principal principal) {
-        User user = userRepository.findByEmail(principal.getName()).get();
+        User user = userService.findByEmail(principal.getName());
         return user.getCart();
     }
 
     @GetMapping("/orders")
     public Set<Order> getOrders(Principal principal) {
-        User user = userRepository.findByEmail(principal.getName()).get();
+        User user = userService.findByEmail(principal.getName());
         return user.getCustomerOrders();
     }
 
     @PostMapping("/placeOrder")
     public ResponseEntity placeOrder(@RequestBody Contact contact, Principal principal) {
         try {
-            User user = userRepository.findByEmail(principal.getName()).get();
+            User user = userService.findByEmail(principal.getName());
             userService.placeOrder(user, contact.getId());
             return ResponseEntity.ok(HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -67,9 +64,9 @@ public class CustomerController {
     @GetMapping("/addToCart/{productId}")
     public ResponseEntity addToCart(Principal principal, @PathVariable int productId) {
         try {
-            User user = userRepository.findByEmail(principal.getName()).get();
-            user.addToCart(productRepository.findById(productId).get());
-            userRepository.save(user);
+            User user = userService.findByEmail(principal.getName());
+            user.addToCart(productService.findById(productId));
+            userService.save(user);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -79,7 +76,7 @@ public class CustomerController {
     @DeleteMapping("/removeCartItem/{cartItemId}")
     public ResponseEntity removeCartItem(@PathVariable int cartItemId, Principal principal) {
         try {
-            User user = userRepository.findByEmail(principal.getName()).get();
+            User user = userService.findByEmail(principal.getName());
             userService.removeCartItem(user, cartItemId);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
@@ -90,7 +87,7 @@ public class CustomerController {
     @GetMapping("/setQuantity/{cartItemId}/{quantity}") //custom quantity
     public ResponseEntity setQuantity(@PathVariable int cartItemId, @PathVariable int quantity, Principal principal) {
         try {
-            User user = userRepository.findByEmail(principal.getName()).get();
+            User user = userService.findByEmail(principal.getName());
             userService.setQuantity(user, cartItemId, quantity);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
@@ -102,7 +99,7 @@ public class CustomerController {
     @GetMapping("/addQuantity/{cartItemId}")
     public ResponseEntity addQuantity(@PathVariable int cartItemId, Principal principal) {
         try {
-            User user = userRepository.findByEmail(principal.getName()).get();
+            User user = userService.findByEmail(principal.getName());
             userService.addQuantity(user, cartItemId);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
@@ -113,7 +110,7 @@ public class CustomerController {
     @GetMapping("/removeQuantity/{cartItemId}")
     public ResponseEntity removeQuantity(@PathVariable int cartItemId, Principal principal) {
         try {
-            User user = userRepository.findByEmail(principal.getName()).get();
+            User user = userService.findByEmail(principal.getName());
             userService.removeQuantity(user, cartItemId);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
@@ -129,7 +126,7 @@ public class CustomerController {
     @PostMapping("/profile/addContact")
     public ResponseEntity addContact(@RequestBody Contact contact, Principal principal) {
         try {
-            User user = userRepository.findByEmail(principal.getName()).get();
+            User user = userService.findByEmail(principal.getName());
             userService.addContact(user, contact);
             return ResponseEntity.ok(HttpStatus.OK);
         } catch (Exception e) {
@@ -139,13 +136,13 @@ public class CustomerController {
 
     @GetMapping("/profile/getContacts")
     public Set<Contact> getContacts(Principal principal) {
-        User user = userRepository.findByEmail(principal.getName()).get();
+        User user = userService.findByEmail(principal.getName());
         return userService.getContacts(user);
     }
     @PostMapping("/profile/cancelOrder")
     public ResponseEntity cancelOrder(@RequestBody Order order, Principal principal) {
         try {
-            User user = userRepository.findByEmail(principal.getName()).get();
+            User user = userService.findByEmail(principal.getName());
             userService.cancelOrder(user, order);
             return ResponseEntity.ok(HttpStatus.OK);
         } catch (Exception e) {
@@ -155,7 +152,7 @@ public class CustomerController {
 
     @GetMapping("/profile/order/{orderId}")
     public Order getCustomerOrderById(@PathVariable int orderId, Principal principal) {
-        User user = userRepository.findByEmail(principal.getName()).get();
+        User user = userService.findByEmail(principal.getName());
         return userService.getCustomerOrderById(user, orderId);
     }
 
