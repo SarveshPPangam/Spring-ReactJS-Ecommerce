@@ -1,26 +1,16 @@
 package com.spring.Ecommerce.controllers;
 
-
 import com.spring.Ecommerce.models.Cart;
 import com.spring.Ecommerce.models.Contact;
 import com.spring.Ecommerce.models.Order;
 import com.spring.Ecommerce.models.User;
-import com.spring.Ecommerce.repository.ProductRepository;
-import com.spring.Ecommerce.repository.UserRepository;
-import com.spring.Ecommerce.services.MyUserDetailsService;
 import com.spring.Ecommerce.services.ProductService;
 import com.spring.Ecommerce.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
-import java.util.List;
 import java.util.Set;
 
 @CrossOrigin("http://localhost:3000")
@@ -28,8 +18,6 @@ import java.util.Set;
 @RequestMapping("/c")
 public class CustomerController {
 
-    @Autowired
-    private MyUserDetailsService userDetailsService;
 
     @Autowired
     UserService userService;
@@ -50,7 +38,7 @@ public class CustomerController {
     }
 
     @PostMapping("/placeOrder")
-    public ResponseEntity placeOrder(@RequestBody Contact contact, Principal principal) {
+    public ResponseEntity<?> placeOrder(@RequestBody Contact contact, Principal principal) {
         try {
             User user = userService.findByEmail(principal.getName());
             userService.placeOrder(user, contact.getId());
@@ -62,34 +50,34 @@ public class CustomerController {
 
 
     @GetMapping("/addToCart/{productId}")
-    public ResponseEntity addToCart(Principal principal, @PathVariable int productId) {
+    public ResponseEntity<String> addToCart(Principal principal, @PathVariable int productId) {
         try {
             User user = userService.findByEmail(principal.getName());
             user.addToCart(productService.findById(productId));
             userService.save(user);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @DeleteMapping("/removeCartItem/{cartItemId}")
-    public ResponseEntity removeCartItem(@PathVariable int cartItemId, Principal principal) {
+    public ResponseEntity<String> removeCartItem(@PathVariable int cartItemId, Principal principal) {
         try {
             User user = userService.findByEmail(principal.getName());
             userService.removeCartItem(user, cartItemId);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @GetMapping("/setQuantity/{cartItemId}/{quantity}") //custom quantity
-    public ResponseEntity setQuantity(@PathVariable int cartItemId, @PathVariable int quantity, Principal principal) {
+    public ResponseEntity<String> setQuantity(@PathVariable int cartItemId, @PathVariable int quantity, Principal principal) {
         try {
             User user = userService.findByEmail(principal.getName());
             userService.setQuantity(user, cartItemId, quantity);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -97,22 +85,22 @@ public class CustomerController {
 
 
     @GetMapping("/addQuantity/{cartItemId}")
-    public ResponseEntity addQuantity(@PathVariable int cartItemId, Principal principal) {
+    public ResponseEntity<String> addQuantity(@PathVariable int cartItemId, Principal principal) {
         try {
             User user = userService.findByEmail(principal.getName());
             userService.addQuantity(user, cartItemId);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @GetMapping("/removeQuantity/{cartItemId}")
-    public ResponseEntity removeQuantity(@PathVariable int cartItemId, Principal principal) {
+    public ResponseEntity<String> removeQuantity(@PathVariable int cartItemId, Principal principal) {
         try {
             User user = userService.findByEmail(principal.getName());
             userService.removeQuantity(user, cartItemId);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -124,7 +112,7 @@ public class CustomerController {
     }
 
     @PostMapping("/profile/addContact")
-    public ResponseEntity addContact(@RequestBody Contact contact, Principal principal) {
+    public ResponseEntity<HttpStatus> addContact(@RequestBody Contact contact, Principal principal) {
         try {
             User user = userService.findByEmail(principal.getName());
             userService.addContact(user, contact);
@@ -140,7 +128,7 @@ public class CustomerController {
         return userService.getContacts(user);
     }
     @PostMapping("/profile/cancelOrder")
-    public ResponseEntity cancelOrder(@RequestBody Order order, Principal principal) {
+    public ResponseEntity<HttpStatus> cancelOrder(@RequestBody Order order, Principal principal) {
         try {
             User user = userService.findByEmail(principal.getName());
             userService.cancelOrder(user, order);
