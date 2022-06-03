@@ -5,7 +5,6 @@ import com.spring.Ecommerce.JwtUtil;
 import com.spring.Ecommerce.models.AuthenticationRequest;
 import com.spring.Ecommerce.models.AuthenticationResponse;
 import com.spring.Ecommerce.models.Product;
-import com.spring.Ecommerce.repository.ProductCategoryRepository;
 import com.spring.Ecommerce.services.MyUserDetailsService;
 import com.spring.Ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
@@ -37,8 +34,6 @@ public class HomeController {
     @Autowired
     MyUserDetailsService userDetailsService;
 
-    @Autowired
-    ProductCategoryRepository productCategoryRepository;
 
     @GetMapping("/allProducts")
     public List<Product> home(){

@@ -5,9 +5,8 @@ import com.spring.Ecommerce.models.Order;
 import com.spring.Ecommerce.models.Product;
 import com.spring.Ecommerce.models.ProductCategory;
 import com.spring.Ecommerce.models.User;
-import com.spring.Ecommerce.repository.ProductCategoryRepository;
-import com.spring.Ecommerce.repository.UserRepository;
 import com.spring.Ecommerce.services.MyUserDetailsService;
+import com.spring.Ecommerce.services.ProductCategoryService;
 import com.spring.Ecommerce.services.ProductService;
 import com.spring.Ecommerce.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,47 +29,44 @@ public class SellerController {
     ProductService productService;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Autowired
     MyUserDetailsService userDetailsService;
 
     @Autowired
-    ProductCategoryRepository productCategoryRepository;
-
-    @Autowired
-    UserService userService;
+    ProductCategoryService productCategoryService;
 
 
     @GetMapping("/products")
     public Set<Product> getProducts(Principal principal) {
-        User user = userRepository.findByEmail(principal.getName()).get();
+        User user = userService.findByEmail(principal.getName());
         return user.getProducts();
     }
 
     @GetMapping("/product/{productId}")
     public Product getProduct(@PathVariable int productId, Principal principal) {
-        User user = userRepository.findByEmail(principal.getName()).get();
+        User user = userService.findByEmail(principal.getName());
         return user.getProductById(productId).get();
     }
 
     @GetMapping("/orders/{orderId}/setDelivered")
-    public ResponseEntity setDelivered(Principal principal, @PathVariable int orderId) {
-        User user = userRepository.findByEmail(principal.getName()).get();
+    public ResponseEntity<String> setDelivered(Principal principal, @PathVariable int orderId) {
+        User user = userService.findByEmail(principal.getName());
         user.setDelivered(orderId);
-        userRepository.save(user);
-        return new ResponseEntity(HttpStatus.OK);
+        userService.save(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/orders/{orderId}")
     public Order getOrder(Principal principal, @PathVariable int orderId) {
-        User user = userRepository.findByEmail(principal.getName()).get();
+        User user = userService.findByEmail(principal.getName());
         return user.findOrderOfSeller(orderId);
     }
 
     @GetMapping("/categories")
     public List<ProductCategory> getCategories() {
-        return productCategoryRepository.findAll();
+        return productCategoryService.findAll();
     }
 
     @PostMapping("/addProduct")
@@ -78,7 +74,7 @@ public class SellerController {
         //SAME FUNCTION FOR EDIT PRODUCT
         try {
             User user = userDetailsService.getUserModelByEmail(principal.getName());
-            product.setCategory(productCategoryRepository.findByName(product.getCategory().getName()).get());
+            product.setCategory(productCategoryService.findByName(product.getCategory().getName()));
             product.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             product.setCreated_by(user);
             product.setDetails(product.getDetails());
@@ -97,7 +93,7 @@ public class SellerController {
             User user = userDetailsService.getUserModelByEmail(principal.getName());
             Optional<Product> toEdit = user.getProductById(product.getId());
             if (toEdit.isPresent()) {
-                product.setCategory(productCategoryRepository.findByName(product.getCategory().getName()).get());
+                product.setCategory(productCategoryService.findByName(product.getCategory().getName()));
                 product.setCreatedAt(new Timestamp(System.currentTimeMillis()));
                 product.setCreated_by(user);
                 product.setDetails(product.getDetails());
@@ -116,20 +112,20 @@ public class SellerController {
 
     @GetMapping("/orders")
     public Set<Order> getOrders(Principal principal) {
-        User user = userRepository.findByEmail(principal.getName()).get();
+        User user = userService.findByEmail(principal.getName());
         return user.getSellerOrders();
     }
 
     @GetMapping("/order/{orderId}")
     public Order getSellerOrderById(@PathVariable int orderId, Principal principal) {
-        User user = userRepository.findByEmail(principal.getName()).get();
+        User user = userService.findByEmail(principal.getName());
         return userService.getSellerOrderById(user, orderId);
     }
 
     @PostMapping("/setAsDelivered")
-    public ResponseEntity setAsDelivered(@RequestBody Order order, Principal principal) {
+    public ResponseEntity<HttpStatus> setAsDelivered(@RequestBody Order order, Principal principal) {
         try {
-            User user = userRepository.findByEmail(principal.getName()).get();
+            User user = userService.findByEmail(principal.getName());
             userService.setAsDelivered(user, order);
             return ResponseEntity.ok(HttpStatus.OK);
         } catch (Exception e) {
