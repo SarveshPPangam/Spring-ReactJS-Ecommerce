@@ -21,12 +21,12 @@ public class UserService {
     ProductService productService;
 
 
-    public User findByEmail(String email){
-        Optional<User> optionalUser =  userRepository.findByEmail(email);
+    public User findByEmail(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         return optionalUser.orElse(null);
     }
 
-    public void save(User user){
+    public void save(User user) {
         userRepository.save(user);
     }
 
@@ -44,7 +44,7 @@ public class UserService {
     public void setQuantity(User user, int cartItemId, int quantity) {
         if (quantity <= 0)
             user.removeCartItem(cartItemId);
-         else
+        else
             user.setQuantity(cartItemId, quantity);
         userRepository.save(user);
     }
@@ -66,6 +66,15 @@ public class UserService {
 
     public Set<Contact> getContacts(User user) {
         return user.getContacts();
+    }
+
+    public void deleteContactById(User user, int id) {
+        user.deleteContactById(id);
+        save(user);
+    }
+
+    public Contact getContact(User user, int id) {
+        return user.getContacts().stream().filter(contact -> contact.getId() == id).findFirst().orElse(null);
     }
 
     public Order getCustomerOrderById(User user, int id) {

@@ -119,6 +119,12 @@ public class User {
         return this;
     }
 
+    public User deleteContactById(int id){
+        Contact contact = this.getContacts().stream().filter(contact1 -> contact1.getId() == id).findFirst().orElse(null);
+        this.getContacts().remove(contact);
+        return this;
+    }
+
     public void addToCart(Product product){
         if(this.cart == null){
             this.cart = new Cart();

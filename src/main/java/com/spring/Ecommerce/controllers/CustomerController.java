@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.security.Principal;
 import java.util.Set;
 
@@ -127,6 +128,20 @@ public class CustomerController {
         User user = userService.findByEmail(principal.getName());
         return userService.getContacts(user);
     }
+
+    @DeleteMapping("/profile/contact/{id}")
+    public ResponseEntity<HttpStatus> deleteContact(@PathVariable int id, Principal principal) {
+        User user = userService.findByEmail(principal.getName());
+        userService.deleteContactById(user, id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @GetMapping("/profile/contact/{id}")
+    public Contact getContact(@PathVariable int id, Principal principal){
+        User user = userService.findByEmail(principal.getName());
+        return userService.getContact(user, id);
+    }
+
     @PostMapping("/profile/cancelOrder")
     public ResponseEntity<HttpStatus> cancelOrder(@RequestBody Order order, Principal principal) {
         try {

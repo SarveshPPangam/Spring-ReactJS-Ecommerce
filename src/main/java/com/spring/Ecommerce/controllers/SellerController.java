@@ -47,7 +47,7 @@ public class SellerController {
     @GetMapping("/product/{productId}")
     public Product getProduct(@PathVariable int productId, Principal principal) {
         User user = userService.findByEmail(principal.getName());
-        return user.getProductById(productId).get();
+        return user.getProductById(productId).orElse(null);
     }
 
     @GetMapping("/orders/{orderId}/setDelivered")
