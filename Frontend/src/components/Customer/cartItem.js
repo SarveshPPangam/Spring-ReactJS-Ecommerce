@@ -52,9 +52,9 @@ export const CartItem = ({ cartItem, handleRemoveItem, handleAddQuantity, handle
 
 
     const onSubmitQuantity = (data) => {
-        if (data?.quantity<=0)
+        if (data?.quantity <= 0)
             return;
-        fetch(`http://localhost:8080/c/setQuantity/${cartItem.id}/${data.quantity}`, {
+        fetch(`/c/setQuantity/${cartItem.id}/${data.quantity}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -106,10 +106,10 @@ export const CartItem = ({ cartItem, handleRemoveItem, handleAddQuantity, handle
                                         />
                                         {watch('quantity') !== cartItem?.quantity && <Grid item><Button type="submit">Set quantity</Button></Grid>}
                                     </form>
-                                    : 
+                                    :
                                     <>
-                                    {cartItem?.quantity}
-                                    <Button onClick={() => setIsCustomQuantity(true)}>Set custom quantity</Button>
+                                        {cartItem?.quantity}
+                                        <Button onClick={() => setIsCustomQuantity(true)}>Set custom quantity</Button>
                                     </>
                                 }
                             </Grid>

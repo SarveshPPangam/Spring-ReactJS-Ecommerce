@@ -38,7 +38,7 @@ export const OrderList = () => {
     const viewOrderURL = (userRole === 'CUSTOMER' ? `/profile/order/` : `/seller/order/`)
 
     const fetchCustomerOrders = () => {
-        fetch(`http://localhost:8080/c/orders`, {
+        fetch(`/c/orders`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ export const OrderList = () => {
     }
 
     const fetchSellerOrders = () => {
-        fetch(`http://localhost:8080/seller/orders`, {
+        fetch(`/seller/orders`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

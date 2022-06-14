@@ -112,18 +112,14 @@ public class CustomerController {
         return "profile";
     }
 
-    @PostMapping("/profile/addContact")
-    public ResponseEntity<HttpStatus> addContact(@RequestBody Contact contact, Principal principal) {
-        try {
-            User user = userService.findByEmail(principal.getName());
-            userService.addContact(user, contact);
-            return ResponseEntity.ok(HttpStatus.OK);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    @PostMapping("/profile/contacts")
+    public ResponseEntity<?> addContact(@RequestBody Contact contact, Principal principal) {
+        User user = userService.findByEmail(principal.getName());
+        userService.addContact(user, contact);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("/profile/getContacts")
+    @GetMapping("/profile/contacts")
     public Set<Contact> getContacts(Principal principal) {
         User user = userService.findByEmail(principal.getName());
         return userService.getContacts(user);
@@ -137,7 +133,7 @@ public class CustomerController {
     }
 
     @GetMapping("/profile/contact/{id}")
-    public Contact getContact(@PathVariable int id, Principal principal){
+    public Contact getContact(@PathVariable int id, Principal principal) {
         User user = userService.findByEmail(principal.getName());
         return userService.getContact(user, id);
     }

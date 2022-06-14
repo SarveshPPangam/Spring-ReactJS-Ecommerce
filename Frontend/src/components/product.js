@@ -77,8 +77,8 @@ export const Product = () => {
     const { id } = useParams();
     const history = useHistory();
     const userRole = state?.user?.role;
-    const fetchURL = `http://localhost:8080/` + (userRole === 'SELLER' ? `seller/product/${id}` : `product/${id}`)
-    // userRole === "SELLER" ? `http://localhost:8080/seller/product/${id}`  : `http://localhost:8080/product/${id}` ;
+    const fetchURL = `/` + (userRole === 'SELLER' ? `seller/product/${id}` : `product/${id}`)
+    // userRole === "SELLER" ? `/seller/product/${id}`  : `/product/${id}` ;
     useEffect(() => {
 
         fetch(fetchURL, {
@@ -99,7 +99,7 @@ export const Product = () => {
     }, [state?.token])
 
     const addToCart = () => {
-        fetch(`http://localhost:8080/c/addToCart/${product.id}`, {
+        fetch(`/c/addToCart/${product.id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ export const Product = () => {
 
     const handleDelete = () => {
 
-        fetch(`http://localhost:8080/common/deleteProduct/${product.id}`, {
+        fetch(`/common/deleteProduct/${product.id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -167,7 +167,7 @@ export const Product = () => {
                             </Grid>
                         </>
                     }
-                    { userRole == "CUSTOMER" &&
+                    {userRole == "CUSTOMER" &&
                         <Grid container>
                             <Button variant="contained" color="secondary" onClick={addToCart}>
                                 Add to cart

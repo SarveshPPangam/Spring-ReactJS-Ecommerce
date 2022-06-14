@@ -22,9 +22,8 @@ export const ContactList = () => {
     const { handleSubmit, control } = useForm();
     const [contacts, setContacts] = useState()
 
-    useEffect(() => {
-        console.log("in useEffect");
-        fetch('http://localhost:8080/c/profile/getContacts', {
+    const fetchContacts = () => {
+        fetch('/c/profile/contacts', {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -41,13 +40,15 @@ export const ContactList = () => {
         }, function (error) {
             console.log(error.message)
         })
+    }
 
+    useEffect(() => {
+        fetchContacts()
     }, [state.token])
 
 
     const onSubmit = (contact) => {
-        console.log(contact)
-        fetch('http://localhost:8080/c/profile/addContact', {
+        fetch('/c/profile/contacts', {
             method: 'POST',
             body: JSON.stringify(contact),
             headers: {
@@ -57,6 +58,7 @@ export const ContactList = () => {
         }).then(function (response) {
             response.text().then(r => {
                 console.log(r)
+                fetchContacts()
             })
         }, function (err) {
             console.log(err)
@@ -72,7 +74,7 @@ export const ContactList = () => {
             {contacts?.map(contact => {
                 return (
                     <Grid container key={contact.id} className={classes.contact}>
-                        <Contact contact={contact} />
+                        <Contact contact={contact} contacts={contacts} setContacts={setContacts} />
                     </Grid>
                 )
             }

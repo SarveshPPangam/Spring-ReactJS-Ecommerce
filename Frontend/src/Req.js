@@ -4,11 +4,11 @@ import React, { useContext, useEffect } from "react"
 function Req() {
 
 
-    var creds = {"email":"c@c.com","password":"s"};
+    var creds = { "email": "c@c.com", "password": "s" };
     console.log(creds);
     useEffect(() => {
         console.log('inside useEffect')
-        fetch('http://localhost:8080/authenticate', {
+        fetch('/authenticate', {
             method: 'POST',
             body: JSON.stringify(creds),
             headers: {
@@ -25,11 +25,11 @@ function Req() {
             console.log(error.message)
         })
     }, [])
-  return (
-    <div className="App">
-        <h1>j</h1>
-    </div>
-  );
+    return (
+        <div className="App">
+            <h1>j</h1>
+        </div>
+    );
 }
 
 export default Req;

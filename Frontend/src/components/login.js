@@ -37,7 +37,7 @@ export default function Login() {
     const onSubmit = data => {
         // console.log(data);
 
-        fetch('http://localhost:8080/authenticate', {
+        fetch('/authenticate', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -91,34 +91,34 @@ export default function Login() {
                                     error={errors && !!errors['password']}
                                     helperText={errors && errors['password']?.message}
                                     {...register('password', { required: true })} />
-                           
-                        </Grid>
-                        <Grid item>
-                            <Link
-                                component="button"
-                                variant="body2"
-                                onClick={() => {
-                                }}
-                            >
-                                Forgot Password?
-                            </Link>
-                        </Grid>
-                        <Grid container item direction={"row"} justifyContent={"center"} spacing={4}>
-                            <Grid item xs={6}>
-                                <Button type="submit" variant="contained" color="primary"
-                                    fullWidth>Login</Button>
+
                             </Grid>
-                            <Grid item xs={6}>
-                                <Button type="submit" variant="contained" color="secondary" fullWidth
-                                    onClick={goToRegister}>Sign up
-                                </Button>
+                            <Grid item>
+                                <Link
+                                    component="button"
+                                    variant="body2"
+                                    onClick={() => {
+                                    }}
+                                >
+                                    Forgot Password?
+                                </Link>
                             </Grid>
-                            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                            <Grid container item direction={"row"} justifyContent={"center"} spacing={4}>
+                                <Grid item xs={6}>
+                                    <Button type="submit" variant="contained" color="primary"
+                                        fullWidth>Login</Button>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Button type="submit" variant="contained" color="secondary" fullWidth
+                                        onClick={goToRegister}>Sign up
+                                    </Button>
+                                </Grid>
+                                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
-                </Grid>
-        </form>
+            </form>
         </>
     );
 }

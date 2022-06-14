@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @Table
 @Data
 @NoArgsConstructor
-public class Contact {
+public class Contact implements Comparable<Contact> {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -40,6 +40,12 @@ public class Contact {
         this.createdAt = createdAt;
     }
 
+
+
+    @Override
+    public int compareTo(Contact contact) {
+        return getCreatedAt().compareTo(contact.getCreatedAt());
+    }
 
 
 }

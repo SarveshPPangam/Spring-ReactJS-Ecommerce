@@ -66,12 +66,12 @@ export const AddProduct = ({ edit = false }) => {
     const [product, setProduct] = useState();
     const { state } = useContext(AppContext);
     const history = useHistory()
-    var fetchUrl = product?.id ? "http://localhost:8080/seller/editProduct": "http://localhost:8080/seller/addProduct";
+    var fetchUrl = product?.id ? "/seller/editProduct" : "/seller/addProduct";
 
-              
+
 
     let { id } = useParams();
-    
+
 
     const { handleSubmit, control, watch, register, reset, errors, setValue } = useForm({
         defaultValues: {
@@ -85,7 +85,7 @@ export const AddProduct = ({ edit = false }) => {
     })
 
     const getProductDetails = () => {
-        fetch('http://localhost:8080/product/' + id, {
+        fetch('/product/' + id, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -104,7 +104,7 @@ export const AddProduct = ({ edit = false }) => {
     }
     useEffect(() => {
         console.log("in useEffect");
-        fetch('http://localhost:8080/seller/categories', {
+        fetch('/seller/categories', {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -270,7 +270,7 @@ export const AddProduct = ({ edit = false }) => {
 
                                             <Grid container spacing={4} key={detail.id}>
 
-                                            
+
 
 
                                                 <Grid item xs={6} sm={3}>

@@ -30,7 +30,7 @@ export const ProductList = () => {
     const userRole = state?.user?.role;
 
     const fetchSellerProducts = () => {
-        fetch('http://localhost:8080/seller/products', {
+        fetch('/seller/products', {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -50,7 +50,7 @@ export const ProductList = () => {
     }
 
     const fetchProductsForCustomer = () => {
-        fetch('http://localhost:8080/allProducts', {
+        fetch('/allProducts', {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -88,7 +88,7 @@ export const ProductList = () => {
 
                     )
                 })
-            } 
+            }
             {userRole == 'CUSTOMER' &&
                 products?.map((product, index) => {
                     return (

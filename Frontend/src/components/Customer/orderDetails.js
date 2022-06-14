@@ -49,7 +49,7 @@ export const OrderDetails = () => {
     const userRole = state?.user?.role;
 
     const fetchCustomerOrder = (id) => {
-        fetch(`http://localhost:8080/c/profile/order/${id}`, {
+        fetch(`/c/profile/order/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -67,7 +67,7 @@ export const OrderDetails = () => {
     }
 
     const fetchSellerOrder = (id) => {
-        fetch(`http://localhost:8080/seller/order/${id}`, {
+        fetch(`/seller/order/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -89,7 +89,7 @@ export const OrderDetails = () => {
     }, [state.token])
 
     const handleCancelOrder = () => {
-        fetch(`http://localhost:8080/c/profile/cancelOrder`, {
+        fetch(`/c/profile/cancelOrder`, {
             method: 'POST',
             body: JSON.stringify(order),
             headers: {
@@ -107,7 +107,7 @@ export const OrderDetails = () => {
     }
 
     const handleSetAsDelivered = () => {
-        fetch(`http://localhost:8080/seller/setAsDelivered`, {
+        fetch(`/seller/setAsDelivered`, {
             method: 'POST',
             body: JSON.stringify(order),
             headers: {

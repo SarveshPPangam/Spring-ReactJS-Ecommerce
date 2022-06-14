@@ -18,13 +18,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export const Contact = ({ contact }) => {
+export const Contact = ({ contact, contacts, setContacts }) => {
     const classes = useStyles();
     const { state } = useContext(AppContext);
 
     const deleteContact = (id) => {
         console.log("here")
-        fetch('http://localhost:8080/c/profile/contact/' + id, {
+        fetch('/c/profile/contact/' + id, {
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json",
@@ -35,6 +35,7 @@ export const Contact = ({ contact }) => {
             response.text().then(r => {
                 const d = JSON.parse(r)
                 console.log(d)
+                setContacts(contacts?.filter(c => c.id !== id))
             })
         }, function (error) {
             console.log(error.message)

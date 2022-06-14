@@ -8,8 +8,7 @@ import com.spring.Ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -76,6 +75,7 @@ public class UserService {
     public Contact getContact(User user, int id) {
         return user.getContacts().stream().filter(contact -> contact.getId() == id).findFirst().orElse(null);
     }
+
 
     public Order getCustomerOrderById(User user, int id) {
         return user.getCustomerOrders().stream().filter(order -> order.getId() == id).findFirst().get();
