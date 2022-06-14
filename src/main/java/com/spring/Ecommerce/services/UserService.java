@@ -1,7 +1,7 @@
 package com.spring.Ecommerce.services;
 
 
-import com.spring.Ecommerce.models.Contact;
+import com.spring.Ecommerce.models.Address;
 import com.spring.Ecommerce.models.Order;
 import com.spring.Ecommerce.models.User;
 import com.spring.Ecommerce.repository.UserRepository;
@@ -29,9 +29,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void placeOrder(User user, int contactId) {
+    public void placeOrder(User user, int addressId) {
         productService.setProductQuantity(user.getCart());//reduce Product quantity after placing order
-        user.placeOrder(contactId);
+        user.placeOrder(addressId);
         userRepository.save(user);
     }
 
@@ -58,22 +58,22 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void addContact(User user, Contact contact) {
-        user.addContact(contact);
+    public void addAddress(User user, Address address) {
+        user.addAddress(address);
         userRepository.save(user);
     }
 
-    public Set<Contact> getContacts(User user) {
-        return user.getContacts();
+    public Set<Address> getAddresses(User user) {
+        return user.getAddresses();
     }
 
-    public void deleteContactById(User user, int id) {
-        user.deleteContactById(id);
+    public void deleteAddressById(User user, int id) {
+        user.deleteAddressById(id);
         save(user);
     }
 
-    public Contact getContact(User user, int id) {
-        return user.getContacts().stream().filter(contact -> contact.getId() == id).findFirst().orElse(null);
+    public Address getAddress(User user, int id) {
+        return user.getAddresses().stream().filter(address -> address.getId() == id).findFirst().orElse(null);
     }
 
 

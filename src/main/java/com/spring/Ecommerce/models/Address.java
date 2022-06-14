@@ -2,7 +2,6 @@ package com.spring.Ecommerce.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -12,7 +11,7 @@ import java.sql.Timestamp;
 @Table
 @Data
 @NoArgsConstructor
-public class Contact implements Comparable<Contact> {
+public class Address {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -20,7 +19,7 @@ public class Contact implements Comparable<Contact> {
 
     private String receiverName;
     private String phoneNumber;
-    private String address;
+    private String addressLine;
     private int pinCode;
 
     @JsonIgnore
@@ -32,20 +31,17 @@ public class Contact implements Comparable<Contact> {
     private Timestamp modifiedAt;
 
 
-    public Contact(String receiverName, String phoneNumber, String address, int pinCode, Timestamp createdAt) {
+    public Address(String receiverName, String phoneNumber, String address, int pinCode, Timestamp createdAt) {
         this.receiverName = receiverName;
         this.phoneNumber = phoneNumber;
-        this.address = address;
+        this.addressLine = address;
         this.pinCode = pinCode;
         this.createdAt = createdAt;
     }
 
 
 
-    @Override
-    public int compareTo(Contact contact) {
-        return getCreatedAt().compareTo(contact.getCreatedAt());
-    }
+
 
 
 }

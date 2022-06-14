@@ -1,6 +1,9 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import React, { useContext } from 'react'
+import { useState } from 'react';
+import { set } from 'react-hook-form';
 import { AppContext } from '../contexts';
+import EditContactFormDialog from './editContactFormDialog';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -21,6 +24,14 @@ const useStyles = makeStyles((theme) => ({
 export const Contact = ({ contact, contacts, setContacts }) => {
     const classes = useStyles();
     const { state } = useContext(AppContext);
+
+    const [openEditForm, setOpenEditForm] = useState(false)
+
+
+
+    const handleEdit = (id) => {
+        setOpenEditForm(true)
+    }
 
     const deleteContact = (id) => {
         console.log("here")
@@ -52,7 +63,7 @@ export const Contact = ({ contact, contacts, setContacts }) => {
                             {contact.receiverName}
                         </Typography>
 
-                        <Button className={classes.button}>Edit</Button>
+                        <Button className={classes.button} onClick={() => handleEdit(contact?.id)}>Edit</Button>
                     </Grid>
 
                 </Grid>
@@ -78,6 +89,10 @@ export const Contact = ({ contact, contacts, setContacts }) => {
                     </Typography>
                 </Grid>
             </Grid>
+
+
+
+            <EditContactFormDialog openProp={openEditForm} contact={contact} />
         </div>
     )
 }

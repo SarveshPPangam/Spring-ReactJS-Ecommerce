@@ -50,7 +50,7 @@ public class User {
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER)
-    private Set<Contact> contacts;
+    private Set<Address> addresses;
 
 
     public Set<Order> getCustomerOrders(){
@@ -109,19 +109,19 @@ public class User {
         return this.products.stream().filter(product -> product.getId()==id).findFirst();
     }
 
-    public User addContact(Contact contact) {
-        if(this.contacts == null){
-            this.contacts = new HashSet<>();
+    public User addAddress(Address address) {
+        if(this.addresses == null){
+            this.addresses = new HashSet<>();
         }
-        contact.setUser(this);
-        contact.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        this.contacts.add(contact);
+        address.setUser(this);
+        address.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        this.addresses.add(address);
         return this;
     }
 
-    public User deleteContactById(int id){
-        Contact contact = this.getContacts().stream().filter(contact1 -> contact1.getId() == id).findFirst().orElse(null);
-        this.getContacts().remove(contact);
+    public User deleteAddressById(int id){
+        Address address = this.getAddresses().stream().filter(address1 -> address1.getId() == id).findFirst().orElse(null);
+        this.getAddresses().remove(address);
         return this;
     }
 
@@ -156,7 +156,7 @@ public class User {
         this.cart.clear();
     }
 
-    public void placeOrder(int contactId){
+    public void placeOrder(int addressId){
         Set<User> sellers = new HashSet<>();
         this.cart.getItems().forEach(cartItem -> {
             sellers.add(cartItem.getProduct().getCreated_by());
@@ -180,7 +180,7 @@ public class User {
             });
             order.setOrderItems(orderItems).setStatus(OrderStatus.PENDING)
                     .setPlacedAt(new Timestamp(System.currentTimeMillis()))
-                    .setContact(this.getContacts().stream().filter(contact -> contact.getId()==contactId).findFirst().get())
+                    .setAddress(this.getAddresses().stream().filter(address -> address.getId()==addressId).findFirst().get())
                     .setSellerId(seller).setCustomerId(this).setTotalPrice(ref.totalPrice).setTotalItems();
             orders.add(order);
         });
@@ -205,9 +205,9 @@ public class User {
                 .findFirst().get();
     }
 
-//    public void placeCustomerOrder(User seller, Contact contact){   //only for customers, because orders for sellers are saved in other class i guess
+//    public void placeCustomerOrder(User seller, Address address){   //only for customers, because orders for sellers are saved in other class i guess
 //        Order customerOrder = new Order();
-//        customerOrder.setCustomerId(this).setSellerId(seller).setContact(contact)
+//        customerOrder.setCustomerId(this).setSellerId(seller).setAddress(address)
 //                .setPlacedAt(new Timestamp(System.currentTimeMillis())).setStatus(OrderStatus.PENDING)
 //                .setTotalPrice(calculateTotalPrice()).setOrderItems(getOrderItems(customerOrder))
 //                .setTotalItems();

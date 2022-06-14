@@ -1,7 +1,7 @@
 package com.spring.Ecommerce.controllers;
 
+import com.spring.Ecommerce.models.Address;
 import com.spring.Ecommerce.models.Cart;
-import com.spring.Ecommerce.models.Contact;
 import com.spring.Ecommerce.models.Order;
 import com.spring.Ecommerce.models.User;
 import com.spring.Ecommerce.services.ProductService;
@@ -39,10 +39,10 @@ public class CustomerController {
     }
 
     @PostMapping("/placeOrder")
-    public ResponseEntity<?> placeOrder(@RequestBody Contact contact, Principal principal) {
+    public ResponseEntity<?> placeOrder(@RequestBody Address address, Principal principal) {
         try {
             User user = userService.findByEmail(principal.getName());
-            userService.placeOrder(user, contact.getId());
+            userService.placeOrder(user, address.getId());
             return ResponseEntity.ok(HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -112,30 +112,30 @@ public class CustomerController {
         return "profile";
     }
 
-    @PostMapping("/profile/contacts")
-    public ResponseEntity<?> addContact(@RequestBody Contact contact, Principal principal) {
+    @PostMapping("/profile/addresses")
+    public ResponseEntity<?> addAddress(@RequestBody Address address, Principal principal) {
         User user = userService.findByEmail(principal.getName());
-        userService.addContact(user, contact);
+        userService.addAddress(user, address);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("/profile/contacts")
-    public Set<Contact> getContacts(Principal principal) {
+    @GetMapping("/profile/addresses")
+    public Set<Address> getAddresses(Principal principal) {
         User user = userService.findByEmail(principal.getName());
-        return userService.getContacts(user);
+        return userService.getAddresses(user);
     }
 
-    @DeleteMapping("/profile/contact/{id}")
-    public ResponseEntity<HttpStatus> deleteContact(@PathVariable int id, Principal principal) {
+    @DeleteMapping("/profile/address/{id}")
+    public ResponseEntity<HttpStatus> deleteAddress(@PathVariable int id, Principal principal) {
         User user = userService.findByEmail(principal.getName());
-        userService.deleteContactById(user, id);
+        userService.deleteAddressById(user, id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("/profile/contact/{id}")
-    public Contact getContact(@PathVariable int id, Principal principal) {
+    @GetMapping("/profile/address/{id}")
+    public Address getAddress(@PathVariable int id, Principal principal) {
         User user = userService.findByEmail(principal.getName());
-        return userService.getContact(user, id);
+        return userService.getAddress(user, id);
     }
 
     @PostMapping("/profile/cancelOrder")

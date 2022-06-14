@@ -94,11 +94,11 @@ public class ECommerceApplication {
             Product product = productService.findById(2);
 //            user.addToCart(product);
 //            user.decrementQuantity(2, 10);
-//            user.addContact(new Contact("Jo Jo","+23562523423", "hehe island",3463466,createdAt));
+//            user.addContact(new Address("Jo Jo","+23562523423", "hehe island",3463466,createdAt));
 //            CustomerOrder order = new CustomerOrder();
 //            OrderItem item = new OrderItem();
 //            item.setProduct(product).setCreatedAt(createdAt).setTotalPrice(1).setOrderId(order).setQuantity(1);
-//            order.setContact(customerUser.getContacts().iterator().next()).setCustomerId(customerUser).setSellerId(sellerUser)
+//            order.setAddress(customerUser.getAddresses().iterator().next()).setCustomerId(customerUser).setSellerId(sellerUser)
 //                    .setStatus(OrderStatus.PENDING).setPlacedAt(createdAt).setOrderItems(Set.of(item));
 //            customerUser.addOrder(order);
 //            userRepository.save(customerUser);

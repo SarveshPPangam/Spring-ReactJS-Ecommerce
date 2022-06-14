@@ -3,11 +3,9 @@ package com.spring.Ecommerce.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.Set;
 
 @Entity
@@ -42,8 +40,8 @@ public class Order {
     private OrderStatus status;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "contact_id", referencedColumnName = "id")
-    private Contact contact;
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
 
     private Timestamp placedAt;
     private Timestamp deliveredAt;
@@ -73,8 +71,8 @@ public class Order {
         return this;
     }
 
-    public Order setContact(Contact contact) {
-        this.contact = contact;
+    public Order setAddress(Address address) {
+        this.address = address;
         return this;
     }
 

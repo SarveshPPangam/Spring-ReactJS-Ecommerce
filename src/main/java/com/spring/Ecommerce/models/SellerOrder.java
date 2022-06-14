@@ -27,8 +27,8 @@ public class SellerOrder {
     private OrderStatus status;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "contact_id", referencedColumnName = "id")
-    private Contact contact;
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
     private Timestamp placedAt;
 
 
@@ -56,8 +56,8 @@ public class SellerOrder {
         return this;
     }
 
-    public SellerOrder setContact(Contact contact) {
-        this.contact = contact;
+    public SellerOrder setAddress(Address address) {
+        this.address = address;
         return this;
     }
 
