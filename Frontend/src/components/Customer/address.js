@@ -3,7 +3,7 @@ import React, { useContext } from 'react'
 import { useState } from 'react';
 import { set } from 'react-hook-form';
 import { AppContext } from '../contexts';
-import EditAddressFormDialog from './editAddressFormDialog';
+import AddAddressFormDialog from './addAddressFormDialog';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -34,7 +34,6 @@ export const Address = ({ address, addresses, setAddresses, fetchAddresses }) =>
     }
 
     const deleteAddress = (id) => {
-        console.log("here")
         fetch('/c/profile/address/' + id, {
             method: 'DELETE',
             headers: {
@@ -92,7 +91,7 @@ export const Address = ({ address, addresses, setAddresses, fetchAddresses }) =>
 
 
 
-            <EditAddressFormDialog openEditForm={openEditForm} setOpenEditForm={setOpenEditForm} address={address}
+            <AddAddressFormDialog openEditForm={openEditForm} setOpenEditForm={setOpenEditForm} address={address}
                 fetchAddresses={fetchAddresses} state={state} isForEdit={true} />
         </div>
     )

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form'
 import { AppContext } from '../contexts';
 import { Address } from './address';
-import EditAddressFormDialog from './editAddressFormDialog';
+import AddAddressFormDialog from './addAddressFormDialog';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -77,7 +77,7 @@ export const AddressList = () => {
                 </FormControl>
             </Grid>
 
-            <EditAddressFormDialog openEditForm={openEditForm} setOpenEditForm={setOpenEditForm}
+            <AddAddressFormDialog openEditForm={openEditForm} setOpenEditForm={setOpenEditForm}
                 fetchAddresses={fetchAddresses} state={state} />
 
 
