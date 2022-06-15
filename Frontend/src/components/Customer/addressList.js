@@ -74,7 +74,7 @@ export const AddressList = () => {
             {addresses?.map(address => {
                 return (
                     <Grid container key={address.id} className={classes.address}>
-                        <Address address={address} addresses={addresses} setAddresses={setAddresses} />
+                        <Address address={address} addresses={addresses} setAddresses={setAddresses} fetchAddresses={fetchAddresses} />
                     </Grid>
                 )
             }

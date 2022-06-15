@@ -116,6 +116,14 @@ public class CustomerController {
     public ResponseEntity<?> addAddress(@RequestBody Address address, Principal principal) {
         User user = userService.findByEmail(principal.getName());
         userService.addAddress(user, address);
+        System.out.println("here");
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PutMapping("/profile/addresses")
+    public ResponseEntity<?> updateAddress(@RequestBody Address address, Principal principal) {
+        User user = userService.findByEmail(principal.getName());
+        userService.updateAddress(user, address);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

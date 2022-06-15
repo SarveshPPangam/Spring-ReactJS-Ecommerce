@@ -119,6 +119,12 @@ public class User {
         return this;
     }
 
+    public User updateAddress(Address address){
+        this.deleteAddressById(address.getId());
+        this.addAddress(address);
+        return this;
+    }
+
     public User deleteAddressById(int id){
         Address address = this.getAddresses().stream().filter(address1 -> address1.getId() == id).findFirst().orElse(null);
         this.getAddresses().remove(address);

@@ -63,6 +63,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void updateAddress(User user, Address address) {
+        user.updateAddress(address);
+        userRepository.save(user);
+    }
+
     public Set<Address> getAddresses(User user) {
         return user.getAddresses();
     }

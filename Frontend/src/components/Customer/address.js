@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export const Address = ({ address, addresses, setAddresses }) => {
+export const Address = ({ address, addresses, setAddresses, fetchAddresses }) => {
     const classes = useStyles();
     const { state } = useContext(AppContext);
 
@@ -92,7 +92,8 @@ export const Address = ({ address, addresses, setAddresses }) => {
 
 
 
-            <EditAddressFormDialog openProp={openEditForm} setOpenEditForm={setOpenEditForm} address={address} />
+            <EditAddressFormDialog openProp={openEditForm} setOpenEditForm={setOpenEditForm} address={address}
+                fetchAddresses={fetchAddresses} state={state} isForEdit={true} />
         </div>
     )
 }

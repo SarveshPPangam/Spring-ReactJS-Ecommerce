@@ -8,32 +8,47 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import { Controller, useForm } from 'react-hook-form'
 
 
-export default function EditAddressFormDialog({ openProp, setOpenEditForm, address }) {
+export default function EditAddressFormDialog({ openProp, setOpenEditForm, address, state, fetchAddresses, isForEdit = false }) {
 
     const { handleSubmit, control } = useForm();
-
-
-    const handleClickOpen = () => {
-        setOpenEditForm(true);
-    };
 
     const handleClose = () => {
         setOpenEditForm(false);
     };
 
-    const onSubmit = (address) => {
-        console.log(address)
+    const onSubmit = (addressInput) => {
+        fetch('/c/profile/addresses', {
+            method: isForEdit ? 'PUT' : 'POST',
+            body: JSON.stringify(addressInput),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + state?.token,
+            },
+        }).then(function (response) {
+            response.text().then(r => {
+                console.log(r)
+                console.log(addressInput)
+                fetchAddresses()
+            })
+        }, function (err) {
+            console.log(err)
+        })
+        handleClose()
     }
 
     return (
+
         <div>
             <Dialog open={openProp} onClose={handleClose}>
-                <DialogTitle>Edit address</DialogTitle>
+                <DialogTitle>{isForEdit ? 'Edit' : 'Add'} address</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        Edit address
-                    </DialogContentText>
                     <form onSubmit={handleSubmit(onSubmit)}>
+                        <Controller
+                            render={({ field }) => <Input {...field} type='hidden' />}
+                            name={`id`}
+                            control={control}
+                            defaultValue={address?.id || ''}
+                        />
                         <Grid container xs={12} sm={12}>
                             <FormControl fullWidth>
                                 <InputLabel htmlFor="name">Receiver name</InputLabel>
@@ -42,7 +57,7 @@ export default function EditAddressFormDialog({ openProp, setOpenEditForm, addre
                                     render={({ field }) => <Input {...field} />}
                                     name={`receiverName`}
                                     control={control}
-                                    defaultValue={""}
+                                    defaultValue={address?.receiverName || ''}
                                 />
                             </FormControl>
                         </Grid>
@@ -54,19 +69,19 @@ export default function EditAddressFormDialog({ openProp, setOpenEditForm, addre
                                     render={({ field }) => <Input {...field} />}
                                     name={`phoneNumber`}
                                     control={control}
-                                    defaultValue={""}
+                                    defaultValue={address?.phoneNumber || ""}
                                 />
                             </FormControl>
                         </Grid>
                         <Grid container xs={12} sm={12}>
                             <FormControl fullWidth>
-                                <InputLabel htmlFor="name">Address</InputLabel>
+                                <InputLabel htmlFor="name">Address line</InputLabel>
 
                                 <Controller
                                     render={({ field }) => <Input {...field} />}
                                     name={`addressLine`}
                                     control={control}
-                                    defaultValue={""}
+                                    defaultValue={address?.addressLine || ""}
                                 />
                             </FormControl>
                         </Grid>
@@ -78,13 +93,13 @@ export default function EditAddressFormDialog({ openProp, setOpenEditForm, addre
                                     render={({ field }) => <Input {...field} />}
                                     name={`pinCode`}
                                     control={control}
-                                    defaultValue={""}
+                                    defaultValue={address?.pinCode || ""}
                                 />
                             </FormControl>
                         </Grid>
                         <DialogActions>
                             <Button onClick={handleClose}>Cancel</Button>
-                            <Button onClick={handleClose}>Subscribe</Button>
+                            <Button type="submit">Update</Button>
                         </DialogActions>
                     </form>
                 </DialogContent>
