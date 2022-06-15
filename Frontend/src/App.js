@@ -22,7 +22,7 @@ import { SellerProducts } from "./components/Seller/sellerProducts";
 import { AddProduct } from "./components/Seller/addProduct";
 import { Product } from "./components/product";
 import { Cart } from "./components/Customer/cart";
-import { ContactList } from "./components/Customer/contactList";
+import { AddressList } from "./components/Customer/addressList";
 import { Profile } from "./components/Customer/profile";
 import { OrderList } from "./components/Customer/orderList";
 import { OrderDetails } from "./components/Customer/orderDetails";
@@ -38,7 +38,7 @@ function App() {
             <AppProvider>
                 <Switch>
                     <React.Fragment>
-                        <Route exact path="/"><Homepage/></Route>
+                        <Route exact path="/"><Homepage /></Route>
                         <Route path="/login"><Login /></Route>
                         {/* <Route path="/product"><SellerHomepage/></Route> */}
                         <Route path="/product/:id"><Product /></Route>
@@ -47,7 +47,7 @@ function App() {
                         <main >
                             <div />
                             <Route path="/profile"><Profile /></Route>
-                            <Route path="/profile/contacts"><ContactList /></Route>
+                            <Route path="/profile/addresses"><AddressList /></Route>
                             <Route path="/profile/orders"><OrderList /></Route>
                             <Route path="/profile/order/:id"><OrderDetails /></Route>
                             <Route path="/cart"><Cart /></Route>
@@ -55,7 +55,7 @@ function App() {
                             <Route path="/seller/products"><SellerProducts /></Route>
                             <Route path="/seller/product/:id"><Product /></Route>
                             <Route path="/seller/addProduct"><AddProduct /></Route>
-                            <Route path="/seller/editProduct/:id"><AddProduct edit={true}/></Route>
+                            <Route path="/seller/editProduct/:id"><AddProduct edit={true} /></Route>
                             <Route path="/seller/orders"><OrderList /></Route>
                             <Route path="/seller/order/:id"><OrderDetails /></Route>
                             <Redirect from="*" to="/" />

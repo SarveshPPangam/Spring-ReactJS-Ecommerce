@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../contexts';
 import { CartItem } from './cartItem';
 import RupeeSymbol from '../../rupee.svg'
-import ContactDialog from './contactDialog';
+import AddressDialog from './addressDialog';
 import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
@@ -24,7 +24,7 @@ export const Cart = () => {
     const history = useHistory()
     const { state } = useContext(AppContext);
     const [cart, setCart] = useState();
-    const [contacts, setContacts] = useState();
+    const [addresses, setAddresses] = useState();
     const [temp, setTemp] = useState(false);
     const [open, setOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = useState();
@@ -50,8 +50,8 @@ export const Cart = () => {
         })
     }
 
-    const fetchContacts = () => {
-        fetch('/c/profile/contacts', {
+    const fetchAddresses = () => {
+        fetch('/c/profile/addresses', {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -62,7 +62,7 @@ export const Cart = () => {
             response.text().then(r => {
                 //                console.log(r)
                 const d = JSON.parse(r)
-                setContacts(d);
+                setAddresses(d);
                 setSelectedValue(d?.[0])
             })
         }, function (error) {
@@ -73,7 +73,7 @@ export const Cart = () => {
 
     useEffect(() => {
         fetchCart();
-        fetchContacts();
+        fetchAddresses();
     }, [state.token, temp])
 
     const handleRemoveItem = (cartItemId) => {
@@ -94,10 +94,10 @@ export const Cart = () => {
     }
 
     const handlePlaceOrder = () => {
-        const contact = selectedValue;
+        const address = selectedValue;
         fetch('/c/placeOrder', {
             method: 'POST',
-            body: JSON.stringify(contact),
+            body: JSON.stringify(address),
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + state.token,
@@ -189,7 +189,7 @@ export const Cart = () => {
                         </Typography>
                     </Grid>
 
-                    <ContactDialog selectedValue={selectedValue} open={open} onClose={handleClose} contacts={contacts} />
+                    <AddressDialog selectedValue={selectedValue} open={open} onClose={handleClose} addresses={addresses} />
                     <Grid container>
                         {selectedValue && <Button variant="contained" onClick={handlePlaceOrder}>Place order</Button>}
                     </Grid>

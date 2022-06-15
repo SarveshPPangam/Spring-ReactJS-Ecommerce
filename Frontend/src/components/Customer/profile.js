@@ -13,8 +13,8 @@ export const Profile = () => {
     return (
         <div>
             profile
-            <Link to={"/profile/contacts"} className={classes.link}>
-                <Button >Contacts</Button>
+            <Link to={"/profile/addresses"} className={classes.link}>
+                <Button >Addresses</Button>
             </Link>
             <Link to={"/profile/orders"} className={classes.link}>
                 <Button >Your orders</Button>

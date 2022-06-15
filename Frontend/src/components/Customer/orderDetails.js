@@ -4,7 +4,7 @@ import { Button, Grid, Icon, makeStyles, Typography } from '@material-ui/core'
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../contexts';
 import RupeeSymbol from '../../rupee.svg'
-import ContactDialog from './contactDialog';
+import AddressDialog from './addressDialog';
 import { Link, useHistory, useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
@@ -187,11 +187,11 @@ export const OrderDetails = () => {
             })}
             <Grid container >
                 <Typography variant="h5" noWrap className={classes.title}>
-                    Deliver to:  {order?.contact?.address}
+                    Deliver to:  {order?.address?.addressLine}
 
                 </Typography>
                 <Typography variant="h5" noWrap className={classes.title}>
-                    {userRole === 'SELLER' ? "Ordered by:" : "Receiver name:"} {order?.contact?.receiverName}
+                    {userRole === 'SELLER' ? "Ordered by:" : "Receiver name:"} {order?.address?.receiverName}
 
                 </Typography>
                 <Typography variant="h5" noWrap className={classes.title}>
