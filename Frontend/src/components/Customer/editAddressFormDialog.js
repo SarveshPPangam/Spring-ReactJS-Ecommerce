@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import { Controller, useForm } from 'react-hook-form'
 
 
-export default function EditAddressFormDialog({ openProp, setOpenEditForm, address, state, fetchAddresses, isForEdit = false }) {
+export default function EditAddressFormDialog({ openEditForm, setOpenEditForm, address, state, fetchAddresses, isForEdit = false }) {
 
     const { handleSubmit, control } = useForm();
 
@@ -39,7 +39,7 @@ export default function EditAddressFormDialog({ openProp, setOpenEditForm, addre
     return (
 
         <div>
-            <Dialog open={openProp} onClose={handleClose}>
+            <Dialog open={openEditForm} onClose={handleClose}>
                 <DialogTitle>{isForEdit ? 'Edit' : 'Add'} address</DialogTitle>
                 <DialogContent>
                     <form onSubmit={handleSubmit(onSubmit)}>

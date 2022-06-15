@@ -121,6 +121,7 @@ public class User {
 
     public User updateAddress(Address address){
         this.deleteAddressById(address.getId());
+        address.setModifiedAt(new Timestamp(System.currentTimeMillis()));
         this.addAddress(address);
         return this;
     }

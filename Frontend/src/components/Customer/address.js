@@ -29,7 +29,7 @@ export const Address = ({ address, addresses, setAddresses, fetchAddresses }) =>
 
 
 
-    const handleEdit = (id) => {
+    const handleEdit = () => {
         setOpenEditForm(true)
     }
 
@@ -92,7 +92,7 @@ export const Address = ({ address, addresses, setAddresses, fetchAddresses }) =>
 
 
 
-            <EditAddressFormDialog openProp={openEditForm} setOpenEditForm={setOpenEditForm} address={address}
+            <EditAddressFormDialog openEditForm={openEditForm} setOpenEditForm={setOpenEditForm} address={address}
                 fetchAddresses={fetchAddresses} state={state} isForEdit={true} />
         </div>
     )

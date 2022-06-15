@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form'
 import { AppContext } from '../contexts';
 import { Address } from './address';
+import EditAddressFormDialog from './editAddressFormDialog';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -19,8 +20,8 @@ const useStyles = makeStyles((theme) => ({
 export const AddressList = () => {
     const classes = useStyles()
     const { state } = useContext(AppContext);
-    const { handleSubmit, control } = useForm();
     const [addresses, setAddresses] = useState()
+    const [openEditForm, setOpenEditForm] = useState(false)
 
     const fetchAddresses = () => {
         fetch('/c/profile/addresses', {
@@ -47,23 +48,11 @@ export const AddressList = () => {
     }, [state.token])
 
 
-    const onSubmit = (address) => {
-        fetch('/c/profile/addresses', {
-            method: 'POST',
-            body: JSON.stringify(address),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + state.token,
-            },
-        }).then(function (response) {
-            response.text().then(r => {
-                console.log(r)
-                fetchAddresses()
-            })
-        }, function (err) {
-            console.log(err)
-        })
+    const handleAddAddress = () => {
+        setOpenEditForm(true)
     }
+
+
     return (
         <div>
             <Grid container>
@@ -81,63 +70,16 @@ export const AddressList = () => {
             )}
 
 
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <Grid container>
-                    <Grid item xs={6} sm={3}>
-                        <FormControl fullWidth>
-                            <InputLabel htmlFor="name">Receiver name</InputLabel>
 
-                            <Controller
-                                render={({ field }) => <Input {...field} />}
-                                name={`receiverName`}
-                                control={control}
-                                defaultValue={""} // make sure to set up defaultValue
-                            />
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControl fullWidth>
-                            <InputLabel htmlFor="name">Phone number</InputLabel>
+            <Grid item xs={12}>
+                <FormControl>
+                    <Button onClick={handleAddAddress} variant="contained" color="primary" >Add address</Button>
+                </FormControl>
+            </Grid>
 
-                            <Controller
-                                render={({ field }) => <Input {...field} />}
-                                name={`phoneNumber`}
-                                control={control}
-                                defaultValue={""} // make sure to set up defaultValue
-                            />
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControl fullWidth>
-                            <InputLabel htmlFor="name">Address</InputLabel>
+            <EditAddressFormDialog openEditForm={openEditForm} setOpenEditForm={setOpenEditForm}
+                fetchAddresses={fetchAddresses} state={state} />
 
-                            <Controller
-                                render={({ field }) => <Input {...field} />}
-                                name={`addressLine`}
-                                control={control}
-                                defaultValue={""} // make sure to set up defaultValue
-                            />
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControl fullWidth>
-                            <InputLabel htmlFor="name">Pincode</InputLabel>
-
-                            <Controller
-                                render={({ field }) => <Input {...field} />}
-                                name={`pinCode`}
-                                control={control}
-                                defaultValue={""} // make sure to set up defaultValue
-                            />
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <FormControl>
-                            <Button type="submit" variant="contained" color="primary" >Save</Button>
-                        </FormControl>
-                    </Grid>
-                </Grid>
-            </form>
 
         </div>
     )
