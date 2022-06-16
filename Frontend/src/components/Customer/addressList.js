@@ -1,7 +1,6 @@
 import { Button, FormControl, Grid, Input, InputLabel, makeStyles, Typography } from '@material-ui/core'
 import React, { useContext, useEffect } from 'react'
 import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form'
 import { AppContext } from '../contexts';
 import { Address } from './address';
 import AddAddressFormDialog from './addAddressFormDialog';
@@ -44,6 +43,7 @@ export const AddressList = () => {
     }
 
     useEffect(() => {
+        console.log('in usef')
         fetchAddresses()
     }, [state.token])
 

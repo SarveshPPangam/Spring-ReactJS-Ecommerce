@@ -21,23 +21,27 @@ const useStyles = makeStyles((theme) => ({
 export const Homepage = () => {
     const { state } = useContext(AppContext);
     const classes = useStyles();
-    const redirectIfSeller = state?.user?.role === "SELLER" && <Redirect to="/seller/"/>;
+    const redirectIfSeller = state?.user?.role === "SELLER" && <Redirect to="/seller/" />;
     const isCustomer = state?.user?.role === "CUSTOMER";
-    const notLoggedIn = !state?.user?.role && <Link to="/login">Login</Link>;
+    const notLoggedIn = !state?.user?.role;
     console.log("in homepage")
     return (
         <>
-            {console.log(state)}
             {redirectIfSeller}
-            {notLoggedIn}
+            {notLoggedIn &&
+                <>
+                    <Link to="/login">Login</Link>
+                    <Link to="/register">Register</Link>
+                    <ProductList />
+                </>}
             {isCustomer && <>
-            <Link to={"/cart"} className={classes.link}>
-                <Button >Cart</Button>
-            </Link>
-            <Link to={"/profile"} className={classes.link}>
-                <Button >Profile</Button>
-            </Link>
-            <ProductList />
+                <Link to={"/cart"} className={classes.link}>
+                    <Button >Cart</Button>
+                </Link>
+                <Link to={"/profile"} className={classes.link}>
+                    <Button >Profile</Button>
+                </Link>
+                <ProductList />
             </>
             }
         </>

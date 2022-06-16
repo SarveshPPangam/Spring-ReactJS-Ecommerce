@@ -2,36 +2,39 @@ import React, { useContext, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from "@material-ui/core/Button";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { AppContext } from "./contexts";
 import Alert from '@material-ui/lab/Alert';
 import Grid from "@material-ui/core/Grid";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Container from "@material-ui/core/Container";
 import Link from '@material-ui/core/Link';
 import {
     BrowserRouter as Router,
     Route,
     Redirect,
+    useHistory,
 } from "react-router-dom";
-import { Homepage } from "./Homepage";
+import { InputLabel } from "@material-ui/core";
 
 
 export default function Login() {
     const { dispatch } = useContext(AppContext);
-    const [errorMessage, setErrorMessage] = useState("");
-    const { register, handleSubmit, errors } = useForm();
-    const redirectIfLoggedIn = <Redirect to="/" />;
     const { state } = useContext(AppContext);
+
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const { handleSubmit, control } = useForm();
+
+    const redirectToHome = <Redirect to="/" />;
+
+    const history = useHistory()
 
 
     function setToken(token) {
         dispatch({ type: "set-token-header", payload: token });
     }
 
-    const goToRegister = (event) => {
-        event.preventDefault();
-        // history.push('/register');
+    const goToRegister = () => {
+        history.push('/register');
     }
 
     const onSubmit = data => {
@@ -51,7 +54,6 @@ export default function Login() {
                     // console.log(response.jwt)
                     setToken(response.jwt);
                 } else {
-                    console.log(data)
                     let errorResponse = JSON.parse(data);
                     const error = (errorResponse && errorResponse.message) || response.statusText;
                     console.log(error)
@@ -59,13 +61,14 @@ export default function Login() {
                 }
             })
         }).catch((error) => {
-            console.log(error)
+            // console.log(error)
+            setErrorMessage('Some error occurred');
         });
     };
 
     return (
         <>
-            {state?.token && redirectIfLoggedIn}
+            {state?.token && redirectToHome}
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container spacing={0} justifyContent={"center"} alignItems={"center"}>
                     <Grid container item xs={12} sm={6} justifyContent={"center"}>
@@ -74,25 +77,24 @@ export default function Login() {
                                 <h2>LOGIN</h2>
                             </Grid>
                             <Grid item>
-                                <TextField name="email"
-                                    className='loginInput'
-                                    fullWidth
-                                    label="User Email"
-                                    error={errors && !!errors['userId']}
-                                    helperText={errors && errors['email']?.message}
-                                    {...register('email', { required: true })} />
+                                <Controller
+                                    name="email"
+                                    control={control}
+                                    render={({ field }) => <TextField {...field} label="Email" type="email" required />}
+                                    rules={{ required: true }}
+                                    defaultValue=''
+                                />
                             </Grid>
                             <Grid item>
-                                <TextField name="password"
-                                    className='loginInput'
-                                    fullWidth
-                                    label="Password"
-                                    type="password"
-                                    error={errors && !!errors['password']}
-                                    helperText={errors && errors['password']?.message}
-                                    {...register('password', { required: true })} />
-
+                                <Controller
+                                    name="password"
+                                    control={control}
+                                    render={({ field }) => <TextField {...field} label="Password" type="password" required />}
+                                    rules={{ required: true }}
+                                    defaultValue=''
+                                />
                             </Grid>
+
                             <Grid item>
                                 <Link
                                     component="button"
@@ -109,7 +111,7 @@ export default function Login() {
                                         fullWidth>Login</Button>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Button type="submit" variant="contained" color="secondary" fullWidth
+                                    <Button variant="contained" color="secondary" fullWidth
                                         onClick={goToRegister}>Sign up
                                     </Button>
                                 </Grid>

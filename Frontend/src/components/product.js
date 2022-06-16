@@ -78,7 +78,7 @@ export const Product = () => {
     const history = useHistory();
     const userRole = state?.user?.role;
     const fetchURL = `/` + (userRole === 'SELLER' ? `seller/product/${id}` : `product/${id}`)
-    // userRole === "SELLER" ? `/seller/product/${id}`  : `/product/${id}` ;
+
     useEffect(() => {
 
         fetch(fetchURL, {
@@ -89,9 +89,13 @@ export const Product = () => {
             }
         }).then(function (response) {
             response.text().then(r => {
-                const d = JSON.parse(r)
-                console.log(d)
-                setProduct(d)
+                if (r) {
+                    const d = JSON.parse(r)
+                    setProduct(d)
+                }
+                else {
+                    history.push('/')
+                }
             })
         }, function (err) {
             console.log(err.message)
@@ -167,7 +171,7 @@ export const Product = () => {
                             </Grid>
                         </>
                     }
-                    {userRole == "CUSTOMER" &&
+                    {userRole !== "SELLER" &&
                         <Grid container>
                             <Button variant="contained" color="secondary" onClick={addToCart}>
                                 Add to cart
@@ -193,10 +197,9 @@ export const Product = () => {
                 <Grid container className={classes.containerMargin}>
                     <table className={classes.table}>
                         <tbody>
-                            {console.log(product?.details)}
                             {product?.details?.map(detail => {
                                 return (
-                                    <tr>
+                                    <tr key={detail?.id}>
 
 
                                         < td className={classes.td} style={{ background: " #F4E1E6" }}>

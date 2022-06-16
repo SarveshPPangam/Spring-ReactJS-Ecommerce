@@ -28,6 +28,7 @@ export const ProductList = () => {
     const [products, setProducts] = useState([]);
     const classes = useStyles();
     const userRole = state?.user?.role;
+    const isSeller = userRole === 'SELLER'
 
     const fetchSellerProducts = () => {
         fetch('/seller/products', {
@@ -69,14 +70,15 @@ export const ProductList = () => {
         })
     }
     useEffect(() => {
-        console.log("in useEffect");
-        userRole === 'SELLER' && fetchSellerProducts();
-        userRole === 'CUSTOMER' && fetchProductsForCustomer();
+        if (isSeller)
+            fetchSellerProducts();
+        else
+            fetchProductsForCustomer();
 
     }, [state.token])
     return (
         <div className={classes.root}>
-            {userRole == 'SELLER' &&
+            {isSeller ?
                 products?.map((product, index) => {
                     return (
                         <Grid item className={classes.item} key={product.id}>
@@ -88,8 +90,8 @@ export const ProductList = () => {
 
                     )
                 })
-            }
-            {userRole == 'CUSTOMER' &&
+                :
+
                 products?.map((product, index) => {
                     return (
                         <Grid item className={classes.item} key={product.id}>

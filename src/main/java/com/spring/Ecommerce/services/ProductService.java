@@ -24,7 +24,7 @@ public class ProductService {
     }
 
     public Product findById(int id) {
-        return productRepository.findById(id).get();
+        return productRepository.findById(id).orElse(null);
     }
 
     public void deleteById(int id) {
@@ -33,9 +33,9 @@ public class ProductService {
 
     public void setProductQuantity(Cart cart) {
         cart.getItems().forEach(cartItem -> {
-            Product product = cartItem.getProduct();
-            product.reduceQuantityBy(cartItem.getQuantity());
-            productRepository.save(product);
+                    Product product = cartItem.getProduct();
+                    product.reduceQuantityBy(cartItem.getQuantity());
+                    productRepository.save(product);
                 }
         );
     }

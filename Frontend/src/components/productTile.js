@@ -3,24 +3,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import { AppContext, AppProvider } from './contexts'
 import {
     Link,
-    Redirect,
-    Switch,
-
 } from "react-router-dom";
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
 import Grid from "@material-ui/core/Grid";
-import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import Button from '@material-ui/core/Button';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Icon } from "@material-ui/core";
 import RupeeSymbol from '../rupee.svg'
 
@@ -70,6 +61,7 @@ export default function ProductTile({ product }) {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
     const { state } = useContext(AppContext);
+    const isSeller = state?.user?.role === 'SELLER'
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -93,12 +85,12 @@ export default function ProductTile({ product }) {
                     </Icon>
                     {product.price}
                 </Typography>
-                {state?.user?.role === 'SELLER' ?
+                {isSeller ?
 
                     <Grid container >
                         <Grid item >
                             <Button variant="contained" >
-                                <Link to={"/seller/editProduct/"+product.id} className={classes.link}>
+                                <Link to={"/seller/editProduct/" + product.id} className={classes.link}>
                                     Edit
                                 </Link>
                             </Button>

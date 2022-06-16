@@ -5,6 +5,7 @@ import com.spring.Ecommerce.JwtUtil;
 import com.spring.Ecommerce.models.AuthenticationRequest;
 import com.spring.Ecommerce.models.AuthenticationResponse;
 import com.spring.Ecommerce.models.Product;
+import com.spring.Ecommerce.models.UserRegisterDTO;
 import com.spring.Ecommerce.services.MyUserDetailsService;
 import com.spring.Ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,17 +36,6 @@ public class HomeController {
     MyUserDetailsService userDetailsService;
 
 
-    @GetMapping("/allProducts")
-    public List<Product> home(){
-        return productService.getAll();
-    }
-
-    @GetMapping("/product/{productId}")
-    public Product getProduct(@PathVariable int productId){
-        return productService.findById(productId);
-    }
-
-
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
 
@@ -66,6 +56,23 @@ public class HomeController {
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody UserRegisterDTO userRegisterDTO){
+        System.out.println(userRegisterDTO);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+
+    @GetMapping("/allProducts")
+    public List<Product> home(){
+        return productService.getAll();
+    }
+
+    @GetMapping("/product/{productId}")
+    public Product getProduct(@PathVariable int productId){
+        return productService.findById(productId);
+    }
+
     @DeleteMapping("/common/deleteProduct/{productId}")
     public ResponseEntity<?> deleteProduct(@PathVariable int productId){
         try {
@@ -75,6 +82,7 @@ public class HomeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 
 }

@@ -1,20 +1,13 @@
 import React, { useContext, useEffect } from "react"
-import Req from './Req';
 import Login from './components/login';
 import { AppContext, AppProvider } from './components/contexts'
 import {
     BrowserRouter as Router,
     Route,
-    Redirect,
     Switch,
-    HashRouter,
-    Link,
-    useLocation,
-    BrowserRouter
+    BrowserRouter,
+    Redirect
 } from "react-router-dom";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { createTheme, makeStyles } from "@material-ui/core/styles";
-import { MuiThemeProvider } from "@material-ui/core";
 
 import { Homepage } from "./components/Homepage";
 import { SellerHomepage } from "./components/Seller/sellerHomepage";
@@ -26,11 +19,13 @@ import { AddressList } from "./components/Customer/addressList";
 import { Profile } from "./components/Customer/profile";
 import { OrderList } from "./components/Customer/orderList";
 import { OrderDetails } from "./components/Customer/orderDetails";
+import { Register } from "./components/register";
 
 
 
 function App() {
     const { state } = useContext(AppContext);
+    const isSeller = state?.user?.role === 'SELLER'
 
     return (
         <BrowserRouter >
@@ -40,26 +35,28 @@ function App() {
                     <React.Fragment>
                         <Route exact path="/"><Homepage /></Route>
                         <Route path="/login"><Login /></Route>
-                        {/* <Route path="/product"><SellerHomepage/></Route> */}
                         <Route path="/product/:id"><Product /></Route>
-                        {/* <Route path="/register"><Register/></Route>
-                            <Route path="/forgotPassword"><ForgotPassword/></Route> */}
-                        <main >
-                            <div />
-                            <Route path="/profile"><Profile /></Route>
-                            <Route path="/profile/addresses"><AddressList /></Route>
-                            <Route path="/profile/orders"><OrderList /></Route>
-                            <Route path="/profile/order/:id"><OrderDetails /></Route>
-                            <Route path="/cart"><Cart /></Route>
-                            <Route path="/seller/"><SellerHomepage /></Route>
-                            <Route path="/seller/products"><SellerProducts /></Route>
-                            <Route path="/seller/product/:id"><Product /></Route>
-                            <Route path="/seller/addProduct"><AddProduct /></Route>
-                            <Route path="/seller/editProduct/:id"><AddProduct edit={true} /></Route>
-                            <Route path="/seller/orders"><OrderList /></Route>
-                            <Route path="/seller/order/:id"><OrderDetails /></Route>
-                            <Redirect from="*" to="/" />
-                        </main>
+                        <Route path="/register"><Register /></Route>
+                        {/* <Route path="/forgotPassword"><ForgotPassword/></Route> */}
+
+                        <Route path="/profile"><Profile /></Route>
+                        <Route path="/profile/addresses"><AddressList /></Route>
+                        <Route path="/profile/orders"><OrderList /></Route>
+                        <Route path="/profile/order/:id"><OrderDetails /></Route>
+                        <Route path="/cart"><Cart /></Route>
+
+                        {isSeller &&
+                            <>
+                                <Route path="/seller/"><SellerHomepage /></Route>
+                                <Route path="/seller/products"><SellerProducts /></Route>
+                                <Route path="/seller/product/:id"><Product /></Route>
+                                <Route path="/seller/addProduct"><AddProduct /></Route>
+                                <Route path="/seller/editProduct/:id"><AddProduct edit={true} /></Route>
+                                <Route path="/seller/orders"><OrderList /></Route>
+                                <Route path="/seller/order/:id"><OrderDetails /></Route>
+                            </>
+                        }
+                        <Route path="*" ><Redirect to="/" /></Route>
                     </React.Fragment>
                 </Switch>
             </AppProvider>

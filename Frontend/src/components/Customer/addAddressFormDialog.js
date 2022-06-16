@@ -54,7 +54,7 @@ export default function AddAddressFormDialog({ openEditForm, setOpenEditForm, ad
                                 <InputLabel htmlFor="name">Receiver name</InputLabel>
 
                                 <Controller
-                                    render={({ field }) => <Input {...field} />}
+                                    render={({ field }) => <Input {...field} required />}
                                     name={`receiverName`}
                                     control={control}
                                     defaultValue={address?.receiverName || ''}
@@ -67,7 +67,7 @@ export default function AddAddressFormDialog({ openEditForm, setOpenEditForm, ad
                                 <InputLabel htmlFor="name">Phone number</InputLabel>
 
                                 <Controller
-                                    render={({ field }) => <Input {...field} />}
+                                    render={({ field }) => <Input {...field} required />}
                                     name={`phoneNumber`}
                                     control={control}
                                     defaultValue={address?.phoneNumber || ""}
@@ -80,7 +80,7 @@ export default function AddAddressFormDialog({ openEditForm, setOpenEditForm, ad
                                 <InputLabel htmlFor="name">Address line</InputLabel>
 
                                 <Controller
-                                    render={({ field }) => <Input {...field} />}
+                                    render={({ field }) => <Input {...field} required />}
                                     name={`addressLine`}
                                     control={control}
                                     defaultValue={address?.addressLine || ""}
@@ -93,7 +93,7 @@ export default function AddAddressFormDialog({ openEditForm, setOpenEditForm, ad
                                 <InputLabel htmlFor="name">Pincode</InputLabel>
 
                                 <Controller
-                                    render={({ field }) => <Input {...field} />}
+                                    render={({ field }) => <Input {...field} required />}
                                     name={`pinCode`}
                                     control={control}
                                     defaultValue={address?.pinCode || ""}

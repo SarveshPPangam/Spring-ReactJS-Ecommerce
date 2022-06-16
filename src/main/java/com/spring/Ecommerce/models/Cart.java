@@ -59,6 +59,7 @@ public class Cart {
     }
 
     public void addItem(Product product) {
+        if(product==null) return;;
         boolean itemAlreadyInCart = false;
         for(CartItem cartItem1: this.items){
             if(cartItem1.getProduct().getId() == product.getId()){
