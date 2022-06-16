@@ -8,6 +8,7 @@ import com.spring.Ecommerce.models.Product;
 import com.spring.Ecommerce.models.UserRegisterDTO;
 import com.spring.Ecommerce.services.MyUserDetailsService;
 import com.spring.Ecommerce.services.ProductService;
+import com.spring.Ecommerce.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,9 @@ public class HomeController {
 
     @Autowired
     MyUserDetailsService userDetailsService;
+
+    @Autowired
+    UserService userService;
 
 
     @PostMapping("/authenticate")

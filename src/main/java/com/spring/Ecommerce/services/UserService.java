@@ -4,6 +4,7 @@ package com.spring.Ecommerce.services;
 import com.spring.Ecommerce.models.Address;
 import com.spring.Ecommerce.models.Order;
 import com.spring.Ecommerce.models.User;
+import com.spring.Ecommerce.models.UserRegisterDTO;
 import com.spring.Ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,10 @@ public class UserService {
 
     @Autowired
     ProductService productService;
+
+    public UserRegisterResponse registerUser(UserRegisterDTO){
+
+    }
 
 
     public User findByEmail(String email) {
@@ -101,4 +106,20 @@ public class UserService {
     }
 
 
+}
+
+enum UserRegisterResponse{
+    OK("Registered successfully!"),
+    EMAIL_ALREADY_EXISTS("This email already exists in our database!"),
+    SOME_OTHER_ERROR("There was some error!")
+
+    private String message;
+
+    UserRegisterResponse(String message){
+        this.message = message;
+    }
+
+    public String getMessage(){
+        return this.message;
+    }
 }

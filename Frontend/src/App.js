@@ -20,6 +20,7 @@ import { Profile } from "./components/Customer/profile";
 import { OrderList } from "./components/Customer/orderList";
 import { OrderDetails } from "./components/Customer/orderDetails";
 import { Register } from "./components/register";
+import { UnknownRoute } from "./components/unknownRoute";
 
 
 
@@ -56,7 +57,9 @@ function App() {
                                 <Route path="/seller/order/:id"><OrderDetails /></Route>
                             </>
                         }
-                        <Route path="*" ><Redirect to="/" /></Route>
+                        {/* <Route  ><UnknownRoute /></Route> */}
+                        {/* <Redirect to="/" /> */}
+
                     </React.Fragment>
                 </Switch>
             </AppProvider>
