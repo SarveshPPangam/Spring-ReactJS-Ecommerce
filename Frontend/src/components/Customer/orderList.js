@@ -34,6 +34,7 @@ export const OrderList = () => {
     const classes = useStyles()
     const { state } = useContext(AppContext);
     const userRole = state?.user?.role;
+    const isSeller = userRole === 'SELLER'
     const [orders, setOrders] = useState()
     const viewOrderURL = (userRole === 'CUSTOMER' ? `/profile/order/` : `/seller/order/`)
 
@@ -84,7 +85,7 @@ export const OrderList = () => {
                 <Typography variant="h5">
                     Your orders
                 </Typography>
-                {orders?.length === 0 && "You have not ordered anything yet."}
+                {orders?.length === 0 && (isSeller ? "You have no orders yet" : "You have not ordered anything yet.")}
                 <OrderListTable orders={orders} viewOrderURL={viewOrderURL} link={classes.link} />
                 {/* <table>
                     <tr>
