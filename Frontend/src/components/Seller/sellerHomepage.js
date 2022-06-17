@@ -12,9 +12,10 @@ import SellerAppBar from './sellerAppBar';
 export const SellerHomepage = () => {
     const { state } = useContext(AppContext);
     return (
-        <div>
+        < div >
+            {console.log("In seller Homepage")}
             {state?.user?.role !== "SELLER" && <Redirect to="/" />}
             <SellerAppBar />
-        </div>
+        </div >
     )
 }

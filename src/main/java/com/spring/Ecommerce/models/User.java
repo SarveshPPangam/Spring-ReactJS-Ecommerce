@@ -54,7 +54,6 @@ public class User {
 
 
     public Set<Order> getCustomerOrders(){
-        System.out.println(customerOrders.iterator().next().getOrderItems());
         return this.customerOrders;
     }
 
@@ -64,8 +63,15 @@ public class User {
     }
 
 
-    public User setCart(Cart cart) {
-        this.cart = cart;
+    public User initiateCustomer() {
+        this.cart = new Cart();
+        this.cart.setUser(this);
+        this.cart.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        this.cart.setItems(new HashSet<CartItem>());
+
+        this.customerOrders = new HashSet<>();
+
+        this.addresses = new HashSet<>();
         return this;
     }
 
@@ -192,7 +198,7 @@ public class User {
             orders.add(order);
         });
         this.customerOrders.addAll(orders);
-//        this.clearCart();
+        this.clearCart();
     }
 
     public void cancelOrder(int orderId){

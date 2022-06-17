@@ -116,7 +116,6 @@ public class CustomerController {
     public ResponseEntity<?> addAddress(@RequestBody Address address, Principal principal) {
         User user = userService.findByEmail(principal.getName());
         userService.addAddress(user, address);
-        System.out.println("here");
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -130,7 +129,7 @@ public class CustomerController {
     @GetMapping("/profile/addresses")
     public Set<Address> getAddresses(Principal principal) {
         User user = userService.findByEmail(principal.getName());
-        return userService.getAddresses(user);
+        return user.getAddresses();
     }
 
     @DeleteMapping("/profile/address/{id}")

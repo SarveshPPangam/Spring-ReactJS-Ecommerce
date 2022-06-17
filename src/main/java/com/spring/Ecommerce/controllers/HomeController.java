@@ -8,6 +8,7 @@ import com.spring.Ecommerce.models.Product;
 import com.spring.Ecommerce.models.UserRegisterDTO;
 import com.spring.Ecommerce.services.MyUserDetailsService;
 import com.spring.Ecommerce.services.ProductService;
+import com.spring.Ecommerce.services.UserRegisterResponse;
 import com.spring.Ecommerce.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,9 +62,10 @@ public class HomeController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserRegisterDTO userRegisterDTO){
-        System.out.println(userRegisterDTO);
-        return ResponseEntity.ok(HttpStatus.OK);
+    public String register(@RequestBody UserRegisterDTO userRegisterDTO){
+        System.out.println("c"+userRegisterDTO.isSeller());
+        UserRegisterResponse registerResponse = userService.registerUser(userRegisterDTO);
+        return registerResponse.getMessage();
     }
 
 

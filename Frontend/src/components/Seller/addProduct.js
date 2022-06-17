@@ -172,7 +172,7 @@ export const AddProduct = ({ edit = false }) => {
                                         <InputLabel htmlFor="name">Product name</InputLabel>
 
                                         <Controller
-                                            render={({ field }) => <Input {...field} />}
+                                            render={({ field }) => <Input {...field} required />}
                                             name={`name`}
                                             control={control}
                                             defaultValue={""} // make sure to set up defaultValue
@@ -184,7 +184,7 @@ export const AddProduct = ({ edit = false }) => {
                                         <InputLabel htmlFor="imageURL">Product imageURL</InputLabel>
 
                                         <Controller
-                                            render={({ field }) => <Input {...field} />}
+                                            render={({ field }) => <Input {...field} required />}
                                             name={`imageURL`}
                                             control={control}
                                             defaultValue={""} // make sure to set up defaultValue
@@ -197,7 +197,7 @@ export const AddProduct = ({ edit = false }) => {
                                         <InputLabel htmlFor="description">Description</InputLabel>
 
                                         <Controller
-                                            render={({ field }) => <Input {...field} />}
+                                            render={({ field }) => <Input {...field} required />}
                                             name={`description`}
                                             control={control}
                                             defaultValue={""} // make sure to set up defaultValue
@@ -210,7 +210,7 @@ export const AddProduct = ({ edit = false }) => {
                                     <FormControl fullWidth>
 
                                         <Controller
-                                            render={({ field }) => <Input {...field} type="number" />}
+                                            render={({ field }) => <Input {...field} type="number" required />}
                                             name={`price`}
                                             control={control}
                                         // make sure to set up defaultValue
@@ -223,7 +223,7 @@ export const AddProduct = ({ edit = false }) => {
                                     <FormControl fullWidth>
 
                                         <Controller
-                                            render={({ field }) => <Input {...field} type="number" />}
+                                            render={({ field }) => <Input {...field} type="number" required />}
                                             name={`quantity`}
                                             control={control}
                                         // make sure to set up defaultValue
@@ -280,7 +280,7 @@ export const AddProduct = ({ edit = false }) => {
                                                         <InputLabel htmlFor="name">Name</InputLabel>
 
                                                         <Controller
-                                                            render={({ field }) => <Input {...field} />}
+                                                            render={({ field }) => <Input {...field} required />}
                                                             name={`details.${index}.name`}
                                                             control={control}
                                                             defaultValue={detail.name} // make sure to set up defaultValue
@@ -292,7 +292,7 @@ export const AddProduct = ({ edit = false }) => {
                                                         <InputLabel htmlFor="value">Value</InputLabel>
 
                                                         <Controller
-                                                            render={({ field }) => <Input {...field} />}
+                                                            render={({ field }) => <Input {...field} required />}
                                                             name={`details.${index}.value`}
                                                             control={control}
                                                             defaultValue={detail.value} // make sure to set up defaultValue

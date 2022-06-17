@@ -7,6 +7,7 @@ import com.spring.Ecommerce.models.User;
 import com.spring.Ecommerce.models.UserRegisterDTO;
 import com.spring.Ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,8 +21,32 @@ public class UserService {
     @Autowired
     ProductService productService;
 
-    public UserRegisterResponse registerUser(UserRegisterDTO){
+    @Autowired
+    RoleService roleService;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+
+    public UserRegisterResponse registerUser(UserRegisterDTO userRegisterDTO){
+        boolean emailAlreadyExists = checkIfEmailAlreadyExists(userRegisterDTO.getEmail());
+        if (emailAlreadyExists)
+            return UserRegisterResponse.EMAIL_ALREADY_EXISTS;
+        else{
+            User user = new User();
+            String roleName = userRegisterDTO.isSeller() ? "SELLER" : "CUSTOMER";
+            user
+                    .setFirstName(userRegisterDTO.getFirstName())
+                    .setLastName(userRegisterDTO.getLastName())
+                    .setEmail(userRegisterDTO.getEmail())
+                    .setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()))
+                    .setRole(roleService.getRoleByRoleName(roleName))
+                    .setEnabled(true);
+            if(!userRegisterDTO.isSeller())
+                user.initiateCustomer();
+            userRepository.save(user);
+            return UserRegisterResponse.OK;
+        }
     }
 
 
@@ -105,21 +130,10 @@ public class UserService {
         userRepository.save(user);
     }
 
+    private boolean checkIfEmailAlreadyExists(String email){
+        return userRepository.findByEmail(email).isPresent();
+    }
+
 
 }
 
-enum UserRegisterResponse{
-    OK("Registered successfully!"),
-    EMAIL_ALREADY_EXISTS("This email already exists in our database!"),
-    SOME_OTHER_ERROR("There was some error!")
-
-    private String message;
-
-    UserRegisterResponse(String message){
-        this.message = message;
-    }
-
-    public String getMessage(){
-        return this.message;
-    }
-}

@@ -46,17 +46,15 @@ function App() {
                         <Route path="/profile/order/:id"><OrderDetails /></Route>
                         <Route path="/cart"><Cart /></Route>
 
-                        {isSeller &&
-                            <>
-                                <Route path="/seller/"><SellerHomepage /></Route>
-                                <Route path="/seller/products"><SellerProducts /></Route>
-                                <Route path="/seller/product/:id"><Product /></Route>
-                                <Route path="/seller/addProduct"><AddProduct /></Route>
-                                <Route path="/seller/editProduct/:id"><AddProduct edit={true} /></Route>
-                                <Route path="/seller/orders"><OrderList /></Route>
-                                <Route path="/seller/order/:id"><OrderDetails /></Route>
-                            </>
-                        }
+
+                        <Route path="/seller"><SellerHomepage /></Route>
+                        <Route path="/seller/products"><SellerProducts /></Route>
+                        <Route path="/seller/product/:id"><Product /></Route>
+                        <Route path="/seller/addProduct"><AddProduct /></Route>
+                        <Route path="/seller/editProduct/:id"><AddProduct edit={true} /></Route>
+                        <Route path="/seller/orders"><OrderList /></Route>
+                        <Route path="/seller/order/:id"><OrderDetails /></Route>
+
                         {/* <Route  ><UnknownRoute /></Route> */}
                         {/* <Redirect to="/" /> */}
 

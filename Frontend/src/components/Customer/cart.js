@@ -41,7 +41,7 @@ export const Cart = () => {
             }
         }).then(function (response) {
             response.text().then(r => {
-
+                console.log(r)
                 const d = JSON.parse(r)
                 setCart(d);
             })

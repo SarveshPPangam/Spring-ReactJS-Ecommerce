@@ -1,14 +1,21 @@
 package com.spring.Ecommerce.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Data
+import java.io.Serializable;
+
+@Getter
+@NoArgsConstructor
 @ToString
-public class UserRegisterDTO {
+public class UserRegisterDTO implements Serializable {
     private String firstName;
     private String lastName;
     private String email;
     private String password;
-    private String isSeller;
+    @JsonProperty
+    private boolean isSeller;
 }
