@@ -68,7 +68,7 @@ export default function OrderListTable({ orders, viewOrderURL, link }) {
     orders?.forEach(order => {
 
         rows.push(createData(srNo,
-            <div style={{ overflow: "hidden", textOverflow: "ellipsis", width: '20rem' }}>
+            <div style={{ overflow: "hidden", textOverflow: "ellipsis", width: '20rem' }} key={order?.id}>
                 <Typography noWrap >
                     {order?.orderItems?.length > 1 ?
                         order?.orderItems?.[0]?.product?.name + "..."

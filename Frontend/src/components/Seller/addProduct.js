@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
 export const AddProduct = ({ edit = false }) => {
     const classes = useStyles();
     const [categories, setCategories] = useState([]);
-    const [category, setCategory] = useState();
     const [product, setProduct] = useState();
     const { state } = useContext(AppContext);
     const history = useHistory()
@@ -73,10 +72,10 @@ export const AddProduct = ({ edit = false }) => {
     let { id } = useParams();
 
 
-    const { handleSubmit, control, watch, register, reset, errors, setValue } = useForm({
+    const { handleSubmit, control, register, reset, setValue } = useForm({
         defaultValues: {
             "details": [{ "name": "", "value": "" }]
-        }
+        },
     });
 
     const { fields, remove, append } = useFieldArray({
@@ -103,7 +102,6 @@ export const AddProduct = ({ edit = false }) => {
         })
     }
     useEffect(() => {
-        console.log("in useEffect");
         fetch('/seller/categories', {
             method: 'GET',
             headers: {
@@ -124,12 +122,22 @@ export const AddProduct = ({ edit = false }) => {
         edit && getProductDetails()
     }, [state.token])
 
+    useEffect(() => {
+        setValue('category', categories[0]?.name || '')
+    }, [categories])
+
+    useEffect(() => {
+        setTimeout(() => {
+            setValue('category', product?.category?.name)
+        }, 1000)
+    }, [product])
+
     function isValidId(id) {
         return /^\+?(0|[1-9]\d*)$/.test(id);
     }
 
     const onSubmit = (data) => {
-        console.log(fetchUrl)
+        console.log(data)
         data.details.forEach(detail => {
             if (!isValidId(detail.id))
                 detail.id = null
@@ -156,7 +164,7 @@ export const AddProduct = ({ edit = false }) => {
     return (
         <div className={classes.root} >
             <CssBaseline />
-            {console.log(id)}
+            {console.log(product)}
             {categories ?
 
                 <main className={classes.content}>
@@ -232,7 +240,7 @@ export const AddProduct = ({ edit = false }) => {
                                 </Grid>
 
                                 <Grid item xs={6} sm={4}>
-                                    <FormControl className={classes.formControl} fullWidth>
+                                    <FormControl className={classes.formControl} fullWidth >
                                         <InputLabel htmlFor="c-t-label">Product category</InputLabel>
                                         <Controller
                                             render={({ field }) => (
@@ -244,12 +252,10 @@ export const AddProduct = ({ edit = false }) => {
                                             )}
                                             control={control}
                                             name="category"
-                                            defaultValue={categories[0]?.name}
-
+                                            defaultValue={categories[0]?.name || ''}
                                         />
                                     </FormControl>
                                 </Grid>
-
                             </Grid>
                             <Grid container spacing={4}>
                                 <Grid item xs={6} sm={4}>
