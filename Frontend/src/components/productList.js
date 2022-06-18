@@ -51,7 +51,7 @@ export const ProductList = () => {
     }
 
     const fetchProductsForCustomer = () => {
-        fetch('/allProducts', {
+        fetch('/products', {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",

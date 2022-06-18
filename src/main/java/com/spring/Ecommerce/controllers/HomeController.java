@@ -82,7 +82,7 @@ public class HomeController {
     }
 
 
-    @GetMapping("/allProducts")
+    @GetMapping("/products")
     public List<Product> home(){
         return productService.getAll();
     }
