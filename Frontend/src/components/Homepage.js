@@ -26,18 +26,17 @@ export const Homepage = () => {
     const isCustomer = state?.user?.role === "CUSTOMER";
     const notLoggedIn = !state?.user?.role;
 
-    const [searchQuery, setSearchQuery] = useState('');
+    const [productNameQuery, setProductNameQuery] = useState('');
 
     const history = useHistory()
 
     const onChangeQuery = e => {
-        setSearchQuery(e?.target?.value)
+        setProductNameQuery(e?.target?.value)
     }
 
     const onSubmit = (e) => {
         e.preventDefault();
-        console.log(searchQuery)
-        history.push(`/search?query=${searchQuery}`)
+        history.push(`/search?name=${productNameQuery}`)
     }
     return (
         <>
@@ -58,7 +57,7 @@ export const Homepage = () => {
             }
 
             <form onSubmit={onSubmit}>
-                <TextField id="outlined-basic" variant="outlined" name="query" value={searchQuery} onChange={onChangeQuery} required />
+                <TextField id="outlined-basic" variant="outlined" name="name" value={productNameQuery} onChange={onChangeQuery} required />
                 <Button type="submit">Search</Button>
             </form>
             {/* <ProductList /> */}

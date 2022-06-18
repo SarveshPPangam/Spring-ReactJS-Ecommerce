@@ -3,6 +3,7 @@ package com.spring.Ecommerce.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.sipios.springsearch.anotation.SearchSpec;
 import com.spring.Ecommerce.JwtUtil;
 import com.spring.Ecommerce.models.AuthenticationRequest;
 import com.spring.Ecommerce.models.AuthenticationResponse;
@@ -13,6 +14,7 @@ import com.spring.Ecommerce.services.ProductService;
 import com.spring.Ecommerce.services.UserRegisterResponse;
 import com.spring.Ecommerce.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -83,8 +85,10 @@ public class HomeController {
 
 
     @GetMapping("/products")
-    public List<Product> home(){
+    public List<Product> home(@SearchSpec Specification<Product>  specs){
+        if(specs==null)
         return productService.getAll();
+        return productService.search(specs);
     }
 
     @GetMapping("/product/{productId}")

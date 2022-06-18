@@ -5,6 +5,8 @@ import com.spring.Ecommerce.models.Cart;
 import com.spring.Ecommerce.models.Product;
 import com.spring.Ecommerce.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,10 @@ public class ProductService {
 
     public List<Product> getAll() {
         return productRepository.findAll();
+    }
+
+    public List<Product> search(Specification<Product> specs){
+        return productRepository.findAll(Specification.where(specs));
     }
 
     public void addProduct(Product product) {

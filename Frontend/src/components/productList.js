@@ -50,12 +50,12 @@ export const ProductList = () => {
         })
     }
 
-    const fetchProductsForCustomer = () => {
+    const fetchProductsForGuest = () => {
         fetch('/products', {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + state.token
+                "Authorization": "Bearer " + state?.token
             }
 
         }).then(function (response) {
@@ -73,7 +73,7 @@ export const ProductList = () => {
         if (isSeller)
             fetchSellerProducts();
         else
-            fetchProductsForCustomer();
+            fetchProductsForGuest();
 
     }, [state.token])
     return (

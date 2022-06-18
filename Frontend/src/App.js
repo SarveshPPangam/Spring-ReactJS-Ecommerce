@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Login from './components/login';
 import { AppContext, AppProvider } from './components/contexts'
 import {
@@ -29,6 +29,7 @@ import { ProductList } from "./components/productList";
 function App() {
     const { state } = useContext(AppContext);
     const isSeller = state?.user?.role === 'SELLER'
+
 
     return (
         <BrowserRouter >
