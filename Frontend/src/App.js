@@ -21,6 +21,8 @@ import { OrderList } from "./components/Customer/orderList";
 import { OrderDetails } from "./components/Customer/orderDetails";
 import { Register } from "./components/register";
 import { UnknownRoute } from "./components/unknownRoute";
+import { ProductSearch } from "./components/productSearch";
+import { ProductList } from "./components/productList";
 
 
 
@@ -34,11 +36,14 @@ function App() {
             <AppProvider>
                 <Switch>
                     <React.Fragment>
-                        <Route exact path="/"><Homepage /></Route>
+                        <Homepage />
+                        <Route exact path="/"><ProductList /></Route>
                         <Route path="/login"><Login /></Route>
                         <Route path="/product/:id"><Product /></Route>
                         <Route path="/register"><Register /></Route>
                         {/* <Route path="/forgotPassword"><ForgotPassword/></Route> */}
+                        <Route path="/search"><ProductSearch /></Route>
+
 
                         <Route path="/profile"><Profile /></Route>
                         <Route path="/profile/addresses"><AddressList /></Route>

@@ -1,13 +1,14 @@
-import React, { useContext, useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { AppContext, AppProvider } from './contexts'
 
 import {
     Link,
     Redirect,
+    useHistory,
     useLocation
 } from "react-router-dom";
 import { ProductList } from "./productList";
-import { Button, makeStyles } from "@material-ui/core";
+import { Button, makeStyles, TextField } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
 
@@ -24,7 +25,20 @@ export const Homepage = () => {
     const redirectIfSeller = state?.user?.role === "SELLER" && <Redirect to="/seller/" />;
     const isCustomer = state?.user?.role === "CUSTOMER";
     const notLoggedIn = !state?.user?.role;
-    console.log("in homepage")
+
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const history = useHistory()
+
+    const onChangeQuery = e => {
+        setSearchQuery(e?.target?.value)
+    }
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        console.log(searchQuery)
+        history.push(`/search?query=${searchQuery}`)
+    }
     return (
         <>
             {redirectIfSeller}
@@ -32,7 +46,6 @@ export const Homepage = () => {
                 <>
                     <Link to="/login">Login</Link>
                     <Link to="/register">Register</Link>
-                    <ProductList />
                 </>}
             {isCustomer && <>
                 <Link to={"/cart"} className={classes.link}>
@@ -41,9 +54,15 @@ export const Homepage = () => {
                 <Link to={"/profile"} className={classes.link}>
                     <Button >Profile</Button>
                 </Link>
-                <ProductList />
             </>
             }
+
+            <form onSubmit={onSubmit}>
+                <TextField id="outlined-basic" variant="outlined" name="query" value={searchQuery} onChange={onChangeQuery} required />
+                <Button type="submit">Search</Button>
+            </form>
+            {/* <ProductList /> */}
+
         </>
     )
 }
