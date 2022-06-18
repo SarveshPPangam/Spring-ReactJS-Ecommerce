@@ -1,6 +1,8 @@
 package com.spring.Ecommerce.controllers;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.spring.Ecommerce.JwtUtil;
 import com.spring.Ecommerce.models.AuthenticationRequest;
 import com.spring.Ecommerce.models.AuthenticationResponse;
@@ -62,10 +64,21 @@ public class HomeController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody UserRegisterDTO userRegisterDTO){
-        System.out.println("c"+userRegisterDTO.isSeller());
+    public ResponseEntity<Object> register(@RequestBody UserRegisterDTO userRegisterDTO){
+
         UserRegisterResponse registerResponse = userService.registerUser(userRegisterDTO);
-        return registerResponse.getMessage();
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode response = mapper.createObjectNode();
+        response.put("status", registerResponse.getMessage());
+
+
+        if (registerResponse.equals(UserRegisterResponse.EMAIL_ALREADY_EXISTS)) {
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
 

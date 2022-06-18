@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Table (name = "users")
+@Table(name = "users")
 @Getter
 public class User {
 
@@ -53,7 +53,7 @@ public class User {
     private Set<Address> addresses;
 
 
-    public Set<Order> getCustomerOrders(){
+    public Set<Order> getCustomerOrders() {
         return this.customerOrders;
     }
 
@@ -89,7 +89,8 @@ public class User {
 
 
     public User setEmail(String email) {
-        this.email = email; return this;
+        this.email = email;
+        return this;
     }
 
 
@@ -105,18 +106,17 @@ public class User {
     }
 
 
-
     public User setRole(Role role) {
         this.role = role;
         return this;
     }
 
-    public Optional<Product> getProductById(int id){  //FETCH ONE OF SELLER'S PRODUCTS
-        return this.products.stream().filter(product -> product.getId()==id).findFirst();
+    public Optional<Product> getProductById(int id) {  //FETCH ONE OF SELLER'S PRODUCTS
+        return this.products.stream().filter(product -> product.getId() == id).findFirst();
     }
 
     public User addAddress(Address address) {
-        if(this.addresses == null){
+        if (this.addresses == null) {
             this.addresses = new HashSet<>();
         }
         address.setUser(this);
@@ -125,51 +125,53 @@ public class User {
         return this;
     }
 
-    public User updateAddress(Address address){
+    public User updateAddress(Address address) {
         this.deleteAddressById(address.getId());
         address.setModifiedAt(new Timestamp(System.currentTimeMillis()));
         this.addAddress(address);
         return this;
     }
 
-    public User deleteAddressById(int id){
+    public User deleteAddressById(int id) {
         Address address = this.getAddresses().stream().filter(address1 -> address1.getId() == id).findFirst().orElse(null);
         this.getAddresses().remove(address);
         return this;
     }
 
-    public void addToCart(Product product){
-        if(this.cart == null){
+    public void addToCart(Product product) {
+        if (this.cart == null) {
             this.cart = new Cart();
             this.cart.setUser(this);
             this.cart.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             this.cart.setItems(new HashSet<CartItem>());
         }
         cart.addItem(product);
+        this.cart.setModifiedAt(new Timestamp(System.currentTimeMillis()));
     }
 
-    public void removeCartItem(int cartItemId){
+    public void removeCartItem(int cartItemId) {
         this.cart.removeItem(cartItemId);
+        this.cart.setModifiedAt(new Timestamp(System.currentTimeMillis()));
     }
 
-    public void setQuantity(int cartItemId, int quantity){
+    public void setQuantity(int cartItemId, int quantity) {
         this.cart.getItems().stream().filter(cartItem -> cartItem.getId() == cartItemId)
-                .findFirst().get().setQuantity(quantity);
+                .findFirst().ifPresent(item -> item.setQuantity(quantity).setModifiedAt(new Timestamp(System.currentTimeMillis())));
     }
 
-    public void addQuantity(int cartItemID, long quantity){
+    public void addQuantity(int cartItemID, long quantity) {
         this.cart.addQuantity(cartItemID, quantity);
     }
 
-    public void decrementQuantity(int cartItemID, long quantity){
+    public void decrementQuantity(int cartItemID, long quantity) {
         this.cart.decrementQuantity(cartItemID, quantity);
     }
 
-    public void clearCart(){
+    public void clearCart() {
         this.cart.clear();
     }
 
-    public void placeOrder(int addressId){
+    public void placeOrder(int addressId) {
         Set<User> sellers = new HashSet<>();
         this.cart.getItems().forEach(cartItem -> {
             sellers.add(cartItem.getProduct().getCreated_by());
@@ -187,13 +189,13 @@ public class User {
                 OrderItem orderItem = new OrderItem();
                 orderItem.setQuantity(itemOfSeller.getQuantity()).setOrderId(order)
                         .setCreatedAt(new Timestamp(System.currentTimeMillis())).setProduct(itemOfSeller.getProduct())
-                        .setTotalPrice(itemOfSeller.getQuantity()*itemOfSeller.getProduct().getPrice());
+                        .setTotalPrice(itemOfSeller.getQuantity() * itemOfSeller.getProduct().getPrice());
                 orderItems.add(orderItem);
-                ref.totalPrice += itemOfSeller.getQuantity()* itemOfSeller.getProduct().getPrice();
+                ref.totalPrice += itemOfSeller.getQuantity() * itemOfSeller.getProduct().getPrice();
             });
             order.setOrderItems(orderItems).setStatus(OrderStatus.PENDING)
                     .setPlacedAt(new Timestamp(System.currentTimeMillis()))
-                    .setAddress(this.getAddresses().stream().filter(address -> address.getId()==addressId).findFirst().get())
+                    .setAddress(this.getAddresses().stream().filter(address -> address.getId() == addressId).findFirst().get())
                     .setSellerId(seller).setCustomerId(this).setTotalPrice(ref.totalPrice).setTotalItems();
             orders.add(order);
         });
@@ -201,19 +203,20 @@ public class User {
         this.clearCart();
     }
 
-    public void cancelOrder(int orderId){
+    public void cancelOrder(int orderId) {
         this.findOrderOfCustomer(orderId).cancelOrder();
     }
 
-    public void setDelivered(int orderId){
-       this.findOrderOfSeller(orderId).setDelivered();
+    public void setDelivered(int orderId) {
+        this.findOrderOfSeller(orderId).setDelivered();
     }
 
-    public Order findOrderOfCustomer(int orderId){
+    public Order findOrderOfCustomer(int orderId) {
         return this.getCustomerOrders().stream().filter(order -> order.getId() == orderId)
                 .findFirst().get();
     }
-    public Order findOrderOfSeller(int orderId){
+
+    public Order findOrderOfSeller(int orderId) {
         return this.getSellerOrders().stream().filter(order -> order.getId() == orderId)
                 .findFirst().get();
     }

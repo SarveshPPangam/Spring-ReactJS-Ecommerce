@@ -41,7 +41,7 @@ export const Cart = () => {
             }
         }).then(function (response) {
             response.text().then(r => {
-                console.log(r)
+                // console.log(r)
                 const d = JSON.parse(r)
                 setCart(d);
             })
@@ -156,8 +156,8 @@ export const Cart = () => {
 
     return (
         <div className={classes.root}>
-            {cart?.items.length == 0 && "Your cart is empty"}
-            {cart?.items.map((item, index) => {
+            {cart?.items?.length == 0 && "Your cart is empty"}
+            {cart?.items?.map((item, index) => {
                 totalPrice += item.product.price * item.quantity;
                 totalItems += item.quantity;
                 return (
@@ -168,7 +168,7 @@ export const Cart = () => {
                     </Grid>
                 )
             })}
-            {cart?.items.length > 0 &&
+            {cart?.items?.length > 0 &&
                 <>
                     <Typography variant="h5" noWrap>
 

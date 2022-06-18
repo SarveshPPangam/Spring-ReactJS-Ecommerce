@@ -17,7 +17,6 @@ public class Cart {
 
     @JsonIgnore
     @OneToOne
-    @MapsId
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -72,6 +71,7 @@ public class Cart {
             cartItem.setCartId(this).setQuantity(1).setProduct(product).setCreatedAt(new Timestamp(System.currentTimeMillis()));
             this.items.add(cartItem);
         }
+        this.setModifiedAt(new Timestamp(System.currentTimeMillis()));
     }
 
     public void removeItem(int  cartItemid) {
@@ -83,9 +83,10 @@ public class Cart {
 
     public void addQuantity(int cartItemID, long quantity) {
         this.items.stream().filter(cartItem1 -> cartItem1.getId() == cartItemID)
-                .findFirst().get()
-                .addQuantity(quantity);
-
+                .findFirst().ifPresent(item -> {
+                    item.addQuantity(quantity);
+                    item.setModifiedAt(new Timestamp(System.currentTimeMillis()));
+        });
     }
 
     public void decrementQuantity(int cartItemID, long quantity) {
@@ -93,8 +94,11 @@ public class Cart {
                 .findFirst().get();
         if(cartItem.getQuantity() <= quantity)
             this.items.remove(cartItem);
-        else
+        else {
             cartItem.decrementQuantity(quantity);
+            cartItem.setModifiedAt(new Timestamp(System.currentTimeMillis()));
+        }
+
     }
 
     public void clear() {

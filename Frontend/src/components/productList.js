@@ -79,17 +79,20 @@ export const ProductList = () => {
     return (
         <div className={classes.root}>
             {isSeller ?
-                products?.map((product, index) => {
-                    return (
-                        <Grid item className={classes.item} key={product.id}>
-                            <Link to={`/seller/product/${product.id}`} className={classes.link}>
-                                <ProductTile product={product} />
-                            </Link>
+                (products?.length > 0 ?
+                    products?.map((product, index) => {
+                        return (
+                            <Grid item className={classes.item} key={product.id}>
+                                <Link to={`/seller/product/${product.id}`} className={classes.link}>
+                                    <ProductTile product={product} />
+                                </Link>
 
-                        </Grid>
+                            </Grid>
 
-                    )
-                })
+                        )
+                    })
+                    : "You have no products!"
+                )
                 :
 
                 products?.map((product, index) => {

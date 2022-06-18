@@ -1,14 +1,14 @@
 package com.spring.Ecommerce.controllers;
 
-import com.spring.Ecommerce.models.Address;
-import com.spring.Ecommerce.models.Cart;
-import com.spring.Ecommerce.models.Order;
-import com.spring.Ecommerce.models.User;
+import com.spring.Ecommerce.models.*;
+import com.spring.Ecommerce.repository.UserRepository;
+import com.spring.Ecommerce.services.MyUserDetailsService;
 import com.spring.Ecommerce.services.ProductService;
 import com.spring.Ecommerce.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -26,9 +26,14 @@ public class CustomerController {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    UserRepository userRepository;
+
     @GetMapping("/cart")
     public Cart getCart(Principal principal) {
         User user = userService.findByEmail(principal.getName());
+        System.out.println(user.getEmail());
+        System.out.println(user.getCart());
         return user.getCart();
     }
 
@@ -55,6 +60,7 @@ public class CustomerController {
         try {
             User user = userService.findByEmail(principal.getName());
             user.addToCart(productService.findById(productId));
+            System.out.println(principal.getName());
             userService.save(user);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {

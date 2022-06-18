@@ -127,9 +127,12 @@ export const AddProduct = ({ edit = false }) => {
     }, [categories])
 
     useEffect(() => {
-        setTimeout(() => {
-            setValue('category', product?.category?.name)
-        }, 1000)
+        console.log("use2")
+        if (product && categories) {
+            setTimeout(() => {
+                setValue('category', product?.category?.name || categories[0]?.name || '')
+            }, 1000)
+        }
     }, [product])
 
     function isValidId(id) {

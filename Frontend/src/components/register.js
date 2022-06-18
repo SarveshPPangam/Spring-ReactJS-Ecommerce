@@ -3,16 +3,18 @@ import React, { useContext, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { Redirect, useHistory } from 'react-router-dom';
 import { AppContext } from './contexts';
-import Alert from '@material-ui/lab/Alert';
+import AlertDialog from './alertDialog';
 
 export const Register = () => {
 
     const { dispatch } = useContext(AppContext);
     const { state } = useContext(AppContext);
 
-    const history = useHistory()
 
+    const [openDialog, setOpenDialog] = React.useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [redirectingInfo, setRedirectingInfo] = useState({ shouldRedirect: false, redirectingUrl: "" });
+
     const { handleSubmit, control } = useForm();
 
     const redirectToHome = <Redirect to="/" />;
@@ -27,8 +29,15 @@ export const Register = () => {
             }
         }).then(function (response) {
             response.text().then(r => {
-                console.log(r)
-                // history.push('/login')
+                if (response.status === 200) {
+                    setErrorMessage(JSON.parse(r)?.status)
+                    setRedirectingInfo({ shouldRedirect: true, redirectingUrl: "/login" })
+                    setOpenDialog(true)
+                }
+                else {
+                    setErrorMessage(JSON.parse(r)?.status)
+                    setOpenDialog(true)
+                }
             })
         }, function (error) {
             console.log(error.message)
@@ -96,8 +105,9 @@ export const Register = () => {
                                     <Button type="submit" variant="contained" color="primary"
                                         fullWidth>REGISTER</Button>
                                 </Grid>
-                                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                                <AlertDialog open={openDialog} setOpen={setOpenDialog} message={errorMessage} redirectingInfo={redirectingInfo} />
                             </Grid>
+                            {console.log(redirectingInfo)}
                         </Grid>
                     </Grid>
                 </Grid>
