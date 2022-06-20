@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import { ProductList } from "./productList";
 import { Button, makeStyles, TextField } from "@material-ui/core";
+import { useQuery } from "./productSearch";
 
 const useStyles = makeStyles((theme) => ({
 
@@ -26,7 +27,9 @@ export const Homepage = () => {
     const isCustomer = state?.user?.role === "CUSTOMER";
     const notLoggedIn = !state?.user?.role;
 
-    const [productNameQuery, setProductNameQuery] = useState('');
+    const query = useQuery()
+    const productName = query.get('name')
+    const [productNameQuery, setProductNameQuery] = useState(productName || '');
 
     const history = useHistory()
 

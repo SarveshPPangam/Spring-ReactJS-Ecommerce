@@ -1,12 +1,9 @@
 import { React, useEffect, useContext, useState } from 'react'
 import { AppContext, AppProvider } from './contexts'
 import Grid from "@material-ui/core/Grid";
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import {
     Link,
-    Redirect,
-    Switch,
-    useParams
 } from "react-router-dom";
 import ProductTile from './productTile';
 
