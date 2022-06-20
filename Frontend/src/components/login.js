@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from "@material-ui/core/Button";
 import { Controller, useForm } from "react-hook-form";
@@ -8,23 +7,25 @@ import Alert from '@material-ui/lab/Alert';
 import Grid from "@material-ui/core/Grid";
 import Link from '@material-ui/core/Link';
 import {
-    BrowserRouter as Router,
-    Route,
     Redirect,
     useHistory,
 } from "react-router-dom";
-import { InputLabel } from "@material-ui/core";
 
 
 export default function Login() {
     const { dispatch } = useContext(AppContext);
     const { state } = useContext(AppContext);
 
+    const isLoggedIn = state?.token
+    const isSeller = state?.user?.role === 'SELLER'
+
+    const redirect = <Redirect to={isSeller ? '/seller' : '/'} />;
+
+
     const [errorMessage, setErrorMessage] = useState("");
 
     const { handleSubmit, control } = useForm();
 
-    const redirectToHome = <Redirect to="/" />;
 
     const history = useHistory()
 
@@ -68,7 +69,9 @@ export default function Login() {
 
     return (
         <>
-            {state?.token && redirectToHome}
+            {console.log(state)}
+
+            {isLoggedIn && redirect}
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container spacing={0} justifyContent={"center"} alignItems={"center"}>
                     <Grid container item xs={12} sm={6} justifyContent={"center"}>

@@ -2,10 +2,11 @@ import {
     Grid, makeStyles, Typography, Box,
     Toolbar, ListItem, ListItemIcon, List, Drawer, Divider, CssBaseline, ListItemText, Button, Checkbox, TextField,
 } from '@material-ui/core';
-import React, { useContext, useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 import { AppContext } from './contexts';
 import ProductTile from './productTile';
+import { useQuery } from '../hooks/useQuery';
 
 
 
@@ -32,11 +33,16 @@ export const ProductSearch = () => {
     const { state } = useContext(AppContext)
     const classes = useStyles();
 
+    const isSeller = state?.user?.role === "SELLER"
+    const redirectIfSeller = isSeller && <Redirect to="/seller/" />;
+
+
     const [products, setProducts] = useState()
     const [errorMessage, setErrorMessage] = useState('')
 
     let query = useQuery();
-    const productName = query.get("name").toLowerCase()
+    var productName = query.get("name").toLowerCase()
+    productName = productName.replace(/[^a-z]/gi, '');
     const minPrice = parseInt(query.get("minPrice"))
     const maxPrice = parseInt(query.get("maxPrice"))
 
@@ -68,7 +74,7 @@ export const ProductSearch = () => {
 
     useEffect(() => {
         const queryURL = buildQueryURL();
-        // console.log(`/products${queryURL}`)
+        console.log(`/products${queryURL}`)
         fetch(`/products${queryURL}`, {
             method: 'GET',
             headers: {
@@ -104,6 +110,7 @@ export const ProductSearch = () => {
 
     return (
         <>
+            {redirectIfSeller}
             <Box sx={{ display: 'flex' }}>
                 <CssBaseline />
 
@@ -167,8 +174,3 @@ export const ProductSearch = () => {
 
 
 
-export function useQuery() {
-    const { search } = useLocation();
-
-    return React.useMemo(() => new URLSearchParams(search), [search]);
-}

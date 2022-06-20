@@ -7,9 +7,8 @@ import {
     useHistory,
     useLocation
 } from "react-router-dom";
-import { ProductList } from "./productList";
 import { Button, makeStyles, TextField } from "@material-ui/core";
-import { useQuery } from "./productSearch";
+import { useQuery } from "../hooks/useQuery";
 
 const useStyles = makeStyles((theme) => ({
 
@@ -23,8 +22,10 @@ const useStyles = makeStyles((theme) => ({
 export const Homepage = () => {
     const { state } = useContext(AppContext);
     const classes = useStyles();
-    const redirectIfSeller = state?.user?.role === "SELLER" && <Redirect to="/seller/" />;
+
+    const isSeller = state?.user?.role === "SELLER"
     const isCustomer = state?.user?.role === "CUSTOMER";
+    const redirectIfSeller = isSeller && <Redirect to="/seller/" />;
     const notLoggedIn = !state?.user?.role;
 
     const query = useQuery()
@@ -58,12 +59,12 @@ export const Homepage = () => {
                 </Link>
             </>
             }
-
-            <form onSubmit={onSubmit}>
-                <TextField id="outlined-basic" variant="outlined" name="name" value={productNameQuery} onChange={onChangeQuery} required />
-                <Button type="submit">Search</Button>
-            </form>
-            {/* <ProductList /> */}
+            {!isSeller &&
+                <form onSubmit={onSubmit}>
+                    <TextField id="outlined-basic" variant="outlined" name="name" value={productNameQuery} onChange={onChangeQuery} />
+                    <Button type="submit">Search</Button>
+                </form>
+            }
 
         </>
     )
