@@ -108,22 +108,6 @@ function SellerNavBar(props) {
     return (
         <div className={classes.root}>
             <CssBaseline />
-            {/* <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            Responsive drawer
-          </Typography>
-        </Toolbar>
-      </AppBar> */}
             <nav className={classes.drawer} aria-label="mailbox folders">
                 {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
                 <Hidden smUp implementation="css">
@@ -155,14 +139,6 @@ function SellerNavBar(props) {
                     </Drawer>
                 </Hidden>
             </nav>
-            {/* <main className={classes.content}>
-                <div className={classes.toolbar} />
-                <Typography paragraph>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-   
-                </Typography>
-                
-            </main> */}
         </div>
     );
 }

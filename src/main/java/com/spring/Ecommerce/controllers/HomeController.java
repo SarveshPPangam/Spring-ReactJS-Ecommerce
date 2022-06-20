@@ -52,8 +52,7 @@ public class HomeController {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword())
             );
-        }
-        catch (BadCredentialsException e) {
+        } catch (BadCredentialsException e) {
             throw new Exception("Incorrect username or password", e);
         }
 
@@ -66,7 +65,7 @@ public class HomeController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> register(@RequestBody UserRegisterDTO userRegisterDTO){
+    public ResponseEntity<Object> register(@RequestBody UserRegisterDTO userRegisterDTO) {
 
         UserRegisterResponse registerResponse = userService.registerUser(userRegisterDTO);
 
@@ -85,27 +84,26 @@ public class HomeController {
 
 
     @GetMapping("/products")
-    public List<Product> home(@SearchSpec Specification<Product>  specs){
-        if(specs==null)
-        return productService.getAll();
+    public List<Product> home(@SearchSpec Specification<Product> specs) {
+        if (specs == null)
+            return productService.getAll();
         return productService.search(specs);
     }
 
     @GetMapping("/product/{productId}")
-    public Product getProduct(@PathVariable int productId){
+    public Product getProduct(@PathVariable int productId) {
         return productService.findById(productId);
     }
 
     @DeleteMapping("/common/deleteProduct/{productId}")
-    public ResponseEntity<?> deleteProduct(@PathVariable int productId){
+    public ResponseEntity<?> deleteProduct(@PathVariable int productId) {
         try {
             productService.deleteById(productId);
             return ResponseEntity.ok(HttpStatus.OK);
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 
 
 }

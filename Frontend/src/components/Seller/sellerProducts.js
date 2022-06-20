@@ -2,7 +2,7 @@ import React from 'react'
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import {ProductList} from '../productList';
+import { ProductList } from '../productList';
 import Product from '../productTile';
 
 
@@ -49,7 +49,28 @@ const useStyles = makeStyles((theme) => ({
 
 export const SellerProducts = () => {
     const classes = useStyles();
-    console.log("in sp");
+
+    useEffect(() => {
+        fetch('/seller/products', {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + state.token
+            }
+
+        }).then(function (response) {
+            response.text().then(r => {
+                //                console.log(r)
+                const d = JSON.parse(r)
+                console.log(d)
+                setProducts(d)
+            })
+        }, function (error) {
+            console.log(error.message)
+        })
+
+    }, [state.token])
+
     return (
         <div className={classes.root} >
             <CssBaseline />

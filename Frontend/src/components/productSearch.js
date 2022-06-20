@@ -3,7 +3,7 @@ import {
     Toolbar, ListItem, ListItemIcon, List, Drawer, Divider, CssBaseline, ListItemText, Button, Checkbox, TextField,
 } from '@material-ui/core';
 import { useContext, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { AppContext } from './contexts';
 import ProductTile from './productTile';
 import { useQuery } from '../hooks/useQuery';

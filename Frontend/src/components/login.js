@@ -19,7 +19,7 @@ export default function Login() {
     const isLoggedIn = state?.token
     const isSeller = state?.user?.role === 'SELLER'
 
-    const redirect = <Redirect to={isSeller ? '/seller' : '/'} />;
+    const redirect = <Redirect to={isSeller ? '/seller/products' : '/'} />;
 
 
     const [errorMessage, setErrorMessage] = useState("");

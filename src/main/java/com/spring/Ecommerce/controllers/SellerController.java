@@ -1,6 +1,7 @@
 package com.spring.Ecommerce.controllers;
 
 
+import com.sipios.springsearch.anotation.SearchSpec;
 import com.spring.Ecommerce.models.Order;
 import com.spring.Ecommerce.models.Product;
 import com.spring.Ecommerce.models.ProductCategory;
@@ -10,6 +11,7 @@ import com.spring.Ecommerce.services.ProductCategoryService;
 import com.spring.Ecommerce.services.ProductService;
 import com.spring.Ecommerce.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +41,12 @@ public class SellerController {
 
 
     @GetMapping("/products")
-    public Set<Product> getProducts(Principal principal) {
-        User user = userService.findByEmail(principal.getName());
-        return user.getProducts();
+    public Set<Product> getProducts(@SearchSpec Specification<Product> specs, Principal principal) {
+        User seller = userService.findByEmail(principal.getName());
+        if(specs==null)
+            return seller.getProducts();
+        return productService.searchSellerProducts(specs, seller);
+
     }
 
     @GetMapping("/product/{productId}")
