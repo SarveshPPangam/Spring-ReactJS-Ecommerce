@@ -3,10 +3,10 @@ import {
     Toolbar, ListItem, ListItemIcon, List, Drawer, Divider, CssBaseline, ListItemText, Button, Checkbox, TextField,
 } from '@material-ui/core';
 import { useContext, useEffect, useState } from 'react'
-import { Link, Redirect } from 'react-router-dom';
-import { AppContext } from './contexts';
+import { Link, Navigate, } from 'react-router-dom';
 import ProductTile from './productTile';
 import { useQuery } from '../hooks/useQuery';
+import AuthContext from './Auth/authProvider';
 
 
 
@@ -30,11 +30,11 @@ const drawerWidth = 500;
 
 
 export const ProductSearch = () => {
-    const { state } = useContext(AppContext)
+    const { auth } = useContext(AuthContext);
     const classes = useStyles();
 
-    const isSeller = state?.user?.role === "SELLER"
-    const redirectIfSeller = isSeller && <Redirect to="/seller/" />;
+    const isSeller = auth?.userRole === "SELLER"
+    const redirectIfSeller = isSeller && <Navigate to="/seller/" />;
 
 
     const [products, setProducts] = useState()
@@ -79,18 +79,20 @@ export const ProductSearch = () => {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + state?.token
+                "Authorization": "Bearer " + auth?.accessToken
             }
 
         }).then(function (response) {
             response.text().then(r => {
                 try {
                     const d = JSON.parse(r)
+                    if (!response.status === 200) return
+
                     if (d?.length === 0) {
                         setErrorMessage('Your search returned no results...')
                         setProducts(null)
                     }
-                    else {
+                    else if (d) {
                         setProducts(d)
                         setErrorMessage('')
                     }
@@ -103,7 +105,7 @@ export const ProductSearch = () => {
         }, function (error) {
             console.log(error.message)
         })
-    }, [state?.token, query])
+    }, [auth?.accessToken, query])
 
 
 

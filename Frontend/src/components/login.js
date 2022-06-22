@@ -1,25 +1,25 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import TextField from '@material-ui/core/TextField';
 import Button from "@material-ui/core/Button";
 import { Controller, useForm } from "react-hook-form";
-import { AppContext } from "./contexts";
+import jwt from "jsonwebtoken"
 import Alert from '@material-ui/lab/Alert';
 import Grid from "@material-ui/core/Grid";
 import Link from '@material-ui/core/Link';
 import {
-    Redirect,
-    useHistory,
+    Navigate,
+    useNavigate,
 } from "react-router-dom";
+import AuthContext from "./Auth/authProvider";
 
 
 export default function Login() {
-    const { dispatch } = useContext(AppContext);
-    const { state } = useContext(AppContext);
+    const { auth, setAuth, persist, setPersist } = useContext(AuthContext)
 
-    const isLoggedIn = state?.token
-    const isSeller = state?.user?.role === 'SELLER'
+    const isLoggedIn = auth?.userRole
+    const isSeller = auth?.userRole === 'SELLER'
 
-    const redirect = <Redirect to={isSeller ? '/seller/products' : '/'} />;
+    const redirect = <Navigate to={isSeller ? '/seller' : '/'} />;
 
 
     const [errorMessage, setErrorMessage] = useState("");
@@ -27,15 +27,10 @@ export default function Login() {
     const { handleSubmit, control } = useForm();
 
 
-    const history = useHistory()
-
-
-    function setToken(token) {
-        dispatch({ type: "set-token-header", payload: token });
-    }
+    const navigate = useNavigate()
 
     const goToRegister = () => {
-        history.push('/register');
+        navigate('/register');
     }
 
     const onSubmit = data => {
@@ -51,9 +46,12 @@ export default function Login() {
             // console.log(response);
             response.text().then(data => {
                 if (response.ok) {
-                    let response = JSON.parse(data);
-                    // console.log(response.jwt)
-                    setToken(response.jwt);
+                    let parsed = JSON.parse(data);
+                    const accessToken = parsed?.jwt
+                    const decoded = jwt.decode(accessToken);
+                    const userEmail = decoded?.email;
+                    const userRole = decoded?.role;
+                    setAuth({ userEmail, userRole, accessToken });
                 } else {
                     let errorResponse = JSON.parse(data);
                     const error = (errorResponse && errorResponse.message) || response.statusText;
@@ -67,9 +65,17 @@ export default function Login() {
         });
     };
 
+
+    const togglePersist = () => {
+        setPersist(prev => !prev);
+    }
+
+    useEffect(() => {
+        localStorage.setItem("persist", persist);
+    }, [persist])
+
     return (
         <>
-            {console.log(state)}
 
             {isLoggedIn && redirect}
             <form onSubmit={handleSubmit(onSubmit)}>

@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function AlertDialog({ open, setOpen, message, redirectingInfo }) {
 
-    const history = useHistory()
+    const navigate = useNavigate()
 
 
     const handleClose = () => {
         setOpen(false);
         if (redirectingInfo?.shouldRedirect) {
-            history.push(redirectingInfo?.redirectingUrl)
+            navigate(redirectingInfo?.redirectingUrl)
         }
     };
 

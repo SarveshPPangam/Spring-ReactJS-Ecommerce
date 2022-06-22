@@ -1,10 +1,10 @@
 import { Button, Grid, Icon, makeStyles, Typography } from '@material-ui/core'
 import React, { useContext, useEffect, useState } from 'react'
-import { AppContext } from '../contexts';
 import { CartItem } from './cartItem';
 import RupeeSymbol from '../../rupee.svg'
 import AddressDialog from './addressDialog';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import AuthContext from '../Auth/authProvider';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -21,8 +21,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 export const Cart = () => {
     const classes = useStyles();
-    const history = useHistory()
-    const { state } = useContext(AppContext);
+    const navigate = useNavigate()
+    const { auth } = useContext(AuthContext);
     const [cart, setCart] = useState();
     const [addresses, setAddresses] = useState();
     const [temp, setTemp] = useState(false);
@@ -37,7 +37,7 @@ export const Cart = () => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + state.token
+                'Authorization': 'Bearer ' + auth?.accessToken
             }
         }).then(function (response) {
             response.text().then(r => {
@@ -55,7 +55,7 @@ export const Cart = () => {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + state.token
+                "Authorization": "Bearer " + auth?.accessToken
             }
 
         }).then(function (response) {
@@ -74,14 +74,14 @@ export const Cart = () => {
     useEffect(() => {
         fetchCart();
         fetchAddresses();
-    }, [state.token, temp])
+    }, [auth?.accessToken, temp])
 
     const handleRemoveItem = (cartItemId) => {
         fetch(`/c/removeCartItem/${cartItemId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + state.token,
+                'Authorization': 'Bearer ' + auth?.accessToken,
             }
         }).then(function (response) {
             response.text().then(r => {
@@ -100,11 +100,11 @@ export const Cart = () => {
             body: JSON.stringify(address),
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + state.token,
+                'Authorization': 'Bearer ' + auth?.accessToken,
             },
         }).then(function (response) {
             response.text().then(r => {
-                history.push('/')
+                navigate('/')
             })
         }, function (err) {
             console.log(err)
@@ -117,7 +117,7 @@ export const Cart = () => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + state.token,
+                'Authorization': 'Bearer ' + auth?.accessToken,
             }
         }).then(function (response) {
             response.text().then(r => {
@@ -133,7 +133,7 @@ export const Cart = () => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + state.token,
+                'Authorization': 'Bearer ' + auth?.accessToken,
             }
         }).then(function (response) {
             response.text().then(r => {

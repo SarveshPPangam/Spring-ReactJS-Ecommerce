@@ -1,12 +1,10 @@
 import React, { useContext, useEffect, useState } from "react"
 import Login from './components/login';
-import { AppContext, AppProvider } from './components/contexts'
 import {
     BrowserRouter as Router,
     Route,
-    Switch,
     BrowserRouter,
-    Redirect
+    Routes,
 } from "react-router-dom";
 
 import { Homepage } from "./components/Homepage";
@@ -20,55 +18,66 @@ import { Profile } from "./components/Customer/profile";
 import { OrderList } from "./components/Customer/orderList";
 import { OrderDetails } from "./components/Customer/orderDetails";
 import { Register } from "./components/register";
-import { UnknownRoute } from "./components/unknownRoute";
+import { RequireAuth } from "./components/Auth/requireAuth.js";
 import { ProductSearch } from "./components/productSearch";
 import { ProductList } from "./components/productList";
+import Layout from "./components/Auth/layout";
+import AuthContext from "./components/Auth/authProvider";
+
+
+const ROLES = {
+    'Customer': 'CUSTOMER',
+    'Seller': 'SELLER',
+}
 
 
 
 function App() {
-    const { state } = useContext(AppContext);
-    const isSeller = state?.user?.role === 'SELLER'
+    const { auth } = useContext(AuthContext);
+    const isSeller = auth?.userRole === 'SELLER'
 
 
     return (
-        <BrowserRouter >
+        <>
+            <Homepage />
 
-            <AppProvider>
-                <Switch>
-                    <React.Fragment>
-                        <Homepage />
-                        <Route exact path="/"><ProductList /></Route>
-                        <Route path="/login"><Login /></Route>
-                        <Route path="/product/:id"><Product /></Route>
-                        <Route path="/register"><Register /></Route>
+            <Routes>
+                <React.Fragment>
+
+                    <Route path="/" element={<Layout />} >
+                        {/* Public routes */}
+                        <Route path="/" element={<ProductList />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/product/:id" element={<Product />} />
+                        <Route path="/register" element={<Register />} />
                         {/* <Route path="/forgotPassword"><ForgotPassword/></Route> */}
-                        <Route path="/search"><ProductSearch /></Route>
+                        <Route path="/search" element={<ProductSearch />} />
+
+                        <Route element={<RequireAuth allowedRole={ROLES.Customer} />}>
+                            {/* Routes accessible only by logged in user */}
+                            <Route path="/profile" element={<Profile />} />
+                            <Route path="/profile/addresses" element={<AddressList />} />
+                            <Route path="/profile/orders" element={<OrderList />} />
+                            <Route path="/profile/order/:id" element={<OrderDetails />} />
+                            <Route path="/cart" element={<Cart />} />
+                        </Route>
 
 
-                        <Route path="/profile"><Profile /></Route>
-                        <Route path="/profile/addresses"><AddressList /></Route>
-                        <Route path="/profile/orders"><OrderList /></Route>
-                        <Route path="/profile/order/:id"><OrderDetails /></Route>
-                        <Route path="/cart"><Cart /></Route>
 
-
-                        <Route path="/seller"><SellerHomepage /></Route>
-                        <Route path="/seller/products"><SellerProducts /></Route>
-                        <Route path="/seller/product/:id"><Product /></Route>
-                        <Route path="/seller/addProduct"><AddProduct /></Route>
-                        <Route path="/seller/editProduct/:id"><AddProduct edit={true} /></Route>
-                        <Route path="/seller/orders"><OrderList /></Route>
-                        <Route path="/seller/order/:id"><OrderDetails /></Route>
-
-                        {/* <Route  ><UnknownRoute /></Route> */}
-                        {/* <Redirect to="/" /> */}
-
-                    </React.Fragment>
-                </Switch>
-            </AppProvider>
-        </BrowserRouter>
-
+                        {/* Routes accessible only by logged in admin */}
+                        <Route element={<RequireAuth allowedRole={ROLES.Seller} />}>
+                            <Route path="/seller" element={<SellerHomepage />} />
+                            <Route path="/seller/products" element={<SellerProducts />} />
+                            <Route path="/seller/product/:id" element={<Product />} />
+                            <Route path="/seller/addProduct" element={<AddProduct />} />
+                            <Route path="/seller/editProduct/:id" element={<AddProduct edit={true} />} />
+                            <Route path="/seller/orders" element={<OrderList />} />
+                            <Route path="/seller/order/:id" element={<OrderDetails />} />
+                        </Route>
+                    </Route>
+                </React.Fragment>
+            </Routes>
+        </>
     );
 }
 

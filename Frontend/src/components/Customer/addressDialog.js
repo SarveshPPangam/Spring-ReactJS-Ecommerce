@@ -16,7 +16,7 @@ import HouseIcon from '@material-ui/icons/House';
 import Typography from '@material-ui/core/Typography';
 import { blue } from '@material-ui/core/colors';
 import { Grid } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles({
   avatar: {
@@ -27,7 +27,7 @@ const useStyles = makeStyles({
 
 function SimpleDialog(props) {
   const classes = useStyles();
-  const history = useHistory()
+  const navigate = useNavigate()
   const { onClose, selectedValue, open } = props;
   const addresses = props.addresses;
   const handleClose = () => {
@@ -53,7 +53,7 @@ function SimpleDialog(props) {
           </ListItem>
         ))}
 
-        <ListItem autoFocus button onClick={() => history.push('/profile/addresses')}>
+        <ListItem autoFocus button onClick={() => navigate('/profile/addresses')}>
           <ListItemAvatar>
             <Avatar>
               <AddIcon />

@@ -1,11 +1,11 @@
 import { React, useEffect, useContext, useState } from 'react'
-import { AppContext, AppProvider } from './contexts'
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from '@material-ui/core/styles';
 import {
     Link,
 } from "react-router-dom";
 import ProductTile from './productTile';
+import AuthContext from './Auth/authProvider';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -21,10 +21,10 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 export const ProductList = () => {
-    const { state } = useContext(AppContext);
+    const { auth } = useContext(AuthContext);
     const [products, setProducts] = useState([]);
     const classes = useStyles();
-    const userRole = state?.user?.role;
+    const userRole = auth?.userRole;
     const isSeller = userRole === 'SELLER'
 
     const fetchSellerProducts = () => {
@@ -32,14 +32,14 @@ export const ProductList = () => {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + state.token
+                "Authorization": "Bearer " + auth?.accessToken
             }
 
         }).then(function (response) {
             response.text().then(r => {
                 //                console.log(r)
+                if (!response.status === 200) return
                 const d = JSON.parse(r)
-                console.log(d)
                 setProducts(d)
             })
         }, function (error) {
@@ -52,14 +52,14 @@ export const ProductList = () => {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + state?.token
+                "Authorization": "Bearer " + auth?.accessToken
             }
 
         }).then(function (response) {
             response.text().then(r => {
                 //                console.log(r)
+                if (!response.status === 200) return
                 const d = JSON.parse(r)
-                console.log(d)
                 setProducts(d)
             })
         }, function (error) {
@@ -72,7 +72,7 @@ export const ProductList = () => {
         else
             fetchProductsForGuest();
 
-    }, [state.token])
+    }, [auth?.accessToken])
     return (
         <div className={classes.root}>
             {isSeller ?

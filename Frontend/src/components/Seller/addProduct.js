@@ -1,5 +1,4 @@
 import { React, useEffect, useContext, useState } from 'react'
-import { AppContext, AppProvider } from '../contexts'
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,14 +16,14 @@ import Select from "@material-ui/core/Select";
 import MenuItem from '@material-ui/core/MenuItem';
 import {
     Link,
-    Redirect,
     Switch,
-    useHistory,
+    useNavigate,
     useParams
 } from "react-router-dom";
 import { ProductList } from '../productList';
 import Product from '../productTile';
 import { Controller, useFieldArray, useForm } from "react-hook-form";
+import AuthContext from '../Auth/authProvider';
 
 
 const drawerWidth = 240;
@@ -63,8 +62,8 @@ export const AddProduct = ({ edit = false }) => {
     const classes = useStyles();
     const [categories, setCategories] = useState([]);
     const [product, setProduct] = useState();
-    const { state } = useContext(AppContext);
-    const history = useHistory()
+    const { auth } = useContext(AuthContext);
+    const navigate = useNavigate()
     var fetchUrl = product?.id ? "/seller/editProduct" : "/seller/addProduct";
 
 
@@ -88,7 +87,7 @@ export const AddProduct = ({ edit = false }) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + state.token
+                "Authorization": "Bearer " + auth?.accessToken
             }
         }).then(function (response) {
             response.text().then(r => {
@@ -106,7 +105,7 @@ export const AddProduct = ({ edit = false }) => {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + state.token
+                "Authorization": "Bearer " + auth?.accessToken
             }
 
         }).then(function (response) {
@@ -120,7 +119,7 @@ export const AddProduct = ({ edit = false }) => {
             console.log(error.message)
         })
         edit && getProductDetails()
-    }, [state.token])
+    }, [auth?.accessToken])
 
     useEffect(() => {
         setValue('category', categories[0]?.name || '')
@@ -151,13 +150,13 @@ export const AddProduct = ({ edit = false }) => {
             body: JSON.stringify(data),
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + state.token
+                "Authorization": "Bearer " + auth?.accessToken
             }
         }).then(function (response) {
             // console.log(response);
             response.text().then(r => {
                 console.log(r)
-                history.push(id ? `/seller/product/${id}` : `/seller/products`)
+                navigate(id ? `/seller/product/${id}` : `/seller/products`)
             })
         }, function (error) {
             console.log(error.message)

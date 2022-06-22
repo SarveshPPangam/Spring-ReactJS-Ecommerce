@@ -1,7 +1,7 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
-import { AppContext } from '../contexts'
+import AuthContext from '../Auth/authProvider';
 
 import OrderListTable from '../orderListTable';
 
@@ -32,8 +32,8 @@ const useStyles = makeStyles((theme) => ({
 
 export const OrderList = () => {
     const classes = useStyles()
-    const { state } = useContext(AppContext);
-    const userRole = state?.user?.role;
+    const { auth } = useContext(AuthContext);
+    const userRole = auth?.userRole;
     const isSeller = userRole === 'SELLER'
     const [orders, setOrders] = useState()
     const viewOrderURL = (userRole === 'CUSTOMER' ? `/profile/order/` : `/seller/order/`)
@@ -43,7 +43,7 @@ export const OrderList = () => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + state.token
+                'Authorization': 'Bearer ' + auth?.accessToken
             }
         }).then(function (response) {
             response.text().then(r => {
@@ -61,7 +61,7 @@ export const OrderList = () => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + state.token
+                'Authorization': 'Bearer ' + auth?.accessToken
             }
         }).then(function (response) {
             response.text().then(r => {
@@ -77,7 +77,7 @@ export const OrderList = () => {
     useEffect(() => {
         userRole === 'CUSTOMER' && fetchCustomerOrders()
         userRole === 'SELLER' && fetchSellerOrders()
-    }, [state.token])
+    }, [auth?.accessToken])
 
     return (
         <div className={classes.root}>

@@ -2,10 +2,10 @@
 
 import { Button, Grid, Icon, makeStyles, Typography } from '@material-ui/core'
 import React, { useContext, useEffect, useState } from 'react'
-import { AppContext } from '../contexts';
 import RupeeSymbol from '../../rupee.svg'
 import AddressDialog from './addressDialog';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import AuthContext from '../Auth/authProvider';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -43,17 +43,17 @@ const useStyles = makeStyles((theme) => ({
 export const OrderDetails = () => {
     const classes = useStyles()
     const { id } = useParams()
-    const { state } = useContext(AppContext)
+    const { auth } = useContext(AuthContext);
     const [order, setOrder] = useState();
-    const history = useHistory()
-    const userRole = state?.user?.role;
+    const navigate = useNavigate()
+    const userRole = auth?.userRole;
 
     const fetchCustomerOrder = (id) => {
         fetch(`/c/profile/order/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + state.token
+                "Authorization": "Bearer " + auth?.accessToken
             }
         }).then(function (response) {
             response.text().then(r => {
@@ -71,7 +71,7 @@ export const OrderDetails = () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + state.token
+                "Authorization": "Bearer " + auth?.accessToken
             }
         }).then(function (response) {
             response.text().then(r => {
@@ -86,7 +86,7 @@ export const OrderDetails = () => {
     useEffect(() => {
         userRole === 'CUSTOMER' && fetchCustomerOrder(id)
         userRole === 'SELLER' && fetchSellerOrder(id)
-    }, [state.token])
+    }, [auth?.accessToken])
 
     const handleCancelOrder = () => {
         fetch(`/c/profile/cancelOrder`, {
@@ -94,12 +94,12 @@ export const OrderDetails = () => {
             body: JSON.stringify(order),
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + state.token
+                'Authorization': 'Bearer ' + auth?.accessToken
             }
         }).then(function (response) {
             response.text().then(r => {
                 console.log(r)
-                history.push('/profile/orders')
+                navigate('/profile/orders')
             })
         }, function (err) {
             console.log(err)
@@ -112,12 +112,12 @@ export const OrderDetails = () => {
             body: JSON.stringify(order),
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + state.token
+                'Authorization': 'Bearer ' + auth?.accessToken
             }
         }).then(function (response) {
             response.text().then(r => {
                 console.log(r)
-                history.push('/seller/orders')
+                navigate('/seller/orders')
             })
         }, function (err) {
             console.log(err)

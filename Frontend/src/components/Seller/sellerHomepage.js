@@ -1,20 +1,17 @@
-import React, { useContext, useEffect } from "react"
-import { AppContext, AppProvider } from '../contexts'
+import React, { useContext } from "react"
 
 import {
-    Link,
-    Redirect,
-    useLocation
+    Navigate,
 } from "react-router-dom";
 
 import SellerAppBar from './sellerAppBar';
+import AuthContext from "../Auth/authProvider";
 
 export const SellerHomepage = () => {
-    const { state } = useContext(AppContext);
+    const { auth } = useContext(AuthContext);
     return (
         < div >
-            {console.log("In seller Homepage")}
-            {state?.user?.role !== "SELLER" && <Redirect to="/" />}
+            {auth?.userRole !== "SELLER" && <Navigate to="/" />}
             <SellerAppBar />
         </div >
     )

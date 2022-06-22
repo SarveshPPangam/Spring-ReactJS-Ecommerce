@@ -2,7 +2,6 @@ import { Button, Grid, Icon, makeStyles, Typography } from '@material-ui/core'
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import RupeeSymbol from '../../rupee.svg'
-import { AppContext } from '../contexts'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -20,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 export const OrderItemTile = ({ orderItem }) => {
   const classes = useStyles()
-  const { state } = useContext(AppContext);
+  const { auth } = useContext(AuthContext);
   return (
     <div>
       <Grid container >

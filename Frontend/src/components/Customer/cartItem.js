@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { Icon } from "@material-ui/core";
 import RupeeSymbol from '../../rupee.svg'
 import { useContext } from 'react';
-import { AppContext } from '../contexts';
 import { Link } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
+import AuthContext from '../Auth/authProvider';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -41,14 +41,15 @@ const useStyles = makeStyles((theme) => ({
 }))
 export const CartItem = ({ cartItem, handleRemoveItem, handleAddQuantity, handleRemoveQuantity, temp, setTemp }) => {
     const classes = useStyles();
-    const { state } = useContext(AppContext);
+    const { auth } = useContext(AuthContext)
+
     const { handleSubmit, control, watch, setValue } = useForm()
     const [isCustomQuantity, setIsCustomQuantity] = useState(false)
 
     useEffect(() => {
         setIsCustomQuantity(false)
         setValue('quantity', cartItem?.quantity)
-    }, [state.token, cartItem?.quantity])
+    }, [auth?.accessToken, cartItem?.quantity])
 
 
     const onSubmitQuantity = (data) => {
@@ -58,7 +59,7 @@ export const CartItem = ({ cartItem, handleRemoveItem, handleAddQuantity, handle
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + state.token
+                'Authorization': 'Bearer ' + auth?.accessToken
             }
         }).then(function (response) {
             response.text().then(r => {

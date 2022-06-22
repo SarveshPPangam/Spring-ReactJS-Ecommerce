@@ -13,7 +13,7 @@ function Req() {
             body: JSON.stringify(creds),
             headers: {
                 "Content-Type": "application/json",
-                // "Authorization": "Bearer " + state.token
+                // "Authorization": "Bearer " + auth?.accessToken
             }
         }).then(function (response) {
             response.text().then(r => {

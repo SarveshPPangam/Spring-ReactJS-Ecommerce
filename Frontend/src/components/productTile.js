@@ -1,8 +1,7 @@
 import { React, useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { AppContext, AppProvider } from './contexts'
 import {
-    Link,
+    Link, useNavigate,
 } from "react-router-dom";
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -14,6 +13,7 @@ import { red } from '@material-ui/core/colors';
 import Button from '@material-ui/core/Button';
 import { Icon } from "@material-ui/core";
 import RupeeSymbol from '../rupee.svg'
+import AuthContext from './Auth/authProvider';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -59,13 +59,21 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProductTile({ product }) {
     const classes = useStyles();
+    const { auth } = useContext(AuthContext)
+    const navigate = useNavigate()
+
+
     const [expanded, setExpanded] = useState(false);
-    const { state } = useContext(AppContext);
-    const isSeller = state?.user?.role === 'SELLER'
+    const isSeller = auth?.userRole === 'SELLER'
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
+
+    const onClickEdit = () => {
+        navigate("/seller/editProduct/" + product?.id)
+    }
+
 
     return (
         <Card className={classes.root}>
@@ -89,10 +97,8 @@ export default function ProductTile({ product }) {
 
                     <Grid container >
                         <Grid item >
-                            <Button variant="contained" >
-                                <Link to={"/seller/editProduct/" + product.id} className={classes.link}>
-                                    Edit
-                                </Link>
+                            <Button variant="contained" onClick={onClickEdit}>
+                                Edit
                             </Button>
                         </Grid>
                     </Grid>

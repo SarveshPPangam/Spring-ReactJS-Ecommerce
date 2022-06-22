@@ -119,7 +119,7 @@ export default function OrderListTable({ orders, viewOrderURL, link }) {
                                 let id = row.id;
                                 console.log(viewOrderURL)
                                 return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                         {columns.map((column) => {
                                             const value = row[column.id];
                                             return (

@@ -1,16 +1,15 @@
 import { React, useEffect, useContext, useState } from 'react'
-import { AppContext, AppProvider } from './contexts'
 import Grid from "@material-ui/core/Grid";
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import {
     Link,
-    Redirect,
     Switch,
     useParams,
-    useHistory,
+    useNavigate,
 } from "react-router-dom";
 import { Button, Icon, Typography } from '@material-ui/core';
 import RupeeSymbol from '../rupee.svg'
+import AuthContext from './Auth/authProvider';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -71,12 +70,12 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 export const Product = () => {
-    const { state } = useContext(AppContext);
+    const { auth } = useContext(AuthContext);
     const [product, setProduct] = useState([]);
     const classes = useStyles();
     const { id } = useParams();
-    const history = useHistory();
-    const userRole = state?.user?.role;
+    const navigate = useNavigate();
+    const userRole = auth?.userRole;
     const fetchURL = `/` + (userRole === 'SELLER' ? `seller/product/${id}` : `product/${id}`)
 
     useEffect(() => {
@@ -85,29 +84,29 @@ export const Product = () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + state.token
+                "Authorization": "Bearer " + auth?.accessToken
             }
         }).then(function (response) {
             response.text().then(r => {
-                if (r) {
+                if (response.status === 200 && r) {
                     const d = JSON.parse(r)
                     setProduct(d)
                 }
                 else {
-                    history.push('/')
+                    navigate('/')
                 }
             })
         }, function (err) {
             console.log(err.message)
         })
-    }, [state?.token])
+    }, [auth?.accessToken])
 
     const addToCart = () => {
         fetch(`/c/addToCart/${product.id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + state.token
+                'Authorization': 'Bearer ' + auth?.accessToken
             }
         }).then(function (response) {
             response.text().then(r => {
@@ -124,11 +123,12 @@ export const Product = () => {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + state.token
+                'Authorization': 'Bearer ' + auth?.accessToken
             }
         }).then(function (response) {
             response.text().then(r => {
-                history.push('/seller/products')
+                if (!response.status === 200) return
+                navigate('/seller/products')
             })
         }, function (err) {
 

@@ -1,9 +1,9 @@
 import { Button, FormControl, Grid, Input, InputLabel, makeStyles, Typography } from '@material-ui/core'
 import React, { useContext, useEffect } from 'react'
 import { useState } from 'react';
-import { AppContext } from '../contexts';
 import { Address } from './address';
 import AddAddressFormDialog from './addAddressFormDialog';
+import AuthContext from '../Auth/authProvider';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 export const AddressList = () => {
     const classes = useStyles()
-    const { state } = useContext(AppContext);
+    const { auth } = useContext(AuthContext);
     const [addresses, setAddresses] = useState()
     const [openEditForm, setOpenEditForm] = useState(false)
 
@@ -27,10 +27,13 @@ export const AddressList = () => {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + state.token
+                "Authorization": "Bearer " + auth?.accessToken
             }
 
         }).then(function (response) {
+            if (response.status === 403) {
+                return
+            }
             response.text().then(r => {
                 //                console.log(r)
                 const d = JSON.parse(r)
@@ -45,7 +48,7 @@ export const AddressList = () => {
     useEffect(() => {
         console.log('in usef')
         fetchAddresses()
-    }, [state.token])
+    }, [auth?.accessToken])
 
 
     const handleAddAddress = () => {
@@ -77,8 +80,8 @@ export const AddressList = () => {
                 </FormControl>
             </Grid>
 
-            <AddAddressFormDialog openEditForm={openEditForm} setOpenEditForm={setOpenEditForm}
-                fetchAddresses={fetchAddresses} state={state} />
+            <AddAddressFormDialog openEditForm={openEditForm} setOpenEditForm={setOpenEditForm} auth={auth}
+                fetchAddresses={fetchAddresses} />
 
 
         </div>

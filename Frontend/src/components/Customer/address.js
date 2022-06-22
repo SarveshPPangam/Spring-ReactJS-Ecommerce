@@ -2,7 +2,7 @@ import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import React, { useContext } from 'react'
 import { useState } from 'react';
 import { set } from 'react-hook-form';
-import { AppContext } from '../contexts';
+import AuthContext from '../Auth/authProvider';
 import AddAddressFormDialog from './addAddressFormDialog';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Address = ({ address, addresses, setAddresses, fetchAddresses }) => {
     const classes = useStyles();
-    const { state } = useContext(AppContext);
+    const { auth } = useContext(AuthContext);
 
     const [openEditForm, setOpenEditForm] = useState(false)
 
@@ -38,7 +38,7 @@ export const Address = ({ address, addresses, setAddresses, fetchAddresses }) =>
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + state.token
+                "Authorization": "Bearer " + auth?.accessToken
             }
 
         }).then(function (response) {
@@ -92,7 +92,7 @@ export const Address = ({ address, addresses, setAddresses, fetchAddresses }) =>
 
 
             <AddAddressFormDialog openEditForm={openEditForm} setOpenEditForm={setOpenEditForm} address={address}
-                fetchAddresses={fetchAddresses} state={state} isForEdit={true} />
+                fetchAddresses={fetchAddresses} auth={auth} isForEdit={true} />
         </div>
     )
 }

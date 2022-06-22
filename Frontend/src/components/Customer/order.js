@@ -1,12 +1,11 @@
 import { Typography } from '@material-ui/core'
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { AppContext } from '../contexts'
 import { OrderItemTile } from './orderItemTile'
 
 export const Order = ({ order }) => {
-    const { state } = useContext(AppContext);
-    const userRole = state?.user?.role;
+    const { auth } = useContext(AuthContext);
+    const userRole = auth?.userRole;
     const viewDetailsRedirectURL = (userRole === 'CUSTOMER' ? `/profile/order/` : `/seller/order/`) + order?.id
 
     return (

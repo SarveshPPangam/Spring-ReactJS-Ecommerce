@@ -1,14 +1,14 @@
 import { Button, Checkbox, FormControlLabel, Grid, Link, TextField } from '@material-ui/core';
 import React, { useContext, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
-import { Redirect, useHistory } from 'react-router-dom';
-import { AppContext } from './contexts';
+import { Navigate, useNavigate } from 'react-router-dom';
 import AlertDialog from './alertDialog';
+import AuthContext from './Auth/authProvider';
 
 export const Register = () => {
 
-    const { dispatch } = useContext(AppContext);
-    const { state } = useContext(AppContext);
+
+    const { auth } = useContext(AuthContext);
 
 
     const [openDialog, setOpenDialog] = React.useState(false);
@@ -17,7 +17,7 @@ export const Register = () => {
 
     const { handleSubmit, control } = useForm();
 
-    const redirectToHome = <Redirect to="/" />;
+    const redirectToHome = <Navigate to="/" />;
 
     const onSubmit = data => {
         console.log(data)
@@ -48,7 +48,7 @@ export const Register = () => {
 
     return (
         <>
-            {state?.token && redirectToHome}
+            {auth?.accessToken && redirectToHome}
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container spacing={0} justifyContent={"center"} alignItems={"center"}>
                     <Grid container item xs={12} sm={6} justifyContent={"center"}>

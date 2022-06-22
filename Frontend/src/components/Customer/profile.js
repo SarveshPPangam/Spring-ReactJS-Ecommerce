@@ -1,6 +1,7 @@
 import { Button, makeStyles } from '@material-ui/core'
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { AuthProvider } from '../Auth/authProvider';
 
 const useStyles = makeStyles((theme) => ({
     link: {

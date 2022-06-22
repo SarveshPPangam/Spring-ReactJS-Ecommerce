@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import { Controller, useForm } from 'react-hook-form'
 
 
-export default function AddAddressFormDialog({ openEditForm, setOpenEditForm, address, state, fetchAddresses, isForEdit = false }) {
+export default function AddAddressFormDialog({ openEditForm, setOpenEditForm, address, auth, fetchAddresses, isForEdit = false }) {
 
     const { handleSubmit, control } = useForm();
 
@@ -22,10 +22,11 @@ export default function AddAddressFormDialog({ openEditForm, setOpenEditForm, ad
             body: JSON.stringify(addressInput),
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + state?.token,
+                'Authorization': 'Bearer ' + auth?.accessToken,
             },
         }).then(function (response) {
             response.text().then(r => {
+                if (!response.status === 200) return
                 console.log(r)
                 console.log(addressInput)
                 fetchAddresses()

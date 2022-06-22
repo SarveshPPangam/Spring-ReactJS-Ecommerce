@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react"
-import { AppContext, AppProvider } from './contexts'
 
 import {
     Link,
-    Redirect,
-    useHistory,
-    useLocation
+    useNavigate,
+    useLocation,
+    Navigate
 } from "react-router-dom";
 import { Button, makeStyles, TextField } from "@material-ui/core";
 import { useQuery } from "../hooks/useQuery";
+import AuthContext, { AuthProvider } from "./Auth/authProvider";
 
 const useStyles = makeStyles((theme) => ({
 
@@ -20,19 +20,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Homepage = () => {
-    const { state } = useContext(AppContext);
     const classes = useStyles();
+    const { auth } = useContext(AuthContext)
 
-    const isSeller = state?.user?.role === "SELLER"
-    const isCustomer = state?.user?.role === "CUSTOMER";
-    const redirectIfSeller = isSeller && <Redirect to="/seller/" />;
-    const notLoggedIn = !state?.user?.role;
+
+    const isSeller = auth?.userRole === "SELLER"
+    const isCustomer = auth?.userRole === "CUSTOMER";
+    const redirectIfSeller = isSeller && <Navigate to="/seller/" />;
+    const notLoggedIn = !auth?.userRole;
 
     const query = useQuery()
     const productName = query.get('name')
     const [productNameQuery, setProductNameQuery] = useState(productName || '');
 
-    const history = useHistory()
+    const navigate = useNavigate()
 
     const onChangeQuery = e => {
         setProductNameQuery(e?.target?.value)
@@ -40,11 +41,11 @@ export const Homepage = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        history.push(`/search?name=${productNameQuery}`)
+        navigate(`/search?name=${productNameQuery}`)
     }
     return (
         <>
-            {redirectIfSeller}
+
             {notLoggedIn &&
                 <>
                     <Link to="/login">Login</Link>
