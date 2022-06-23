@@ -39,7 +39,9 @@ function App() {
 
     return (
         <>
-            <Homepage />
+            {isSeller ?
+                <SellerHomepage />
+                : <Homepage />}
 
             <Routes>
                 <React.Fragment>
