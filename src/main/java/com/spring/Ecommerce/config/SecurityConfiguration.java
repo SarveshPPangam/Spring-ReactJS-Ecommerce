@@ -33,8 +33,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests().antMatchers("/authenticate").permitAll()
                 .antMatchers("/c/**").hasAuthority("CUSTOMER")
-                .antMatchers("/seller/**").hasAuthority("SELLER")
-                .antMatchers("/common/**").hasAnyAuthority("ADMIN", "SELLER");
+                .antMatchers("/seller/**").hasAuthority("SELLER");
+//                .antMatchers("/common/**").hasAnyAuthority("ADMIN", "SELLER");
 
 //        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
         http.cors();
