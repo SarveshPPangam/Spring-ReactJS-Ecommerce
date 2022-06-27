@@ -60,8 +60,9 @@ public class HomeController {
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authenticationRequest.getEmail());
 
-        final String accessToken = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new AuthenticationResponse(accessToken));
+        final String accessToken = jwtTokenUtil.generateAccessToken(userDetails);
+        final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
+        return ResponseEntity.ok(new AuthenticationResponse(accessToken, refreshToken));
     }
 
     @PostMapping("/register")
@@ -94,16 +95,5 @@ public class HomeController {
     public Product getProduct(@PathVariable int productId) {
         return productService.findById(productId);
     }
-
-//    @DeleteMapping("/common/deleteProduct/{productId}")
-//    public ResponseEntity<?> deleteProduct(@PathVariable int productId){
-//        try {
-//            productService.deleteById(productId);
-//            return ResponseEntity.ok(HttpStatus.OK);
-//        }catch (Exception e){
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
-//    }
-
 
 }
