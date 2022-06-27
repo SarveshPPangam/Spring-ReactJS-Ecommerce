@@ -1,6 +1,6 @@
 package com.spring.Ecommerce.filters;
 
-import com.spring.Ecommerce.JwtUtil;
+import com.spring.Ecommerce.util.JwtUtil;
 import com.spring.Ecommerce.services.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

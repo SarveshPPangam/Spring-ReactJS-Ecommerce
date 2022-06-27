@@ -1,4 +1,5 @@
-package com.spring.Ecommerce;
+package com.spring.Ecommerce.util;
+
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

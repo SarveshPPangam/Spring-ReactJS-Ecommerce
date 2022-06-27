@@ -4,7 +4,6 @@ package com.spring.Ecommerce.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sipios.springsearch.anotation.SearchSpec;
-import com.spring.Ecommerce.JwtUtil;
 import com.spring.Ecommerce.models.AuthenticationRequest;
 import com.spring.Ecommerce.models.AuthenticationResponse;
 import com.spring.Ecommerce.models.Product;
@@ -13,6 +12,7 @@ import com.spring.Ecommerce.services.MyUserDetailsService;
 import com.spring.Ecommerce.services.ProductService;
 import com.spring.Ecommerce.services.UserRegisterResponse;
 import com.spring.Ecommerce.services.UserService;
+import com.spring.Ecommerce.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -60,8 +60,8 @@ public class HomeController {
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authenticationRequest.getEmail());
 
-        final String jwt = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        final String accessToken = jwtTokenUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new AuthenticationResponse(accessToken));
     }
 
     @PostMapping("/register")
@@ -95,15 +95,15 @@ public class HomeController {
         return productService.findById(productId);
     }
 
-    @DeleteMapping("/common/deleteProduct/{productId}")
-    public ResponseEntity<?> deleteProduct(@PathVariable int productId) {
-        try {
-            productService.deleteById(productId);
-            return ResponseEntity.ok(HttpStatus.OK);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+//    @DeleteMapping("/common/deleteProduct/{productId}")
+//    public ResponseEntity<?> deleteProduct(@PathVariable int productId){
+//        try {
+//            productService.deleteById(productId);
+//            return ResponseEntity.ok(HttpStatus.OK);
+//        }catch (Exception e){
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
 
 
 }
