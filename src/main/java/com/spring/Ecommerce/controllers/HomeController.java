@@ -23,6 +23,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -63,6 +65,30 @@ public class HomeController {
         final String accessToken = jwtTokenUtil.generateAccessToken(userDetails);
         final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
         return ResponseEntity.ok(new AuthenticationResponse(accessToken, refreshToken));
+    }
+
+    @GetMapping("/refreshToken")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        final String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            try {
+                final String refreshToken = authorizationHeader.substring(7);
+                final String username = jwtTokenUtil.extractUsername(refreshToken);
+
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                boolean isTokenValid = jwtTokenUtil.validateToken(refreshToken, userDetails);
+                if(isTokenValid){
+                    String responseAccessToken = jwtTokenUtil.generateAccessToken(userDetails);
+                    String responseRefreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
+                    return ResponseEntity.ok(new AuthenticationResponse(responseAccessToken, responseRefreshToken));
+                }else{
+                    throw new Exception("Invalid token!");
+                }
+            } catch (Exception exception) {
+                    return ResponseEntity.internalServerError().body(exception.getMessage());
+            }
+        }
+        return ResponseEntity.internalServerError().body("Something went wrong!");
     }
 
     @PostMapping("/register")
