@@ -1,5 +1,4 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
-import { Homepage } from "../Homepage.js";
 import useAuth from "../../hooks/useAuth.js";
 
 export const RequireAuth = ({ allowedRole }) => {

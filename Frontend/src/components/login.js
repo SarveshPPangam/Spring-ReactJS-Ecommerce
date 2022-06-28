@@ -47,7 +47,7 @@ export default function Login() {
             response.text().then(data => {
                 if (response.ok) {
                     let parsed = JSON.parse(data);
-                    const accessToken = parsed?.jwt
+                    const accessToken = parsed?.accessToken
                     const decoded = jwt.decode(accessToken);
                     const userEmail = decoded?.email;
                     const userRole = decoded?.role;
