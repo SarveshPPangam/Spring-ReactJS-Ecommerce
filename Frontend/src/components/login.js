@@ -11,6 +11,7 @@ import {
     useNavigate,
 } from "react-router-dom";
 import AuthContext from "./Auth/authProvider";
+import axios from "axios";
 
 
 export default function Login() {
@@ -33,36 +34,29 @@ export default function Login() {
         navigate('/register');
     }
 
-    const onSubmit = data => {
-        // console.log(data);
-
-        fetch('/authenticate', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(function (response) {
-            // console.log(response);
-            response.text().then(data => {
-                if (response.ok) {
-                    let parsed = JSON.parse(data);
-                    const accessToken = parsed?.accessToken
-                    const decoded = jwt.decode(accessToken);
-                    const userEmail = decoded?.email;
-                    const userRole = decoded?.role;
-                    setAuth({ userEmail, userRole, accessToken });
-                } else {
-                    let errorResponse = JSON.parse(data);
-                    const error = (errorResponse && errorResponse.message) || response.statusText;
-                    console.log(error)
-                    setErrorMessage(error);
+    const onSubmit = async (data) => {
+        try {
+            const response = await axios.post('/authenticate',
+                data,
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
                 }
-            })
-        }).catch((error) => {
-            // console.log(error)
-            setErrorMessage('Some error occurred');
-        });
+            );
+            //console.log(JSON.stringify(response));
+            const accessToken = response?.data?.jwt;
+            const decoded = jwt.decode(accessToken);
+            const userEmail = decoded?.email;
+            const userRole = decoded?.role;
+            setAuth({ userEmail, userRole, accessToken });
+        } catch (err) {
+            if (!err?.response) {
+                setErrorMessage('No Server Response');
+
+            } else {
+                setErrorMessage('Login Failed');
+            }
+        }
     };
 
 

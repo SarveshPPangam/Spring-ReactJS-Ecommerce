@@ -4,6 +4,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Navigate, useNavigate } from 'react-router-dom';
 import AlertDialog from './alertDialog';
 import AuthContext from './Auth/authProvider';
+import axios from "axios";
 
 export const Register = () => {
 
@@ -19,31 +20,31 @@ export const Register = () => {
 
     const redirectToHome = <Navigate to="/" />;
 
-    const onSubmit = data => {
+    const onSubmit = async data => {
         console.log(data)
-        fetch('/register', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(function (response) {
-            response.text().then(r => {
-                if (response.status === 200) {
-                    setErrorMessage(JSON.parse(r)?.status)
-                    setRedirectingInfo({ shouldRedirect: true, redirectingUrl: "/login" })
-                    setOpenDialog(true)
-                }
-                else {
-                    setErrorMessage(JSON.parse(r)?.status)
-                    setOpenDialog(true)
-                }
-            })
-        }, function (error) {
-            console.log(error.message)
-        })
-    }
 
+        try {
+            const response = await axios.post('/register',
+                data,
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
+                }
+            );
+            //console.log(JSON.stringify(response))
+            setRedirectingInfo({ shouldRedirect: true, redirectingUrl: "/login" })
+            setOpenDialog(true)
+        } catch (err) {
+            console.log(err?.response)
+            if (!err?.response) {
+                setErrorMessage('No Server Response');
+                setOpenDialog(true)
+            } else {
+                setErrorMessage(err.response?.data?.status)
+                setOpenDialog(true)
+            }
+        }
+    }
 
 
     return (

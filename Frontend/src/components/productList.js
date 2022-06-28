@@ -2,10 +2,11 @@ import { React, useEffect, useContext, useState } from 'react'
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from '@material-ui/core/styles';
 import {
-    Link,
+    Link, useNavigate,
 } from "react-router-dom";
 import ProductTile from './productTile';
 import AuthContext from './Auth/authProvider';
+import axiosPrivate from '../api/axiosPrivate';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,55 +23,39 @@ const useStyles = makeStyles((theme) => ({
 }))
 export const ProductList = () => {
     const { auth } = useContext(AuthContext);
-    const [products, setProducts] = useState([]);
-    const classes = useStyles();
     const userRole = auth?.userRole;
     const isSeller = userRole === 'SELLER'
 
-    const fetchSellerProducts = () => {
-        fetch('/seller/products', {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + auth?.accessToken
-            }
+    const [products, setProducts] = useState([]);
 
-        }).then(function (response) {
-            response.text().then(r => {
-                //                console.log(r)
-                if (!response.status === 200) return
-                const d = JSON.parse(r)
-                setProducts(d)
-            })
-        }, function (error) {
-            console.log(error.message)
-        })
-    }
+    const classes = useStyles();
 
-    const fetchProductsForGuest = () => {
-        fetch('/products', {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + auth?.accessToken
-            }
 
-        }).then(function (response) {
-            response.text().then(r => {
-                //                console.log(r)
-                if (!response.status === 200) return
-                const d = JSON.parse(r)
-                setProducts(d)
-            })
-        }, function (error) {
-            console.log(error.message)
-        })
-    }
+
+
     useEffect(() => {
-        if (isSeller)
-            fetchSellerProducts();
-        else
-            fetchProductsForGuest();
+        const productsURL = isSeller ? '/seller/products' : '/products'
+        let isMounted = true;
+        const controller = new AbortController();
+
+        const getProducts = async () => {
+            try {
+                const response = await axiosPrivate.get(productsURL, {
+                    signal: controller.signal
+                });
+                console.log(response.data);
+                isMounted && setProducts(response.data);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        getProducts();
+
+        return () => {
+            isMounted = false;
+            controller.abort();
+        }
 
     }, [auth?.accessToken])
     return (
