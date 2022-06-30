@@ -2,9 +2,10 @@ import { Button, Checkbox, FormControlLabel, Grid, Link, TextField } from '@mate
 import React, { useContext, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { Navigate, useNavigate } from 'react-router-dom';
-import AlertDialog from './alertDialog';
-import AuthContext from './Auth/authProvider';
-import axios from "axios";
+import AlertDialog from '../alertDialog';
+import axios from '../../api/axios';
+import AuthContext from './authProvider';
+
 
 export const Register = () => {
 

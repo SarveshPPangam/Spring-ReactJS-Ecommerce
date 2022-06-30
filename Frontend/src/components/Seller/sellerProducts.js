@@ -63,26 +63,7 @@ export const SellerProducts = () => {
     }
 
 
-    useEffect(() => {
-        fetch('/seller/products', {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + auth?.accessToken
-            }
 
-        }).then(function (response) {
-            response.text().then(r => {
-                //                console.log(r)
-                const d = JSON.parse(r)
-                console.log(d)
-                // setProducts(d)
-            })
-        }, function (error) {
-            console.log(error.message)
-        })
-
-    }, [auth?.accessToken])
 
     const onSubmit = (data) => {
 

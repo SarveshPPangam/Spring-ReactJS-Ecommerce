@@ -1,9 +1,8 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
-import AuthContext from '../Auth/authProvider';
+import AuthContext from './Auth/authProvider';
 
-import OrderListTable from '../orderListTable';
+import OrderListTable from './orderListTable';
 
 
 const drawerWidth = 240;
@@ -67,7 +66,8 @@ export const OrderList = () => {
             response.text().then(r => {
                 const d = JSON.parse(r)
                 console.log(d)
-                setOrders(d);
+                if (Array.isArray(d))
+                    setOrders(d);
             })
         }, function (err) {
             console.log(err)

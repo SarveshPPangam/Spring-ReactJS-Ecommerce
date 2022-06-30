@@ -10,8 +10,8 @@ import {
     Navigate,
     useNavigate,
 } from "react-router-dom";
-import AuthContext from "./Auth/authProvider";
-import axios from "axios";
+import AuthContext from "./authProvider";
+import axios from "../../api/axios";
 
 
 export default function Login() {
@@ -44,7 +44,7 @@ export default function Login() {
                 }
             );
             //console.log(JSON.stringify(response));
-            const accessToken = response?.data?.jwt;
+            const accessToken = response?.data?.accessToken;
             const decoded = jwt.decode(accessToken);
             const userEmail = decoded?.email;
             const userRole = decoded?.role;

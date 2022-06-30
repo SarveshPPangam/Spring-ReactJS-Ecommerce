@@ -2,10 +2,9 @@
 
 import { Button, Grid, Icon, makeStyles, Typography } from '@material-ui/core'
 import React, { useContext, useEffect, useState } from 'react'
-import RupeeSymbol from '../../rupee.svg'
-import AddressDialog from './addressDialog';
+import RupeeSymbol from '../rupee.svg'
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import AuthContext from '../Auth/authProvider';
+import AuthContext from './Auth/authProvider';
 
 const useStyles = makeStyles((theme) => ({
     title: {

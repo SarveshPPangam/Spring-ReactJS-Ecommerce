@@ -23,8 +23,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -70,6 +72,10 @@ public class HomeController {
     @GetMapping("/refreshToken")
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         final String authorizationHeader = request.getHeader("Authorization");
+        for(Cookie c: request.getCookies()){
+            System.out.println(c.getName());
+            System.out.println(c.getValue());
+        }
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 final String refreshToken = authorizationHeader.substring(7);

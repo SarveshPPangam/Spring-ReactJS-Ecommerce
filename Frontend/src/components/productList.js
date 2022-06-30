@@ -6,7 +6,9 @@ import {
 } from "react-router-dom";
 import ProductTile from './productTile';
 import AuthContext from './Auth/authProvider';
-import axiosPrivate from '../api/axiosPrivate';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import axios from '../api/axios';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,6 +27,7 @@ export const ProductList = () => {
     const { auth } = useContext(AuthContext);
     const userRole = auth?.userRole;
     const isSeller = userRole === 'SELLER'
+    const axiosPrivate = useAxiosPrivate()
 
     const [products, setProducts] = useState([]);
 
@@ -34,13 +37,14 @@ export const ProductList = () => {
 
 
     useEffect(() => {
-        const productsURL = isSeller ? '/seller/products' : '/products'
+        const sellerProductsURL = '/seller/products';
+        const productsURL = 'products';
         let isMounted = true;
         const controller = new AbortController();
 
-        const getProducts = async () => {
+        const getSellerProducts = async () => {
             try {
-                const response = await axiosPrivate.get(productsURL, {
+                const response = await axiosPrivate.get(sellerProductsURL, {
                     signal: controller.signal
                 });
                 console.log(response.data);
@@ -49,8 +53,20 @@ export const ProductList = () => {
                 console.error(err);
             }
         }
+        const getProducts = async () => {
+            try {
+                const response = await axios.get(productsURL);
+                console.log(response.data);
+                isMounted && setProducts(response.data);
+            } catch (err) {
+                console.error(err);
+            }
+        }
 
-        getProducts();
+        if (isSeller)
+            getSellerProducts()
+        else
+            getProducts();
 
         return () => {
             isMounted = false;
