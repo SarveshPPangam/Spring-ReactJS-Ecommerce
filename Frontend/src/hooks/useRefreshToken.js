@@ -1,6 +1,7 @@
 
 import useAuth from './useAuth';
 import axios from "axios";
+import jwt from "jsonwebtoken"
 
 const useRefreshToken = () => {
     const { setAuth } = useAuth();
@@ -12,9 +13,13 @@ const useRefreshToken = () => {
         setAuth(prev => {
             console.log(JSON.stringify(prev));
             console.log(response.data.accessToken);
+            const decoded = jwt.decode(response.data.accessToken);
+            const userEmail = decoded?.email;
+            const userRole = decoded?.role;
             return {
                 ...prev,
-                roles: response.data.role,
+                userEmail: userEmail,
+                userRole: userRole,
                 accessToken: response.data.accessToken
             }
         });

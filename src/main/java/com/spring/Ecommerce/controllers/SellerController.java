@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -41,11 +43,13 @@ public class SellerController {
 
 
     @GetMapping("/products")
-    public Set<Product> getProducts(@SearchSpec Specification<Product> specs, Principal principal) {
+    public Set<Product> getProducts(@RequestParam(value = "name", required = false) String name, Principal principal) {
         User seller = userService.findByEmail(principal.getName());
-        if(specs==null)
+        if (name == null || name.trim().length() == 0)
             return seller.getProducts();
-        return productService.searchSellerProducts(specs, seller);
+        return seller.getProducts().stream()
+                .filter(product -> product.getName().toLowerCase().contains(name.toLowerCase()))
+                .collect(Collectors.toSet());
 
     }
 

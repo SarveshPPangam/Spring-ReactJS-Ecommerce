@@ -27,30 +27,12 @@ export const Homepage = () => {
     const isSeller = auth?.userRole === "SELLER"
     const isCustomer = auth?.userRole === "CUSTOMER";
     const redirectIfSeller = isSeller && <Navigate to="/seller/" />;
-    const notLoggedIn = !auth?.userRole;
 
-    const query = useQuery()
-    const productName = query.get('name')
-    const [productNameQuery, setProductNameQuery] = useState(productName || '');
 
-    const navigate = useNavigate()
-
-    const onChangeQuery = e => {
-        setProductNameQuery(e?.target?.value)
-    }
-
-    const onSubmit = (e) => {
-        e.preventDefault();
-        navigate(`/search?name=${productNameQuery}`)
-    }
     return (
         <>
 
-            {notLoggedIn &&
-                <>
-                    <Link to="/login">Login</Link>
-                    <Link to="/register">Register</Link>
-                </>}
+
             {isCustomer && <>
                 <Link to={"/cart"} className={classes.link}>
                     <Button >Cart</Button>
@@ -60,12 +42,7 @@ export const Homepage = () => {
                 </Link>
             </>
             }
-            {!isSeller &&
-                <form onSubmit={onSubmit}>
-                    <TextField id="outlined-basic" variant="outlined" name="name" value={productNameQuery} onChange={onChangeQuery} />
-                    <Button type="submit">Search</Button>
-                </form>
-            }
+
 
         </>
     )

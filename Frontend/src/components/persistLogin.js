@@ -23,9 +23,8 @@ const PersistLogin = () => {
             }
         }
 
-        // persist added here AFTER tutorial video
-        // Avoids unwanted call to verifyRefreshToken
-        !auth?.accessToken && persist ? verifyRefreshToken() : setIsLoading(false);
+
+        (!auth?.accessToken || auth?.accessToken === '') ? verifyRefreshToken() : setIsLoading(false);
 
         return () => isMounted = false;
     }, [])

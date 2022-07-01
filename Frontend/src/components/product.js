@@ -78,6 +78,8 @@ export const Product = () => {
     const userRole = auth?.userRole;
     const fetchURL = `/` + (userRole === 'SELLER' ? `seller/product/${id}` : `product/${id}`)
 
+    const isLoggedIn = auth?.accessToken
+
     useEffect(() => {
 
         fetch(fetchURL, {
@@ -102,6 +104,10 @@ export const Product = () => {
     }, [auth?.accessToken])
 
     const addToCart = () => {
+        if (!isLoggedIn) {
+            navigate('/login')
+            return;
+        }
         fetch(`/c/addToCart/${product.id}`, {
             method: 'GET',
             headers: {

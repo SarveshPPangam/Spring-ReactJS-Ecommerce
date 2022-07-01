@@ -17,7 +17,7 @@ import axios from "../../api/axios";
 export default function Login() {
     const { auth, setAuth, persist, setPersist } = useContext(AuthContext)
 
-    const isLoggedIn = auth?.userRole
+    const isLoggedIn = auth?.accessToken
     const isSeller = auth?.userRole === 'SELLER'
 
     const redirect = <Navigate to={isSeller ? '/seller' : '/'} />;

@@ -7,6 +7,7 @@ import { Link, Navigate, } from 'react-router-dom';
 import ProductTile from './productTile';
 import { useQuery } from '../hooks/useQuery';
 import AuthContext from './Auth/authProvider';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 
 
@@ -33,6 +34,8 @@ export const ProductSearch = () => {
     const { auth } = useContext(AuthContext);
     const classes = useStyles();
 
+    const axiosPrivate = useAxiosPrivate()
+
     const isSeller = auth?.userRole === "SELLER"
     const redirectIfSeller = isSeller && <Navigate to="/seller/" />;
 
@@ -42,7 +45,7 @@ export const ProductSearch = () => {
 
     let query = useQuery();
     var productName = query.get("name").toLowerCase()
-    productName = productName.replace(/[^a-z]/gi, '');
+    productName = productName.replace(/[^a-z]/gi, ' ');
     const minPrice = parseInt(query.get("minPrice"))
     const maxPrice = parseInt(query.get("maxPrice"))
 
@@ -72,39 +75,41 @@ export const ProductSearch = () => {
 
     }
 
+
+
     useEffect(() => {
         const queryURL = buildQueryURL();
-        console.log(`/products${queryURL}`)
-        fetch(`/products${queryURL}`, {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + auth?.accessToken
-            }
 
-        }).then(function (response) {
-            response.text().then(r => {
-                try {
-                    const d = JSON.parse(r)
-                    if (!response.status === 200) return
+        let isMounted = true;
+        const controller = new AbortController();
 
-                    if (d?.length === 0) {
+        const getSellerProducts = async () => {
+            try {
+                const response = await axiosPrivate.get(`/products${queryURL}`, {
+                    signal: controller.signal
+                });
+                console.log(response.data);
+                if (isMounted) {
+                    if (response.data?.length == 0) {
                         setErrorMessage('Your search returned no results...')
                         setProducts(null)
                     }
-                    else if (d) {
-                        setProducts(d)
+                    else {
+                        setProducts(response.data)
                         setErrorMessage('')
                     }
-                } catch (e) {
-                    setErrorMessage('Some error occurred...')
-                    setProducts(null)
                 }
-                // console.log(r)
-            })
-        }, function (error) {
-            console.log(error.message)
-        })
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        getSellerProducts()
+
+        return () => {
+            isMounted = false;
+            controller.abort();
+        }
+
     }, [auth?.accessToken, query])
 
 
@@ -138,10 +143,10 @@ export const ProductSearch = () => {
                             <TextField name="name" type="hidden" value={productName} />
                         </Grid>
                         <Grid item>
-                            <TextField name="minPrice" label="Min price" />
+                            <TextField name="minPrice" label="Min price" defaultValue={minPrice || ''} />
                         </Grid>
                         <Grid item>
-                            <TextField name="maxPrice" label="Max price" />
+                            <TextField name="maxPrice" label="Max price" defaultValue={maxPrice || ''} />
                         </Grid>
                         <Button type="submit">Filter</Button>
                     </form>

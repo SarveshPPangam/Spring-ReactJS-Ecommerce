@@ -7,9 +7,11 @@ import Product from '../productTile';
 import { Button, TextField } from '@material-ui/core';
 import { useQuery } from '../../hooks/useQuery';
 import AuthContext from '../Auth/authProvider';
+import { useNavigate } from 'react-router';
 
 
 const drawerWidth = 240;
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,37 +51,16 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
 export const SellerProducts = () => {
-    const classes = useStyles();
     const { auth } = useContext(AuthContext);
-
-    const query = useQuery()
-    const productName = query.get('name')
-    const [productNameQuery, setProductNameQuery] = useState(productName || '');
-
-    const onChangeQuery = e => {
-        setProductNameQuery(e?.target?.value)
-    }
-
-
-
-
-    const onSubmit = (data) => {
-
-    }
-
+    const classes = useStyles(makeStyles)
     return (
         <div className={classes.root} >
             <CssBaseline />
             <main className={classes.content}>
-                <form onSubmit={onSubmit}>
-                    <TextField id="outlined-basic" variant="outlined" name="name" value={productNameQuery} onChange={onChangeQuery} />
-                    <Button type="submit">Search</Button>
-                </form>
-                {/* <div className={classes.toolbar} /> */}
-                <ProductList />
+                < ProductList />
+
             </main>
-        </div >
+        </div>
     )
 }

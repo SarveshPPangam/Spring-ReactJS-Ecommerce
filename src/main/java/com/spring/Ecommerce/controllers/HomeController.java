@@ -14,9 +14,9 @@ import com.spring.Ecommerce.services.UserRegisterResponse;
 import com.spring.Ecommerce.services.UserService;
 import com.spring.Ecommerce.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.reactive.WebFluxProperties;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,7 +50,7 @@ public class HomeController {
 
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse response) throws Exception {
 
         try {
             authenticationManager.authenticate(
@@ -66,32 +66,62 @@ public class HomeController {
 
         final String accessToken = jwtTokenUtil.generateAccessToken(userDetails);
         final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
-        return ResponseEntity.ok(new AuthenticationResponse(accessToken, refreshToken));
+
+
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setMaxAge(24 * 60 * 60 * 1000);
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(new AuthenticationResponse(accessToken));
     }
 
     @GetMapping("/refreshToken")
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
-        final String authorizationHeader = request.getHeader("Authorization");
-        for(Cookie c: request.getCookies()){
-            System.out.println(c.getName());
-            System.out.println(c.getValue());
+        final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
+        Cookie refreshTokenCookie = Arrays.stream(request.getCookies())
+                .filter(cookie -> cookie.getName().equals(REFRESH_TOKEN_COOKIE_NAME)).findFirst().orElse(null);
+
+        if (refreshTokenCookie == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Something went wrong!");
         }
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+
+        final String refreshToken = refreshTokenCookie.getValue();
+
+
+        if (refreshToken != null) {
+            // Clear the cookie
+            refreshTokenCookie.setValue("");
+            refreshTokenCookie.setPath("/");
+            refreshTokenCookie.setMaxAge(0);
+            response.addCookie(refreshTokenCookie);
+
+
             try {
-                final String refreshToken = authorizationHeader.substring(7);
+
                 final String username = jwtTokenUtil.extractUsername(refreshToken);
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 boolean isTokenValid = jwtTokenUtil.validateToken(refreshToken, userDetails);
-                if(isTokenValid){
+                if (isTokenValid) {
                     String responseAccessToken = jwtTokenUtil.generateAccessToken(userDetails);
                     String responseRefreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
-                    return ResponseEntity.ok(new AuthenticationResponse(responseAccessToken, responseRefreshToken));
-                }else{
+
+                    Cookie cookie = new Cookie("refreshToken", responseRefreshToken);
+                    cookie.setHttpOnly(true);
+                    cookie.setSecure(true);
+                    cookie.setMaxAge(24 * 60 * 60 * 1000);
+
+                    response.addCookie(cookie);
+
+                    return ResponseEntity.ok(new AuthenticationResponse(responseAccessToken));
+                } else {
                     throw new Exception("Invalid token!");
                 }
             } catch (Exception exception) {
-                    return ResponseEntity.internalServerError().body(exception.getMessage());
+                return ResponseEntity.internalServerError().body(exception.getMessage());
             }
         }
         return ResponseEntity.internalServerError().body("Something went wrong!");
@@ -112,6 +142,24 @@ public class HomeController {
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response){
+        final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
+        Cookie refreshTokenCookie = Arrays.stream(request.getCookies())
+                .filter(cookie -> cookie.getName().equals(REFRESH_TOKEN_COOKIE_NAME)).findFirst().orElse(null);
+
+        if(refreshTokenCookie != null) {
+            // Clear the cookie
+            refreshTokenCookie.setValue("");
+            refreshTokenCookie.setPath("/");
+            refreshTokenCookie.setMaxAge(0);
+            response.addCookie(refreshTokenCookie);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 

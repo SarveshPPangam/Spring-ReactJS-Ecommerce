@@ -76,6 +76,7 @@ export const ProductList = () => {
     }, [auth?.accessToken])
     return (
         <div className={classes.root}>
+            {console.log(auth)}
             {isSeller ?
                 (products?.length > 0 ?
                     products?.map((product, index) => {

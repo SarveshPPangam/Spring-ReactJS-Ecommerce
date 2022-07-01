@@ -5,6 +5,8 @@ import {
     Route,
     BrowserRouter,
     Routes,
+    Navigate,
+    useLocation,
 } from "react-router-dom";
 
 import { Homepage } from "./components/Homepage";
@@ -24,6 +26,8 @@ import { ProductList } from "./components/productList";
 import Layout from "./components/Auth/layout";
 import AuthContext from "./components/Auth/authProvider";
 import PersistLogin from "./components/persistLogin";
+import { SellerProductSearch } from "./components/Seller/sellerProductSearch";
+import CustomAppBar from "./components/customAppBar";
 
 
 const ROLES = {
@@ -37,11 +41,12 @@ function App() {
     const { auth } = useContext(AuthContext);
     const isSeller = auth?.userRole === 'SELLER'
 
-
     return (
         <>
+            <CustomAppBar />
+
             {isSeller ?
-                <SellerHomepage />
+                (<SellerHomepage />)
                 : <Homepage />}
 
             <Routes>
@@ -49,15 +54,16 @@ function App() {
 
                     <Route path="/" element={<Layout />} >
                         {/* Public routes */}
-                        <Route path="/" element={<ProductList />} />
                         <Route path="/login" element={<Login />} />
-                        <Route path="/product/:id" element={<Product />} />
                         <Route path="/register" element={<Register />} />
                         {/* <Route path="/forgotPassword"><ForgotPassword/></Route> */}
-                        <Route path="/search" element={<ProductSearch />} />
 
 
                         <Route element={<PersistLogin />}>
+                            <Route path="/" element={isSeller ? <SellerProducts /> : <ProductList />} />
+                            <Route path="/search" element={<ProductSearch />} />
+                            <Route path="/product/:id" element={<Product />} />
+
                             <Route element={<RequireAuth allowedRole={ROLES.Customer} />}>
                                 {/* Routes accessible only by logged in user */}
                                 <Route path="/profile" element={<Profile />} />
@@ -71,7 +77,8 @@ function App() {
 
                             {/* Routes accessible only by logged in admin */}
                             <Route element={<RequireAuth allowedRole={ROLES.Seller} />}>
-                                <Route path="/seller" element={<SellerHomepage />} />
+                                {/* <Route path="/seller" element={<SellerHomepage showBar={false} />} /> */}
+                                <Route path="/seller/search" element={<SellerProductSearch />} />
                                 <Route path="/seller/products" element={<SellerProducts />} />
                                 <Route path="/seller/product/:id" element={<Product />} />
                                 <Route path="/seller/addProduct" element={<AddProduct />} />
@@ -80,6 +87,7 @@ function App() {
                                 <Route path="/seller/order/:id" element={<OrderDetails />} />
                             </Route>
                         </Route>
+                        <Route path="*" element={<Navigate to="/" />} />
                     </Route>
                 </React.Fragment>
             </Routes>
