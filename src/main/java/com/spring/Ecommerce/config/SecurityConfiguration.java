@@ -35,7 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/c/**").hasAuthority("CUSTOMER")
                 .antMatchers("/seller/**").hasAuthority("SELLER")
                 .anyRequest().authenticated();
-//                .antMatchers("/common/**").hasAnyAuthority("ADMIN", "SELLER");
+
 
 //        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
         http.cors();

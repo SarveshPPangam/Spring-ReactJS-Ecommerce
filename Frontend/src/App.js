@@ -44,7 +44,6 @@ function App() {
     return (
         <>
             <CustomAppBar />
-
             {isSeller ?
                 (<SellerHomepage />)
                 : <Homepage />}

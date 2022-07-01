@@ -10,6 +10,7 @@ import {
 import { Button, Icon, Typography } from '@material-ui/core';
 import RupeeSymbol from '../rupee.svg'
 import AuthContext from './Auth/authProvider';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -78,67 +79,61 @@ export const Product = () => {
     const userRole = auth?.userRole;
     const fetchURL = `/` + (userRole === 'SELLER' ? `seller/product/${id}` : `product/${id}`)
 
+    const axiosPrivate = useAxiosPrivate()
+
     const isLoggedIn = auth?.accessToken
 
     useEffect(() => {
+        const controller = new AbortController()
+        let isMounted = true;
 
-        fetch(fetchURL, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + auth?.accessToken
+        const fetchProduct = async () => {
+            try {
+                const response = await axiosPrivate.get(fetchURL, {
+                    signal: controller.signal
+                });
+                isMounted && setProduct(response.data);
+            } catch (err) {
+                console.error(err);
             }
-        }).then(function (response) {
-            response.text().then(r => {
-                if (response.status === 200 && r) {
-                    const d = JSON.parse(r)
-                    setProduct(d)
-                }
-                else {
-                    navigate('/')
-                }
-            })
-        }, function (err) {
-            console.log(err.message)
-        })
+        }
+
+        fetchProduct()
+
+        return () => {
+            isMounted = false;
+            controller.abort();
+        }
+
     }, [auth?.accessToken])
 
-    const addToCart = () => {
+    const addToCart = async () => {
         if (!isLoggedIn) {
             navigate('/login')
             return;
         }
-        fetch(`/c/addToCart/${product.id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + auth?.accessToken
-            }
-        }).then(function (response) {
-            response.text().then(r => {
-                console.log(r)
-            })
-        }, function (err) {
-            console.log(err)
-        })
+
+        const controller = new AbortController()
+        try {
+            const response = await axiosPrivate.get(`/c/addToCart/${product.id}`, {
+                signal: controller.signal
+            });
+            navigate('/cart')
+        } catch (err) {
+            console.error(err);
+        }
     }
 
-    const handleDelete = () => {
-
-        fetch(`/common/deleteProduct/${product.id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + auth?.accessToken
-            }
-        }).then(function (response) {
-            response.text().then(r => {
-                if (!response.status === 200) return
-                navigate('/seller/products')
-            })
-        }, function (err) {
-
-        })
+    const handleDelete = async () => {
+        const controller = new AbortController()
+        try {
+            const response = await axiosPrivate.delete(`/common/deleteProduct/${product.id}`, {
+                signal: controller.signal
+            });
+            navigate('/seller/products')
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     return (

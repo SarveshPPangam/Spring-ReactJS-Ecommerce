@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import { Controller, useForm } from 'react-hook-form'
+import axios, { axiosPrivate } from '../../api/axios';
 
 
 export default function AddAddressFormDialog({ openEditForm, setOpenEditForm, address, auth, fetchAddresses, isForEdit = false }) {
@@ -16,24 +17,36 @@ export default function AddAddressFormDialog({ openEditForm, setOpenEditForm, ad
         setOpenEditForm(false);
     };
 
-    const onSubmit = (addressInput) => {
-        fetch('/c/profile/addresses', {
-            method: isForEdit ? 'PUT' : 'POST',
-            body: JSON.stringify(addressInput),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + auth?.accessToken,
-            },
-        }).then(function (response) {
-            response.text().then(r => {
-                if (!response.status === 200) return
-                console.log(r)
-                console.log(addressInput)
+    const onSubmit = async (addressInput) => {
+        if (isForEdit) {
+            try {
+                const response = await axiosPrivate.put('/c/profile/addresses',
+                    JSON.stringify(addressInput),
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                        withCredentials: true
+                    }
+                );
                 fetchAddresses()
-            })
-        }, function (err) {
-            console.log(err)
-        })
+            } catch (err) {
+                console.log(err?.response)
+            }
+        }
+        else {
+            try {
+                const response = await axiosPrivate.post('/c/profile/addresses',
+                    JSON.stringify(addressInput),
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                        withCredentials: true
+                    }
+                );
+                fetchAddresses()
+            } catch (err) {
+                console.log(err?.response)
+            }
+        }
+
         handleClose()
     }
 

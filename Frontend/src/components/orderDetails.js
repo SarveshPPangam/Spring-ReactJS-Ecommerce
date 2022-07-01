@@ -5,6 +5,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import RupeeSymbol from '../rupee.svg'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import AuthContext from './Auth/authProvider';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import axios from '../api/axios';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -47,80 +49,64 @@ export const OrderDetails = () => {
     const navigate = useNavigate()
     const userRole = auth?.userRole;
 
-    const fetchCustomerOrder = (id) => {
-        fetch(`/c/profile/order/${id}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + auth?.accessToken
-            }
-        }).then(function (response) {
-            response.text().then(r => {
-                const d = JSON.parse(r)
-                console.log(d)
-                setOrder(d)
-            })
-        }, function (err) {
-            console.log(err.message)
-        })
+    const axiosPrivate = useAxiosPrivate()
+
+    const fetchCustomerOrder = async (id) => {
+        const controller = new AbortController()
+        try {
+            const response = await axiosPrivate.get(`/c/profile/order/${id}`, {
+                signal: controller.signal
+            });
+            setOrder(response.data);
+        } catch (err) {
+            console.error(err);
+        }
     }
 
-    const fetchSellerOrder = (id) => {
-        fetch(`/seller/order/${id}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + auth?.accessToken
-            }
-        }).then(function (response) {
-            response.text().then(r => {
-                const d = JSON.parse(r)
-                console.log(d)
-                setOrder(d)
-            })
-        }, function (err) {
-            console.log(err.message)
-        })
+    const fetchSellerOrder = async (id) => {
+        const controller = new AbortController()
+        try {
+            const response = await axiosPrivate.get(`/seller/order/${id}`, {
+                signal: controller.signal
+            });
+            setOrder(response.data);
+        } catch (err) {
+            console.error(err);
+        }
     }
     useEffect(() => {
         userRole === 'CUSTOMER' && fetchCustomerOrder(id)
         userRole === 'SELLER' && fetchSellerOrder(id)
     }, [auth?.accessToken])
 
-    const handleCancelOrder = () => {
-        fetch(`/c/profile/cancelOrder`, {
-            method: 'POST',
-            body: JSON.stringify(order),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + auth?.accessToken
-            }
-        }).then(function (response) {
-            response.text().then(r => {
-                console.log(r)
-                navigate('/profile/orders')
-            })
-        }, function (err) {
-            console.log(err)
-        })
+    const handleCancelOrder = async () => {
+        try {
+            const response = await axiosPrivate.post(`/c/profile/cancelOrder`,
+                JSON.stringify(order),
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
+                }
+            );
+            navigate('/profile/orders')
+        } catch (err) {
+            console.log(err?.response)
+        }
     }
 
-    const handleSetAsDelivered = () => {
-        fetch(`/seller/setAsDelivered`, {
-            method: 'POST',
-            body: JSON.stringify(order),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + auth?.accessToken
-            }
-        }).then(function (response) {
-            response.text().then(r => {
-                console.log(r)
-                navigate('/seller/orders')
-            })
-        }, function (err) {
-            console.log(err)
-        })
+    const handleSetAsDelivered = async () => {
+        try {
+            const response = await axiosPrivate.post(`/seller/setAsDelivered`,
+                JSON.stringify(order),
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
+                }
+            );
+            navigate('/seller/orders')
+        } catch (err) {
+            console.log(err?.response)
+        }
     }
 
 

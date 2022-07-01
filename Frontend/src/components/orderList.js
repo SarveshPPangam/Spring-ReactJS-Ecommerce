@@ -1,5 +1,6 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react'
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import AuthContext from './Auth/authProvider';
 
 import OrderListTable from './orderListTable';
@@ -36,42 +37,32 @@ export const OrderList = () => {
     const isSeller = userRole === 'SELLER'
     const [orders, setOrders] = useState()
     const viewOrderURL = (userRole === 'CUSTOMER' ? `/profile/order/` : `/seller/order/`)
+    const axiosPrivate = useAxiosPrivate()
 
-    const fetchCustomerOrders = () => {
-        fetch(`/c/orders`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + auth?.accessToken
-            }
-        }).then(function (response) {
-            response.text().then(r => {
-                const d = JSON.parse(r)
-                console.log(d)
-                setOrders(d);
-            })
-        }, function (err) {
-            console.log(err)
-        })
+    const fetchCustomerOrders = async () => {
+        const controller = new AbortController()
+        try {
+            const response = await axiosPrivate.get(`/c/orders`, {
+                signal: controller.signal
+            });
+            if (Array.isArray(response.data))
+                setOrders(response.data);
+        } catch (err) {
+            console.error(err);
+        }
     }
 
-    const fetchSellerOrders = () => {
-        fetch(`/seller/orders`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + auth?.accessToken
-            }
-        }).then(function (response) {
-            response.text().then(r => {
-                const d = JSON.parse(r)
-                console.log(d)
-                if (Array.isArray(d))
-                    setOrders(d);
-            })
-        }, function (err) {
-            console.log(err)
-        })
+    const fetchSellerOrders = async () => {
+        const controller = new AbortController()
+        try {
+            const response = await axiosPrivate.get(`/seller/orders`, {
+                signal: controller.signal
+            });
+            if (Array.isArray(response.data))
+                setOrders(response.data);
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     useEffect(() => {
