@@ -168,9 +168,11 @@ export const Product = () => {
                     }
                     {userRole !== "SELLER" &&
                         <Grid container>
-                            <Button variant="contained" color="secondary" onClick={addToCart}>
-                                Add to cart
-                            </Button>
+                            {product.quantity > 0 ?
+                                <Button variant="contained" color="secondary" onClick={addToCart}>
+                                    Add to cart
+                                </Button>
+                                : "There are no products left in stock!"}
                         </Grid>
                     }
 

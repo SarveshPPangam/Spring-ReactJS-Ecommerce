@@ -59,12 +59,14 @@ public class CustomerController {
     public ResponseEntity<String> addToCart(Principal principal, @PathVariable int productId) {
         try {
             User user = userService.findByEmail(principal.getName());
+            long productQuantity = productService.getProductQuantity(productId);
+            if(productQuantity <= 0)
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("There are no products left in stock!");
             user.addToCart(productService.findById(productId));
-            System.out.println(principal.getName());
             userService.save(user);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong!");
         }
     }
 

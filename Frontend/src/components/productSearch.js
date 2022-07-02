@@ -44,8 +44,8 @@ export const ProductSearch = () => {
     const [errorMessage, setErrorMessage] = useState('')
 
     let query = useQuery();
-    var productName = query.get("name").toLowerCase()
-    productName = productName.replace(/[^a-z]/gi, ' ');
+    var productName = query.get("name")?.toLowerCase()
+    productName = productName?.replace(/[^a-z]/gi, ' ');
     const minPrice = parseInt(query.get("minPrice"))
     const maxPrice = parseInt(query.get("maxPrice"))
 

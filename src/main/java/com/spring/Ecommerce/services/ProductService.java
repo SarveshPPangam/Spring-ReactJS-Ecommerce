@@ -54,4 +54,8 @@ public class ProductService {
                 }
         );
     }
+
+    public long getProductQuantity(int productId){
+        return productRepository.findById(productId).orElseThrow().getQuantity();
+    }
 }

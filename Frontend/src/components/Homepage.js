@@ -42,8 +42,6 @@ export const Homepage = () => {
                 </Link>
             </>
             }
-
-
         </>
     )
 }
