@@ -40,11 +40,8 @@ export const OrderList = () => {
     const axiosPrivate = useAxiosPrivate()
 
     const fetchCustomerOrders = async () => {
-        const controller = new AbortController()
         try {
-            const response = await axiosPrivate.get(`/c/orders`, {
-                signal: controller.signal
-            });
+            const response = await axiosPrivate.get(`/c/orders`);
             if (Array.isArray(response.data))
                 setOrders(response.data);
         } catch (err) {
@@ -53,11 +50,8 @@ export const OrderList = () => {
     }
 
     const fetchSellerOrders = async () => {
-        const controller = new AbortController()
         try {
-            const response = await axiosPrivate.get(`/seller/orders`, {
-                signal: controller.signal
-            });
+            const response = await axiosPrivate.get(`/seller/orders`);
             if (Array.isArray(response.data))
                 setOrders(response.data);
         } catch (err) {

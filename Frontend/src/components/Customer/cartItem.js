@@ -6,6 +6,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import AuthContext from '../Auth/authProvider';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -46,31 +47,27 @@ export const CartItem = ({ cartItem, handleRemoveItem, handleAddQuantity, handle
     const { handleSubmit, control, watch, setValue } = useForm()
     const [isCustomQuantity, setIsCustomQuantity] = useState(false)
 
+    const axiosPrivate = useAxiosPrivate()
+
     useEffect(() => {
         setIsCustomQuantity(false)
         setValue('quantity', cartItem?.quantity)
     }, [auth?.accessToken, cartItem?.quantity])
 
 
-    const onSubmitQuantity = (data) => {
+    const onSubmitQuantity = async (data) => {
         if (data?.quantity <= 0)
             return;
-        fetch(`/c/setQuantity/${cartItem.id}/${data.quantity}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + auth?.accessToken
-            }
-        }).then(function (response) {
-            response.text().then(r => {
 
-                console.log(r)
-                setTemp(prev => !prev);
-                setIsCustomQuantity(false)
-            })
-        }, function (err) {
-            console.log(err)
-        })
+        try {
+            const response = await axiosPrivate.get(`/c/setQuantity/${cartItem.id}/${data.quantity}`);
+            setTemp(prev => !prev);
+            setIsCustomQuantity(false)
+        } catch (err) {
+            console.error(err);
+        }
+
+
     }
 
     return (

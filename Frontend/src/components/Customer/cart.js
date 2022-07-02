@@ -5,6 +5,7 @@ import RupeeSymbol from '../../rupee.svg'
 import AddressDialog from './addressDialog';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../Auth/authProvider';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,45 +30,28 @@ export const Cart = () => {
     const [open, setOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = useState();
 
+    const axiosPrivate = useAxiosPrivate()
+
     let totalPrice = 0;
     let totalItems = 0;
 
-    const fetchCart = () => {
-        fetch(`/c/cart`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + auth?.accessToken
-            }
-        }).then(function (response) {
-            response.text().then(r => {
-                // console.log(r)
-                const d = JSON.parse(r)
-                setCart(d);
-            })
-        }, function (err) {
-            console.log(err)
-        })
+    const fetchCart = async () => {
+        try {
+            const response = await axiosPrivate.get(`/c/cart`);
+            setCart(response.data);
+        } catch (err) {
+            console.error(err);
+        }
     }
 
-    const fetchAddresses = () => {
-        fetch('/c/profile/addresses', {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + auth?.accessToken
-            }
-
-        }).then(function (response) {
-            response.text().then(r => {
-                //                console.log(r)
-                const d = JSON.parse(r)
-                setAddresses(d);
-                setSelectedValue(d?.[0])
-            })
-        }, function (error) {
-            console.log(error.message)
-        })
+    const fetchAddresses = async () => {
+        try {
+            const response = await axiosPrivate.get('/c/profile/addresses');
+            setAddresses(response.data);
+            setSelectedValue(response.data?.[0])
+        } catch (err) {
+            console.error(err);
+        }
     }
 
 
@@ -76,72 +60,50 @@ export const Cart = () => {
         fetchAddresses();
     }, [auth?.accessToken, temp])
 
-    const handleRemoveItem = (cartItemId) => {
-        fetch(`/c/removeCartItem/${cartItemId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + auth?.accessToken,
-            }
-        }).then(function (response) {
-            response.text().then(r => {
-                setTemp(prev => !prev)
-            })
-        }, function (error) {
-            console.log(error);
-        })
+    const handleRemoveItem = async (cartItemId) => {
 
+        try {
+            const response = await axiosPrivate.delete(`/c/removeCartItem/${cartItemId}`);
+            setTemp(prev => !prev)
+        } catch (err) {
+            console.error(err);
+        }
     }
 
-    const handlePlaceOrder = () => {
+    const handlePlaceOrder = async () => {
+
         const address = selectedValue;
-        fetch('/c/placeOrder', {
-            method: 'POST',
-            body: JSON.stringify(address),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + auth?.accessToken,
-            },
-        }).then(function (response) {
-            response.text().then(r => {
-                navigate('/')
-            })
-        }, function (err) {
-            console.log(err)
-        })
-
+        try {
+            const response = await axiosPrivate.post(`/c/placeOrder`,
+                JSON.stringify(address),
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
+                }
+            );
+            navigate('/')
+        } catch (err) {
+            console.log(err?.response)
+        }
     }
 
-    const handleAddQuantity = (cartItemId) => {
-        fetch(`/c/addQuantity/${cartItemId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + auth?.accessToken,
-            }
-        }).then(function (response) {
-            response.text().then(r => {
-                setTemp(prev => !prev)
-            })
-        }, function (error) {
-            console.log(error);
-        })
+    const handleAddQuantity = async (cartItemId) => {
+        try {
+            const response = await axiosPrivate.delete(`/c/addQuantity/${cartItemId}`);
+            setTemp(prev => !prev)
+        } catch (err) {
+            console.error(err);
+        }
     }
 
-    const handleRemoveQuantity = (cartItemId) => {
-        fetch(`/c/removeQuantity/${cartItemId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + auth?.accessToken,
-            }
-        }).then(function (response) {
-            response.text().then(r => {
-                setTemp(prev => !prev)
-            })
-        }, function (error) {
-            console.log(error);
-        })
+    const handleRemoveQuantity = async (cartItemId) => {
+        try {
+            const response = await axiosPrivate.delete(`/c/removeQuantity/${cartItemId}`);
+            setTemp(prev => !prev)
+        } catch (err) {
+            console.error(err);
+        }
+
     }
 
 

@@ -60,8 +60,8 @@ public class UserService {
     }
 
     public void placeOrder(User user, int addressId) {
-        productService.setProductQuantity(user.getCart());//reduce Product quantity after placing order
         user.placeOrder(addressId);
+        productService.setProductQuantity(user.getCart());//reduce Product quantity after placing order
         userRepository.save(user);
     }
 

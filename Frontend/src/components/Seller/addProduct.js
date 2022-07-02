@@ -24,6 +24,7 @@ import { ProductList } from '../productList';
 import Product from '../productTile';
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import AuthContext from '../Auth/authProvider';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 
 const drawerWidth = 240;
@@ -66,6 +67,8 @@ export const AddProduct = ({ edit = false }) => {
     const navigate = useNavigate()
     var fetchUrl = product?.id ? "/seller/editProduct" : "/seller/addProduct";
 
+    const axiosPrivate = useAxiosPrivate()
+
 
 
     let { id } = useParams();
@@ -82,43 +85,44 @@ export const AddProduct = ({ edit = false }) => {
         name: "details"
     })
 
-    const getProductDetails = () => {
-        fetch('/product/' + id, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + auth?.accessToken
-            }
-        }).then(function (response) {
-            response.text().then(r => {
-                const d = JSON.parse(r)
-                console.log(d)
-                setProduct(d)
-                reset(d)
-            })
-        }, function (err) {
-            console.log(err.message)
-        })
+    const getProductDetails = async () => {
+        const controller = new AbortController()
+        try {
+            const response = await axiosPrivate.get(`/product/${id}`, {
+                signal: controller.signal
+            });
+            setProduct(response.data)
+            reset(response.data)
+        } catch (err) {
+            console.error(err);
+        }
     }
     useEffect(() => {
-        fetch('/seller/categories', {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + auth?.accessToken
-            }
 
-        }).then(function (response) {
-            response.text().then(r => {
-                //                console.log(r)
-                const d = JSON.parse(r)
-                console.log(d)
-                setCategories(d);
-            })
-        }, function (error) {
-            console.log(error.message)
-        })
+        let isMounted = true;
+        const controller = new AbortController();
+
+        const getCategories = async () => {
+            try {
+                const response = await axiosPrivate.get(`/seller/categories`, {
+                    signal: controller.signal
+                });
+                if (isMounted) {
+                    setCategories(response.data)
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        getCategories()
         edit && getProductDetails()
+
+        return () => {
+            isMounted = false;
+            controller.abort();
+        }
+
+
     }, [auth?.accessToken])
 
     useEffect(() => {
@@ -138,29 +142,27 @@ export const AddProduct = ({ edit = false }) => {
         return /^\+?(0|[1-9]\d*)$/.test(id);
     }
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         console.log(data)
         data.details.forEach(detail => {
             if (!isValidId(detail.id))
                 detail.id = null
         })
 
-        fetch(fetchUrl, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + auth?.accessToken
-            }
-        }).then(function (response) {
-            // console.log(response);
-            response.text().then(r => {
-                console.log(r)
-                navigate(id ? `/seller/product/${id}` : `/seller/products`)
-            })
-        }, function (error) {
-            console.log(error.message)
-        })
+        try {
+            const response = await axiosPrivate.post(fetchUrl,
+                JSON.stringify(data),
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
+                }
+            );
+            navigate(id ? `/seller/product/${id}` : `/seller/products`)
+        } catch (err) {
+            console.log(err?.response)
+        }
+
+
     }
 
     return (

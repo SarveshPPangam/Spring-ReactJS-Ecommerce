@@ -113,11 +113,8 @@ export const Product = () => {
             return;
         }
 
-        const controller = new AbortController()
         try {
-            const response = await axiosPrivate.get(`/c/addToCart/${product.id}`, {
-                signal: controller.signal
-            });
+            const response = await axiosPrivate.get(`/c/addToCart/${product.id}`);
             navigate('/cart')
         } catch (err) {
             console.error(err);
@@ -125,11 +122,8 @@ export const Product = () => {
     }
 
     const handleDelete = async () => {
-        const controller = new AbortController()
         try {
-            const response = await axiosPrivate.delete(`/common/deleteProduct/${product.id}`, {
-                signal: controller.signal
-            });
+            const response = await axiosPrivate.delete(`/common/deleteProduct/${product.id}`);
             navigate('/seller/products')
         } catch (err) {
             console.error(err);

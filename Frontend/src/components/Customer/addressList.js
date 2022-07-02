@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Address } from './address';
 import AddAddressFormDialog from './addAddressFormDialog';
 import AuthContext from '../Auth/authProvider';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -21,28 +22,18 @@ export const AddressList = () => {
     const { auth } = useContext(AuthContext);
     const [addresses, setAddresses] = useState()
     const [openEditForm, setOpenEditForm] = useState(false)
+    const axiosPrivate = useAxiosPrivate()
 
-    const fetchAddresses = () => {
-        fetch('/c/profile/addresses', {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + auth?.accessToken
-            }
-
-        }).then(function (response) {
-            if (response.status === 403) {
-                return
-            }
-            response.text().then(r => {
-                //                console.log(r)
-                const d = JSON.parse(r)
-                console.log(d)
-                setAddresses(d);
-            })
-        }, function (error) {
-            console.log(error.message)
-        })
+    const fetchAddresses = async () => {
+        const controller = new AbortController()
+        try {
+            const response = await axiosPrivate.get(`/c/profile/addresses`, {
+                signal: controller.signal
+            });
+            setAddresses(response.data);
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     useEffect(() => {

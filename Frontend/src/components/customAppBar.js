@@ -130,11 +130,8 @@ export default function CustomAppBar() {
     // Logout
 
 
-    const controller = new AbortController()
     try {
-      const response = await axiosPrivate.get(`/logout/`, {
-        signal: controller.signal
-      });
+      const response = await axiosPrivate.get(`/logout/`);
       console.log(response.data);
       setAuth(prev => {
         return {

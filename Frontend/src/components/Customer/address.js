@@ -2,6 +2,7 @@ import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import React, { useContext } from 'react'
 import { useState } from 'react';
 import { set } from 'react-hook-form';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import AuthContext from '../Auth/authProvider';
 import AddAddressFormDialog from './addAddressFormDialog';
 
@@ -27,29 +28,20 @@ export const Address = ({ address, addresses, setAddresses, fetchAddresses }) =>
 
     const [openEditForm, setOpenEditForm] = useState(false)
 
+    const axiosPrivate = useAxiosPrivate()
 
 
     const handleEdit = () => {
         setOpenEditForm(true)
     }
 
-    const deleteAddress = (id) => {
-        fetch('/c/profile/address/' + id, {
-            method: 'DELETE',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + auth?.accessToken
-            }
-
-        }).then(function (response) {
-            response.text().then(r => {
-                const d = JSON.parse(r)
-                console.log(d)
-                setAddresses(addresses?.filter(c => c.id !== id))
-            })
-        }, function (error) {
-            console.log(error.message)
-        })
+    const deleteAddress = async (id) => {
+        try {
+            const response = await axiosPrivate.delete(`/c/profile/address/${id}`);
+            setAddresses(addresses?.filter(c => c.id !== id))
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     return (

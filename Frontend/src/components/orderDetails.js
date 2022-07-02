@@ -52,11 +52,8 @@ export const OrderDetails = () => {
     const axiosPrivate = useAxiosPrivate()
 
     const fetchCustomerOrder = async (id) => {
-        const controller = new AbortController()
         try {
-            const response = await axiosPrivate.get(`/c/profile/order/${id}`, {
-                signal: controller.signal
-            });
+            const response = await axiosPrivate.get(`/c/profile/order/${id}`);
             setOrder(response.data);
         } catch (err) {
             console.error(err);
@@ -64,11 +61,8 @@ export const OrderDetails = () => {
     }
 
     const fetchSellerOrder = async (id) => {
-        const controller = new AbortController()
         try {
-            const response = await axiosPrivate.get(`/seller/order/${id}`, {
-                signal: controller.signal
-            });
+            const response = await axiosPrivate.get(`/seller/order/${id}`);
             setOrder(response.data);
         } catch (err) {
             console.error(err);
