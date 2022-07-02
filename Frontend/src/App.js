@@ -52,14 +52,15 @@ function App() {
                 <React.Fragment>
 
                     <Route path="/" element={<Layout />} >
-                        {/* Public routes */}
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
+
                         {/* <Route path="/forgotPassword"><ForgotPassword/></Route> */}
 
 
                         <Route element={<PersistLogin />}>
+                            {/* Public routes */}
                             <Route path="/" element={isSeller ? <SellerProducts /> : <ProductList />} />
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/register" element={<Register />} />
                             <Route path="/search" element={<ProductSearch />} />
                             <Route path="/product/:id" element={<Product />} />
 
