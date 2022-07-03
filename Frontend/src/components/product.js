@@ -123,7 +123,7 @@ export const Product = () => {
 
     const handleDelete = async () => {
         try {
-            const response = await axiosPrivate.delete(`/common/deleteProduct/${product.id}`);
+            const response = await axiosPrivate.delete(`/seller/product/${product.id}`);
             navigate('/seller/products')
         } catch (err) {
             console.error(err);

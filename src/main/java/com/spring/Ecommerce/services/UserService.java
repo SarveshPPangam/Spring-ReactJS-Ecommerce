@@ -130,6 +130,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void deleteSellerProduct(User user, int productId){
+        user.deleteProduct(productId);
+        userRepository.save(user);
+    }
+
     private boolean checkIfEmailAlreadyExists(String email){
         return userRepository.findByEmail(email).isPresent();
     }

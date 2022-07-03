@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
         flexWrap: "wrap",
+        marginLeft: "15%"
     },
     item: {
         margin: '0px 5px 10px 0px',

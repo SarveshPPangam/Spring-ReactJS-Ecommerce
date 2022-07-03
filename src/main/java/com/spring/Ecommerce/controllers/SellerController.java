@@ -59,6 +59,13 @@ public class SellerController {
         return user.getProductById(productId).orElse(null);
     }
 
+    @DeleteMapping("/product/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable int productId, Principal principal) {
+        User user = userService.findByEmail(principal.getName());
+        userService.deleteSellerProduct(user, productId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/orders/{orderId}/setDelivered")
     public ResponseEntity<String> setDelivered(Principal principal, @PathVariable int orderId) {
         User user = userService.findByEmail(principal.getName());

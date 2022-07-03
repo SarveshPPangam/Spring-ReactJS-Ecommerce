@@ -3,16 +3,9 @@ import { alpha, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
 import SellerNavBar from './Seller/sellerNavBar';
@@ -180,7 +173,7 @@ export default function CustomAppBar() {
       onClose={handleMobileMenuClose}
     >
 
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem >
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -189,7 +182,7 @@ export default function CustomAppBar() {
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p onClick={handleMenuClose}>Profile</p>
       </MenuItem>
     </Menu>
   );
@@ -218,35 +211,15 @@ export default function CustomAppBar() {
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             {isLoggedIn &&
-              <IconButton
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
+              <Button variant="outlined" onClick={handleMenuClose}>
+                Logout
+              </Button>
             }
-          </div>
-
-          <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
           </div>
         </Toolbar>
       </AppBar >
-      {isLoggedIn && renderMobileMenu
-      }
-      {renderMenu}
+      {/* {isLoggedIn && renderMobileMenu} */}
+      {/* {renderMenu} */}
       {isSeller && <SellerNavBar />}
 
 

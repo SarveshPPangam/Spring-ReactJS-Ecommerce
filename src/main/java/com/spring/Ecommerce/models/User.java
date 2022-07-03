@@ -27,7 +27,10 @@ public class User {
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
 
-    @OneToMany(mappedBy = "created_by")
+    @OneToMany(mappedBy = "created_by",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
     private Set<Product> products;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
@@ -130,6 +133,13 @@ public class User {
         address.setModifiedAt(new Timestamp(System.currentTimeMillis()));
         this.addAddress(address);
         return this;
+    }
+
+    public void deleteProduct(int productId) {
+        Product product = this.getProducts().stream()
+                .filter(p -> p.getId() == productId).findFirst().orElse(null);
+        if (product != null)
+            this.getProducts().remove(product);
     }
 
     public User deleteAddressById(int id) {

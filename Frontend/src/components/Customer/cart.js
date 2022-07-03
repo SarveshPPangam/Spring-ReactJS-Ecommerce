@@ -73,6 +73,8 @@ export const Cart = () => {
     const handlePlaceOrder = async () => {
 
         const address = selectedValue;
+        if (address == null)
+            return;
         try {
             const response = await axiosPrivate.post(`/c/placeOrder`,
                 JSON.stringify(address),

@@ -29,10 +29,7 @@ public class Order {
 
     private long totalItems;
 
-    public Order setSellerId(User sellerId) {
-        this.sellerId = sellerId;
-        return this;
-    }
+
 
     private double totalPrice;
 
@@ -57,6 +54,11 @@ public class Order {
 
     public Order setCustomerId(User customerId) {
         this.customerId = customerId;
+        return this;
+    }
+
+    public Order setSellerId(User sellerId) {
+        this.sellerId = sellerId;
         return this;
     }
 
