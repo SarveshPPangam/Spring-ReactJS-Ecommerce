@@ -192,15 +192,7 @@ export default function CustomAppBar() {
       <AppBar position="static">
         <Toolbar>
 
-          {notLoggedIn &&
-            <>
-              <Button component={Link} to="/login" variant="outlined" >
-                Login
-              </Button>
-              <Button component={Link} to="/register" variant="outlined" >
-                Register
-              </Button>
-            </>}
+
 
           {!isSeller &&
             <form onSubmit={onSubmit}>
@@ -216,6 +208,15 @@ export default function CustomAppBar() {
               </Button>
             }
           </div>
+          {notLoggedIn &&
+            <>
+              <Button component={Link} to="/login" variant="outlined" >
+                Login
+              </Button>
+              <Button component={Link} to="/register" variant="outlined" >
+                Register
+              </Button>
+            </>}
         </Toolbar>
       </AppBar >
       {/* {isLoggedIn && renderMobileMenu} */}

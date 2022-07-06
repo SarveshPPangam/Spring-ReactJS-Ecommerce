@@ -8,6 +8,7 @@ import ProductTile from './productTile';
 import AuthContext from './Auth/authProvider';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import axios from '../api/axios';
+import { ListItem, ListItemText } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -30,6 +31,7 @@ export const ProductList = () => {
     const isSeller = userRole === 'SELLER'
     const axiosPrivate = useAxiosPrivate()
 
+    const [categories, setCategories] = useState([])
     const [products, setProducts] = useState([]);
 
     const classes = useStyles();
@@ -75,6 +77,17 @@ export const ProductList = () => {
         }
 
     }, [auth?.accessToken])
+
+
+    useEffect(() => {
+        const categoriesSet = new Set();
+        products?.forEach(product => {
+            categoriesSet.add(product?.category?.name);
+        })
+        setCategories(Array.from(categoriesSet));
+    }, [products])
+
+
     return (
         <div className={classes.root}>
             {console.log(auth)}
@@ -95,17 +108,44 @@ export const ProductList = () => {
                 )
                 :
 
-                products?.map((product, index) => {
+                categories?.map((category, index) => {
                     return (
-                        <Grid item className={classes.item} key={product.id}>
-                            <Link to={`/product/${product.id}`} className={classes.link}>
-                                <ProductTile product={product} />
-                            </Link>
+                        <>
+                            <ListItem key={index}>
+                                <ListItemText primary={category} />
+                            </ListItem>
 
-                        </Grid>
+                            {products?.map((product, index) => {
+                                if (product?.category?.name === category) {
+                                    return (
+                                        <Grid item className={classes.item} key={product.id}>
+                                            <Link to={`/product/${product.id}`} className={classes.link}>
+                                                <ProductTile product={product} />
+                                            </Link>
 
+                                        </Grid>
+                                    )
+                                }
+
+
+                            })}
+
+
+                        </>
                     )
                 })
+
+                // products?.map((product, index) => {
+                //     return (
+                //         <Grid item className={classes.item} key={product.id}>
+                //             <Link to={`/product/${product.id}`} className={classes.link}>
+                //                 <ProductTile product={product} />
+                //             </Link>
+
+                //         </Grid>
+
+                //     )
+                // })
             }
         </div>
     )

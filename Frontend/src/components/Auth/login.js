@@ -98,7 +98,7 @@ export default function Login() {
                                 />
                             </Grid>
 
-                            <Grid item>
+                            {/* <Grid item>
                                 <Link
                                     component="button"
                                     variant="body2"
@@ -107,7 +107,7 @@ export default function Login() {
                                 >
                                     Forgot Password?
                                 </Link>
-                            </Grid>
+                            </Grid> */}
                             <Grid container item direction={"row"} justifyContent={"center"} spacing={4}>
                                 <Grid item xs={6}>
                                     <Button type="submit" variant="contained" color="primary"
